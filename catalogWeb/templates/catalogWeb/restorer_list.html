@@ -1,0 +1,21 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h1>Restorer List</h1>
+
+    {% if restorer_list %}
+    <ul>
+
+      {% for restorer in restorer_list %}
+      <li>
+        {{  restorer }}   <a href="{% url 'restorerDel' restorer.restorer_id %}"> Del</a>
+      </li>
+      {% endfor %}
+
+    </ul>
+
+    {% else %}
+      <p>There are no books in the library.</p>
+    {% endif %}
+{% endblock %}
+

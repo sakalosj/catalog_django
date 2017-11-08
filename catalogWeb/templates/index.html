@@ -1,0 +1,64 @@
+{% load static %}
+{% load render_table from django_tables2 %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{% static "catalogWeb/css/w3.css" %}">
+    <link rel="stylesheet" href="{% static "catalogWeb/css/popups.css" %}">
+    <link rel="stylesheet" href="{% static "catalogWeb/css/mystyle1.css" %}">
+    <link rel="stylesheet" href="{% static "catalogWeb/css/tabs.css" %}">
+ <link rel="stylesheet" href="{% static 'django_tables2/themes/paleblue/css/screen.css' %}" />
+
+    <script src="{% static "catalogWeb/scripts/jquery-3.2.1.js" %}"></script>
+    <script src="{% static "catalogWeb/scripts/myscripts.js" %}"></script>
+<script>
+    var csrftoken = '{{ csrf_token }}';
+</script>
+    <title>{% block title %}My amazing site{% endblock %}</title>
+</head>
+
+<body>
+{% comment %}
+    <div id="sidebar">
+        {% block sidebar %}
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/blog/">Blog</a></li>
+        </ul>
+        {% endblock %}
+    </div>
+
+    <div id="content">
+        {% block content %}{% endblock %}
+    </div>
+    {% endcomment %}
+
+    <div class="tab_container">
+      <ul class="tabs">
+    		<li class="tab-link current_tab" data-tab="restorer"><a href="javascript:void(0);" onclick="set_variable('model','Restorer');" >Restauratori</a></li>
+    		<li class="tab-link" data-tab="monument"><a href="javascript:void(0);" onclick="set_variable('model','Object');" >Pamiatky</li>
+    		<li class="tab-link" data-tab="project"><a href="javascript:void(0);" onclick="set_variable('model','Project');" >Projekty</li>
+    	</ul>
+    </div>  <!--tab_container-->
+    <div id=main_container>
+      <navbar_left>
+        <ul>
+           <li id="add_nav_but_form" class=".form_button"><a href="/add" ><i class="material-icons">add</i> <!--onclick="loadPopup();"-->
+              <span>Pridat</span></a></li>
+           <li id="rem_nav_but_form"><a href="/del"><i class="material-icons">remove</i>
+             <span>Vymazat</span></a></li>
+           <li id="restorer_filt_nav_but_in"><a href="#"><i class="material-icons">filter_list</i>
+             <span>Filter</span></a></li>
+           <li id="search_nav_but_in"><a href="#"><i class="material-icons">search</i>
+             <span>Hladat</span></a></li>
+           <li id=search_nav_but_ref><a href="javascript:void(0);" onclick="get_table();"><i class="material-icons">refresh</i>
+             <span>Znovu nacitat</span></a></li>
+       </ul>
+      </navbar_left>
+      <div id="db_table_container"  class="w3-table" >
+           {% render_table tableData %}
+      </div> <!--db_table_container-->
+    </div> <!--main_container-->
+
+</body>
+</html>

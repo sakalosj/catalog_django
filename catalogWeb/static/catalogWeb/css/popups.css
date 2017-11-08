@@ -1,0 +1,46 @@
+#popupdiv{
+opacity:0.92;
+position: absolute;
+top: 0px;
+left: 0px;
+height: 100%;
+width: 100%;
+background: #000;
+display: none;
+}
+
+.popupform{
+/*margin: auto;
+display: none;
+height: 50%;
+width: 50%;
+*/
+width: 50%;
+margin: auto;
+background: white;
+display: none;
+}
+
+
+#popup_container{
+opacity:0.92;
+position: absolute;
+top: 0px;
+left: 0px;
+height: 100%;
+width: 100%;
+background: #000;
+display: none;
+}
+
+.popup_template{
+/*margin: auto;
+display: none;
+height: 50%;
+width: 50%;
+*/
+width: 50%;
+margin: auto;
+background: white;
+display: none;
+}
