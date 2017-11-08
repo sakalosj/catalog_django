@@ -1,5 +1,14 @@
 {% extends "base_generic.html" %}
 
+{% block sidebar %}
+  <ul class="sidebar-nav">
+    <li><a href="{% url 'index_new' %}">Home</a></li>
+    <li><a href="{% url 'restorerAdd' %}">restorer add</a></li>
+    <li><a href="{% url 'restorerList' %}">restorer list</a></li>
+  </ul>
+{% endblock sidebar %}
+
+
 {% block content %}
     <h1>Restorer List</h1>
 

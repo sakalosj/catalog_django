@@ -102,3 +102,18 @@ class RestorerDelete(DeleteView):
     model = Restorer
     fields = '__all__'
     success_url = reverse_lazy('restorerList')
+
+class ObjectListView(generic.ListView):
+    model = Object
+    paginate_by = 4
+
+
+class ObjectCreate(CreateView):
+    model = Object
+    fields = '__all__'
+    success_url = reverse_lazy('objectList')
+
+class ObjectDelete(DeleteView):
+    model = Object
+    fields = '__all__'
+    success_url = reverse_lazy('objectList')
