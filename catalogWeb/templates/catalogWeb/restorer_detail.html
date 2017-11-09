@@ -1,13 +1,9 @@
 {% extends "base_generic.html" %}
 
 
-
-
 {% block content %}
     <h1>{{ object.first_name }}</h1>
-    <p>{{ object.content }}</p>
-    <p>Reporter: {{ restorer.last_name }}</p>
-    <p>Published: {{ object.pub_date|date }}</p>
-    <p>Date: {{ now|date }}</p>
-
+    <p>First name: {{ restorer.first_name }}</p>
+    <p>Last name: {{ restorer.last_name }}</p>
+    <p>Description: {{ restorer.description }}</p>
 {% endblock content %}

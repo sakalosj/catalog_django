@@ -107,10 +107,12 @@ class RestorerDelete(DeleteView):
 class RestorerDetail(DetailView):
 
     model = Restorer
+    propertiesList = [field.name for field in Restorer._meta.fields if field.name != "id"]
 
     def get_context_data(self, **kwargs):
         context = super(RestorerDetail, self).get_context_data(**kwargs)
         context['now'] = 'TERAZ'
+        context['propertiesList'] = vars(self)
         return context
 
 class RestorerUpdate(UpdateView):
@@ -137,6 +139,14 @@ class MonumentDelete(DeleteView):
     fields = '__all__'
     success_url = reverse_lazy('monumentList')
 
+class MonumentDetail(DetailView):
+    model = Monument
+
+class MonumentUpdate(UpdateView):
+    model = Monument
+    fields = '__all__'
+    success_url = reverse_lazy('monumentList')
+
 class ProjectListView(generic.ListView):
     model = Project
     paginate_by = 4
@@ -148,6 +158,14 @@ class ProjectCreate(CreateView):
     success_url = reverse_lazy('projectList')
 
 class ProjectDelete(DeleteView):
+    model = Project
+    fields = '__all__'
+    success_url = reverse_lazy('projectList')
+
+class ProjectDetail(DetailView):
+    model = Project
+
+class ProjectUpdate(UpdateView):
     model = Project
     fields = '__all__'
     success_url = reverse_lazy('projectList')

@@ -28,8 +28,6 @@ class Monument(models.Model):
     # material = models.CharField(max_length=45)
     materialList =  models.OneToOneField('MaterialList', on_delete=models.CASCADE, blank=True, null=True)
 
-
-
     def __str__(self):
         """
         String for representing the Model object.
@@ -53,6 +51,13 @@ class Project(models.Model):
     restorerList = models.ManyToManyField(Restorer,blank=True)
     monumentList = models.ManyToManyField(Monument,blank=True)
     researchList = models.ManyToManyField('Research',blank=True)
+
+    def __str__(self):
+        """
+        String for representing the Model object.
+        """
+        return '%s' % (self.name)
+
 
 class Material(models.Model):
     name = models.CharField(max_length=45)

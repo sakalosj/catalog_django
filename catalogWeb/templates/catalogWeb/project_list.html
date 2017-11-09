@@ -15,7 +15,9 @@
 
       {% for project in project_list %}
       <li>
-        {{  object }}   <a href="{% url 'projectDelete' project.id %}"> Del</a>
+              <a href="{% url 'projectDetail' project.id %}"> {{  project }}</a>
+          <a href="{% url 'projectDelete' project.id %}"> Del</a>
+            <a href="{% url 'projectUpdate' project.id %}"> Update</a>
       </li>
       {% endfor %}
 

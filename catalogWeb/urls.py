@@ -15,16 +15,13 @@ urlpatterns = [
     url(r'monument/list', views.MonumentListView.as_view(), name='monumentList'),
     url(r'monument/add', views.MonumentCreate.as_view(), name='monumentCreate'),
     url(r'monument/del/(?P<pk>[0-9]+)/$', views.MonumentDelete.as_view(), name='monumentDelete'),
+    url(r'monument/details/(?P<pk>[0-9]+)/$', views.MonumentDetail.as_view(), name='monumentDetail'),
+    url(r'monument/update/(?P<pk>[0-9]+)/$', views.MonumentUpdate.as_view(), name='monumentUpdate'),
 
     url(r'project/list', views.ProjectListView.as_view(), name='projectList'),
     url(r'project/add', views.ProjectCreate.as_view(), name='projectCreate'),
     url(r'project/del/(?P<pk>[0-9]+)/$', views.ProjectDelete.as_view(), name='projectDelete'),
-    #
-    # url(r'add/project', views.projectAdd),
-    # url(r'list/project', views.projectList),
-    # url(r'del/project', views.projectRemove),
-    #
-    # url(r'table', views.getTable),
-    # url(r'ddd', views.getVariableValue),
-    #url(r'^$', views.restorerList, name='index'),
+    url(r'project/details/(?P<pk>[0-9]+)/$', views.ProjectDetail.as_view(), name='projectDetail'),
+    url(r'project/update/(?P<pk>[0-9]+)/$', views.ProjectUpdate.as_view(), name='projectUpdate'),
+
 ]

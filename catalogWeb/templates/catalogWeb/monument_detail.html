@@ -1,0 +1,15 @@
+{% extends "base_generic.html" %}
+
+
+{% block content %}
+    <h1>{{ monument.name }}</h1>
+
+    <p>name        :  {{   monument.name          }} </p>
+    <p>description :  {{   monument.description   }} </p>
+    <p>date        :  {{   monument.date          }} </p>
+    <p>provenance  :  {{   monument.provenance    }} </p>
+    <p>dimensions  :  {{   monument.dimensions    }} </p>
+    <p>technique   :  {{   monument.technique     }} </p>
+    <p>materialList:  {{   monument.materialList  }} </p>
+
+{% endblock content %}

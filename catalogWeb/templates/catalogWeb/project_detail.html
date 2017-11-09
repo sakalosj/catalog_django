@@ -1,0 +1,34 @@
+{% extends "base_generic.html" %}
+
+
+{% block content %}
+    <h1>{{ project }}</h1>
+    <p>First name: {{ restorer.first_name }}</p>
+    <p>Last name: {{ restorer.last_name }}</p>
+    <p>Description: {{ restorer.description }}</p>
+    
+    <p>name        :       {{  project.name          }} </p>
+    <p>garant      :       {{  project.garant        }} </p>
+    <p>description :       {{  project.description   }} </p>
+    <p>realized_by :       {{  project.realized_by   }} </p>
+    <p>realized_for:       {{  project.realized_for  }} </p>
+
+    <p>Restorers:</p>
+    {% for restorer in project.restorerList.all %}
+        <p>restorer : {{ restorer }}</p>
+    {% endfor %}
+
+    <p>Monuments:</p>
+    {% for monument in project.monumentList.all %}
+        <p>monument : {{ monument }}</p>
+    {% endfor %}
+
+    <p>Research:</p>
+    {% for restorer in project.researchList.all %}
+        <p>restorer : {{ restorer }}</p>
+    {% endfor %}
+
+{#    <p>restorerList:       {{  project.restorerList.all  }} </p>#}
+{#    <p>monumentList:       {{  project.monumentList  }} </p>#}
+{#    <p>researchList:       {{  project.researchList  }} </p>#}
+{% endblock content %}

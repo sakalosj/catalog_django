@@ -15,7 +15,9 @@
 
       {% for monument in monument_list %}
       <li>
-        {{  monument }}   <a href="{% url 'monumentDelete' monument.id %}"> Del</a>
+        <a href="{% url 'monumentDetail' monument.id %}"> {{  monument }}</a>
+          <a href="{% url 'monumentDelete' monument.id %}"> Del</a>
+            <a href="{% url 'monumentUpdate' monument.id %}"> Update</a>
       </li>
       {% endfor %}
 
