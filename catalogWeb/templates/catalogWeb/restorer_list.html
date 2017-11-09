@@ -2,8 +2,7 @@
 
 {% block sidebar %}
   <ul class="sidebar-nav">
-    <li><a href="{% url 'index_new' %}">Home</a></li>
-    <li><a href="{% url 'restorerAdd' %}">restorer add</a></li>
+    <li><a href="{% url 'restorerCreate' %}">restorer add</a></li>
     <li><a href="{% url 'restorerList' %}">restorer list</a></li>
   </ul>
 {% endblock sidebar %}
@@ -17,7 +16,9 @@
 
       {% for restorer in restorer_list %}
       <li>
-        {{  restorer }}   <a href="{% url 'restorerDel' restorer.restorer_id %}"> Del</a>
+        <a href="{% url 'restorerDetail' restorer.id %}"> {{  restorer }}</a>
+          <a href="{% url 'restorerDelete' restorer.id %}"> Del</a>
+            <a href="{% url 'restorerUpdate' restorer.id %}"> Update</a>
       </li>
       {% endfor %}
 

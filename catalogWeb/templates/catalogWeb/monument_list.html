@@ -1,0 +1,28 @@
+{% extends "base_generic.html" %}
+
+{% block sidebar %}
+  <ul class="sidebar-nav">
+    <li><a href="{% url 'monumentCreate' %}">monument add</a></li>
+    <li><a href="{% url 'monumentList' %}">monument list</a></li>
+  </ul>
+{% endblock sidebar%}
+
+{% block content %}
+    <h1>monument List</h1>
+
+    {% if monument_list %}
+    <ul>
+
+      {% for monument in monument_list %}
+      <li>
+        {{  monument }}   <a href="{% url 'monumentDelete' monument.id %}"> Del</a>
+      </li>
+      {% endfor %}
+
+    </ul>
+
+    {% else %}
+      <p>There are no books in the library.</p>
+    {% endif %}
+{% endblock %}
+

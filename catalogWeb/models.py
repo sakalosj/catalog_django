@@ -4,7 +4,7 @@ from django.db import models
 
 
 class Restorer(models.Model):
-    restorer_id = models.AutoField(primary_key=True)
+    # restorer_id = models.AutoField(primary_key=True)
     first_name = models.CharField(max_length=45)
     last_name = models.CharField(max_length=45)
     description = models.CharField(max_length=200)
@@ -16,8 +16,8 @@ class Restorer(models.Model):
         return '%s, %s' % (self.last_name, self.first_name)
 
 
-class Object(models.Model):
-    object_id = models.AutoField(primary_key=True)
+class Monument(models.Model):
+    # object_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=45)
     description = models.CharField(max_length=45)
     date = models.DateField()
@@ -26,13 +26,9 @@ class Object(models.Model):
     technique = models.CharField(max_length=45)
     # picture_list_id_fk = models.CharField(max_length=45)
     # material = models.CharField(max_length=45)
-    materialList =  models.ForeignKey('MaterialList', on_delete=models.CASCADE, null=True)
+    materialList =  models.OneToOneField('MaterialList', on_delete=models.CASCADE, blank=True, null=True)
 
-    research= models.ManyToManyField(
-        'Research',
-        through='ResearchRelation',
-        # through_fields=('object', 'project', 'research'),
-    )
+
 
     def __str__(self):
         """
@@ -41,21 +37,22 @@ class Object(models.Model):
         return '%s' % (self.name)
 
 class ResearchRelation(models.Model):
-    project = models.ForeignKey('Project', on_delete= models.CASCADE)
+    project = models.ForeignKey('Project', on_delete= models.CASCADE,blank=True,null=True)
 
-    object = models.ForeignKey(Object, on_delete= models.PROTECT)
-    research = models.ForeignKey('Research', on_delete=models.CASCADE)
+    monument = models.ForeignKey(Monument, on_delete= models.PROTECT,blank=True,null=True)
+    research = models.ForeignKey('Research', on_delete=models.CASCADE,blank=True,null=True)
     description = models.CharField(max_length=200)
 
 class Project(models.Model):
-    project_id = models.AutoField(primary_key=True)
+    # project_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=45)
     garant = models.CharField(max_length=45)
     description = models.CharField(max_length=200)
     realized_by = models.CharField(max_length=45)
     realized_for = models.CharField(max_length=45)
-    restorers = models.ManyToManyField(Restorer)
-    objects = models.ManyToManyField(Object)
+    restorerList = models.ManyToManyField(Restorer,blank=True)
+    monumentList = models.ManyToManyField(Monument,blank=True)
+    researchList = models.ManyToManyField('Research',blank=True)
 
 class Material(models.Model):
     name = models.CharField(max_length=45)
@@ -67,6 +64,7 @@ class MaterialList(models.Model):
         Material,
         through='Material2MaterialList',
         # through_fields=('materialList', 'material'),
+        blank=True
     )
 
 
@@ -77,6 +75,8 @@ class Material2MaterialList(models.Model):
 
 
 class Research(models.Model):
+    name = models.CharField(max_length=45)
+    monumentList = models.ForeignKey(Monument,blank=True,null=True)
     UVA = models.BooleanField()
     UVC = models.BooleanField()
     RUVA = models.BooleanField()
@@ -86,6 +86,7 @@ class Research(models.Model):
     ch_t_research = models.BooleanField()
     sondazny = models.CharField(max_length=200)
     other = models.CharField(max_length=200)
+
 
 
 

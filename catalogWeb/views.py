@@ -3,11 +3,12 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from django.views import generic
-from django.views.generic import CreateView, DeleteView
+from django.views.generic import CreateView, DeleteView, DetailView
 from django.urls import reverse, reverse_lazy
+from django.views.generic.edit import ModelFormMixin, UpdateView
 
 from .forms import RestorerForm, RestorerRemoveForm
-from .models import Restorer,Object
+from .models import Restorer, Monument, Project, ResearchRelation
 from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
@@ -103,17 +104,50 @@ class RestorerDelete(DeleteView):
     fields = '__all__'
     success_url = reverse_lazy('restorerList')
 
-class ObjectListView(generic.ListView):
-    model = Object
+class RestorerDetail(DetailView):
+
+    model = Restorer
+
+    def get_context_data(self, **kwargs):
+        context = super(RestorerDetail, self).get_context_data(**kwargs)
+        context['now'] = 'TERAZ'
+        return context
+
+class RestorerUpdate(UpdateView):
+
+    model = Restorer
+
+    fields = '__all__'
+    success_url = reverse_lazy('restorerList')
+
+
+
+class MonumentListView(generic.ListView):
+    model = Monument
     paginate_by = 4
 
 
-class ObjectCreate(CreateView):
-    model = Object
+class MonumentCreate(CreateView):
+    model = Monument
     fields = '__all__'
-    success_url = reverse_lazy('objectList')
+    success_url = reverse_lazy('monumentList')
 
-class ObjectDelete(DeleteView):
-    model = Object
+class MonumentDelete(DeleteView):
+    model = Monument
     fields = '__all__'
-    success_url = reverse_lazy('objectList')
+    success_url = reverse_lazy('monumentList')
+
+class ProjectListView(generic.ListView):
+    model = Project
+    paginate_by = 4
+
+
+class ProjectCreate(CreateView):
+    model = Project
+    fields = '__all__'
+    success_url = reverse_lazy('projectList')
+
+class ProjectDelete(DeleteView):
+    model = Project
+    fields = '__all__'
+    success_url = reverse_lazy('projectList')

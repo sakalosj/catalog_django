@@ -1,0 +1,28 @@
+{% extends "base_generic.html" %}
+
+{% block sidebar %}
+  <ul class="sidebar-nav">
+    <li><a href="{% url 'projectCreate' %}">project add</a></li>
+    <li><a href="{% url 'projectList' %}">project list</a></li>
+  </ul>
+{% endblock sidebar%}
+
+{% block content %}
+    <h1>project List</h1>
+
+    {% if project_list %}
+    <ul>
+
+      {% for project in project_list %}
+      <li>
+        {{  object }}   <a href="{% url 'projectDelete' project.id %}"> Del</a>
+      </li>
+      {% endfor %}
+
+    </ul>
+
+    {% else %}
+      <p>There are no books in the library.</p>
+    {% endif %}
+{% endblock %}
+
