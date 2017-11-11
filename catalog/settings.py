@@ -37,10 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'catalogWeb.apps.CatalogwebConfig',
-    'django_tables2',
-    'djangojs',
-    'eztables',
-    'jquery',
+    # 'django_tables2',
+    # 'djangojs',
+    # 'eztables',
+    # 'jquery',
 ]
 
 MIDDLEWARE = [

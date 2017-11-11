@@ -7,8 +7,8 @@ from django.views.generic import CreateView, DeleteView, DetailView
 from django.urls import reverse, reverse_lazy
 from django.views.generic.edit import ModelFormMixin, UpdateView
 
-from .forms import RestorerForm, RestorerRemoveForm
-from .models import Restorer, Monument, Project, ResearchRelation
+from .forms import RestorerForm, RestorerRemoveForm, MaterialListForm
+from .models import Restorer, Monument, Project, ResearchRelation, Research, Material, MaterialList
 from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
@@ -134,6 +134,8 @@ class MonumentCreate(CreateView):
     fields = '__all__'
     success_url = reverse_lazy('monumentList')
 
+
+
 class MonumentDelete(DeleteView):
     model = Monument
     fields = '__all__'
@@ -146,6 +148,8 @@ class MonumentUpdate(UpdateView):
     model = Monument
     fields = '__all__'
     success_url = reverse_lazy('monumentList')
+
+
 
 class ProjectListView(generic.ListView):
     model = Project
@@ -169,3 +173,60 @@ class ProjectUpdate(UpdateView):
     model = Project
     fields = '__all__'
     success_url = reverse_lazy('projectList')
+
+class ResearchListView(generic.ListView):
+    model = Research
+    paginate_by = 4
+
+
+class ResearchCreate(CreateView):
+    model = Research
+    fields = '__all__'
+    success_url = reverse_lazy('researchList')
+
+class ResearchDelete(DeleteView):
+    model = Research
+    fields = '__all__'
+    success_url = reverse_lazy('researchList')
+
+class ResearchDetail(DetailView):
+    model = Research
+
+class ResearchUpdate(UpdateView):
+    model = Research
+    fields = '__all__'
+    success_url = reverse_lazy('researchList')
+
+class MaterialView(generic.ListView):
+    model = Material
+    paginate_by = 4
+
+
+class MaterialCreate(CreateView):
+    model = Material
+    fields = '__all__'
+    success_url = reverse_lazy('materialList')
+
+class MaterialDelete(DeleteView):
+    model = Material
+    fields = '__all__'
+    success_url = reverse_lazy('materialList')
+
+class MaterialDetail(DetailView):
+    model = Material
+
+class MaterialUpdate(UpdateView):
+    model = Material
+    fields = '__all__'
+    success_url = reverse_lazy('materialList')
+
+
+class MaterialListCreate(generic.CreateView):
+    model = MaterialList
+    form_class = MaterialListForm
+    # fields = '__all__'
+    paginate_by = 4
+    success_url = reverse_lazy('monumentList')
+
+
+

@@ -1,0 +1,18 @@
+{% extends "base_generic.html" %}
+
+
+{% block content %}
+    <h1>{{ object }}</h1>
+    
+    <p>name         : {{ research.name          }}</p>
+    <p>monumentList : {{ research.monumentList  }}</p>
+    <p>UVA          : {{ research.UVA           }}</p>
+    <p>UVC          : {{ research.UVC           }}</p>
+    <p>RUVA         : {{ research.RUVA          }}</p>
+    <p>IR           : {{ research.IR            }}</p>
+    <p>RTG          : {{ research.RTG           }}</p>
+    <p>CT           : {{ research.CT            }}</p>
+    <p>ch_t_research: {{ research.ch_t_research }}</p>
+    <p>sondazny     : {{ research.sondazny      }}</p>
+    <p>other        : {{ research.other         }}</p>
+{% endblock content %}

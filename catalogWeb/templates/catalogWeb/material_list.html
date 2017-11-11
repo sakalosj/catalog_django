@@ -1,0 +1,31 @@
+{% extends "base_generic.html" %}
+
+{% block sidebar %}
+  <ul class="sidebar-nav">
+    <li><a href="{% url 'materialCreate' %}">material add</a></li>
+    <li><a href="{% url 'materialList' %}">material list</a></li>
+  </ul>
+{% endblock sidebar %}
+
+
+{% block content %}
+    <h1>Restorer List</h1>
+
+    {% if material_list %}
+    <ul>
+
+      {% for material in material_list %}
+      <li>
+        <a href="{% url 'materialDetail' material.id %}"> {{  material }}</a>
+          <a href="{% url 'materialDelete' material.id %}"> Del</a>
+            <a href="{% url 'materialUpdate' material.id %}"> Update</a>
+      </li>
+      {% endfor %}
+
+    </ul>
+
+    {% else %}
+      <p>There are no books in the library.</p>
+    {% endif %}
+{% endblock %}
+

@@ -1,0 +1,31 @@
+{% extends "base_generic.html" %}
+
+{% block sidebar %}
+  <ul class="sidebar-nav">
+    <li><a href="{% url 'researchCreate' %}">research add</a></li>
+    <li><a href="{% url 'researchList' %}">research list</a></li>
+  </ul>
+{% endblock sidebar %}
+
+
+{% block content %}
+    <h1>Research List</h1>
+
+    {% if research_list %}
+    <ul>
+
+      {% for research in research_list %}
+      <li>
+        <a href="{% url 'researchDetail' research.id %}"> {{  research }}</a>
+          <a href="{% url 'researchDelete' research.id %}"> Del</a>
+            <a href="{% url 'researchUpdate' research.id %}"> Update</a>
+      </li>
+      {% endfor %}
+
+    </ul>
+
+    {% else %}
+      <p>There are no books in the library.</p>
+    {% endif %}
+{% endblock %}
+

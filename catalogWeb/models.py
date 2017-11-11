@@ -63,6 +63,13 @@ class Material(models.Model):
     name = models.CharField(max_length=45)
     description = models.CharField(max_length=200) #general info
 
+    def __str__(self):
+        """
+        String for representing the Model object.
+        """
+        return '%s' % (self.name)
+
+
 class MaterialList(models.Model):
     name = models.CharField(max_length=45)
     materials =  models.ManyToManyField(
@@ -71,6 +78,12 @@ class MaterialList(models.Model):
         # through_fields=('materialList', 'material'),
         blank=True
     )
+
+    def __str__(self):
+        """
+        String for representing the Model object.
+        """
+        return '%s' % (self.name)
 
 
 class Material2MaterialList(models.Model):
@@ -91,6 +104,13 @@ class Research(models.Model):
     ch_t_research = models.BooleanField()
     sondazny = models.CharField(max_length=200)
     other = models.CharField(max_length=200)
+
+    def __str__(self):
+        """
+        String for representing the Model object.
+        """
+        return '%s' % (self.name)
+
 
 
 
