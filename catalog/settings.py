@@ -25,7 +25,7 @@ SECRET_KEY = 'gvmlue)=06u1b^t6ymd!f^a$+k2zj+j+l^hilx#l8kyh*f%m5r'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
