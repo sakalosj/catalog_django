@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import HiddenInput
 
-from .models import Restorer, MaterialList, Material2MaterialList, Material
+from .models import Restorer, MaterialList, Material2MaterialList, Material, Monument
 
 
 class RestorerForm(forms.ModelForm):
@@ -10,31 +10,71 @@ class RestorerForm(forms.ModelForm):
         fields = '__all__'
         # exclude = ['restorer_id']
 
+
 class RestorerRemoveForm(forms.Form):
     pk = forms.IntegerField()
 
+
 class MaterialListForm(forms.ModelForm):
-    """Form to Edit a Child and Specify the Ordering and Relation to Family"""
+    class Meta():
+        model = Monument
+        fields = '__all__'
 
-    # materialListId = forms.IntegerField(widget=HiddenInput)
-    # description = forms.CharField()
+    def save(self, commit=True):
+        materialList = MaterialList.objects.create(
+            name=self.cleaned_data.get('name'))  # Save the child so we have an ID for the m2m
+        materials = [material for material in self.cleaned_data.get('materials')]
+
+        for material in materials:
+            Material2MaterialList.objects.create(materialList=materialList, material=material,
+                                                 description='TEST').save()
+
+        return self.instance
 
 
+class MonumentForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(MonumentForm, self).__init__(*args, **kwargs)
+        # snip the other fields for the sake of brevity
+        # Adding content to the form
+        queryset = MaterialList.objects.filter( id__exact = 1)
+        queryset = MaterialList.objects.get(id=1)
+        self.fields['materialList'] = forms.CharField()
+        for i in self.instance.materialList:
+            pass
+        #     forms.ModelMultipleChoiceField(
+        #     queryset=[MaterialList.objects.filter( id__exact = 1)]
+        # )
+
+    class Meta():
+        model = Monument
+        fields = '__all__'
+        # MaterialList = forms.ModelMultipleChoiceField(queryset=MaterialList.objects.filter(materials__material2materiallist__materialList_id__exact= 1))
+
+    test = forms.CharField(widget=forms.TextInput)
+
+    # def save(self, commit=True):
+    #     materialList = MaterialList.objects.create(name = self.cleaned_data.get('name'))  # Save the child so we have an ID for the m2m
+    #     materials = [material for material in  self.cleaned_data.get('materials') ]
+    #
+    #     for material in materials:
+    #         Material2MaterialList.objects.create(materialList = materialList, material = material, description = 'TEST' ).save()
+    #
+    #     return self.instance
+
+
+class MaterialListForm2(forms.ModelForm):
     class Meta():
         model = MaterialList
         fields = '__all__'
-        # exclude = ['materials', ]
 
     def save(self, commit=True):
-        materialList = MaterialList.objects.create(name = self.cleaned_data.get('name'))  # Save the child so we have an ID for the m2m
+        materialList = MaterialList.objects.update_or_create(
+            name=self.cleaned_data.get('name'))[0]  # Save the child so we have an ID for the m2m
+        materials = [material for material in self.cleaned_data.get('materials')]
 
-        materials = [material for material in  self.cleaned_data.get('materials') ]
         for material in materials:
-            membership = Material2MaterialList.objects.create(materialList = materialList, material = material, description = 'TEST' ).save()
+            Material2MaterialList.objects.create(materialList=materialList, material=material,
+                                                 description='TEST').save()
 
-        # matrials = Material.objects.get(slug=family_slug)
-        # description = self.cleaned_data.get('order')
-        # Material2MaterialList.objects.create(family=family, child=child, order=order)
-        #
         return self.instance
-

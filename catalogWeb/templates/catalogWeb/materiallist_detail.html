@@ -1,0 +1,15 @@
+{% extends "base_generic.html" %}
+
+
+{% block content %}
+    <h1>{{ materiallist.name }}</h1>
+
+    <p>name        :  {{   materiallist.name          }} </p>
+    <p>materiallist:  {{   materiallist.materials  }} </p>
+
+     <p>Materials:</p>
+    {% for material in materiallist.materials.all %}
+        <p>material : {{ material }}</p>
+    {% endfor %}
+
+{% endblock content %}

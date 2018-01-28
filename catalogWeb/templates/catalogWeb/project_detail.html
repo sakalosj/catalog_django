@@ -3,10 +3,7 @@
 
 {% block content %}
     <h1>{{ project }}</h1>
-    <p>First name: {{ restorer.first_name }}</p>
-    <p>Last name: {{ restorer.last_name }}</p>
-    <p>Description: {{ restorer.description }}</p>
-    
+
     <p>name        :       {{  project.name          }} </p>
     <p>garant      :       {{  project.garant        }} </p>
     <p>description :       {{  project.description   }} </p>
@@ -22,8 +19,9 @@
     {% for monument in project.monumentList.all %}
         <p>monument : {{ monument }}</p>
     {% endfor %}
+    <a href="{% url 'researchCreate'  %}"> Add </a>
 
-    <p>Research:</p>
+    <p>Research:<a href="{% url 'researchCreate'  %}"> Add research</a></p>
     {% for restorer in project.researchList.all %}
         <p>restorer : {{ restorer }}</p>
     {% endfor %}

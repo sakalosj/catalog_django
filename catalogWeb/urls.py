@@ -36,5 +36,10 @@ urlpatterns = [
     url(r'material/details/(?P<pk>[0-9]+)/$', views.MaterialDetail.as_view(), name='materialDetail'),
     url(r'material/update/(?P<pk>[0-9]+)/$', views.MaterialUpdate.as_view(), name='materialUpdate'),
 
+    url(r'materialList/list', views.MaterialListView.as_view(), name='materialListList'),
     url(r'materialList/add', views.MaterialListCreate.as_view(), name='materialListCreate'),
+    url(r'materialList/update/(?P<pk>[0-9]+)/$', views.MaterialListUpdate.as_view(), name='materialListUpdate'),
+    url(r'materialList/del/(?P<pk>[0-9]+)/$', views.MaterialListDelete.as_view(), name='materialListDelete'),
+    url(r'materialList/details/(?P<pk>[0-9]+)/$', views.MaterialListDetail.as_view(), name='materialListDetail'),
+
 ]

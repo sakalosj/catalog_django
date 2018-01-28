@@ -7,8 +7,9 @@ from django.views.generic import CreateView, DeleteView, DetailView
 from django.urls import reverse, reverse_lazy
 from django.views.generic.edit import ModelFormMixin, UpdateView
 
-from .forms import RestorerForm, RestorerRemoveForm, MaterialListForm
-from .models import Restorer, Monument, Project, ResearchRelation, Research, Material, MaterialList
+from .forms import RestorerForm, RestorerRemoveForm, MaterialListForm, MonumentForm, MaterialListForm2
+from .models import Restorer, Monument, Project, ResearchRelation, Research, Material, MaterialList, Monument2Project, \
+    Material2MaterialList
 from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
@@ -104,8 +105,8 @@ class RestorerDelete(DeleteView):
     fields = '__all__'
     success_url = reverse_lazy('restorerList')
 
-class RestorerDetail(DetailView):
 
+class RestorerDetail(DetailView):
     model = Restorer
     propertiesList = [field.name for field in Restorer._meta.fields if field.name != "id"]
 
@@ -115,14 +116,14 @@ class RestorerDetail(DetailView):
         context['propertiesList'] = vars(self)
         return context
 
-class RestorerUpdate(UpdateView):
 
+class RestorerUpdate(UpdateView):
     model = Restorer
 
     fields = '__all__'
     success_url = reverse_lazy('restorerList')
 
-
+#######################################################################
 
 class MonumentListView(generic.ListView):
     model = Monument
@@ -135,20 +136,23 @@ class MonumentCreate(CreateView):
     success_url = reverse_lazy('monumentList')
 
 
-
 class MonumentDelete(DeleteView):
     model = Monument
     fields = '__all__'
     success_url = reverse_lazy('monumentList')
 
+
 class MonumentDetail(DetailView):
     model = Monument
 
+
 class MonumentUpdate(UpdateView):
     model = Monument
-    fields = '__all__'
+    form_class = MonumentForm
+    # fields = '__all__'
     success_url = reverse_lazy('monumentList')
 
+#######################################################################
 
 
 class ProjectListView(generic.ListView):
@@ -161,18 +165,47 @@ class ProjectCreate(CreateView):
     fields = '__all__'
     success_url = reverse_lazy('projectList')
 
+    def form_valid(self, form):
+        self.object = form.save(commit=False,)
+        self.object.save()
+        for monument in form.cleaned_data['monumentList']:
+            m2p = Monument2Project()
+            m2p.project = self.object
+            m2p.monument = monument
+            m2p.save()
+        return super(ModelFormMixin, self).form_valid(form)
+
+
 class ProjectDelete(DeleteView):
     model = Project
     fields = '__all__'
     success_url = reverse_lazy('projectList')
 
+
 class ProjectDetail(DetailView):
     model = Project
+
 
 class ProjectUpdate(UpdateView):
     model = Project
     fields = '__all__'
     success_url = reverse_lazy('projectList')
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False,)
+        self.object.save()
+        self.object.restorerList.add()
+        self.object.restorerList.set(form.cleaned_data['restorerList'])
+        for monument in form.cleaned_data['monumentList']:
+            m2p = Monument2Project()
+            m2p.project = self.object
+            m2p.monument = monument
+            a = Monument2Project.objects.filter( monument = monument, project=self.object)
+            m2p.save()
+        return super(ModelFormMixin, self).form_valid(form)
+
+#######################################################################
+
 
 class ResearchListView(generic.ListView):
     model = Research
@@ -184,18 +217,24 @@ class ResearchCreate(CreateView):
     fields = '__all__'
     success_url = reverse_lazy('researchList')
 
+
 class ResearchDelete(DeleteView):
     model = Research
     fields = '__all__'
     success_url = reverse_lazy('researchList')
 
+
 class ResearchDetail(DetailView):
     model = Research
+
 
 class ResearchUpdate(UpdateView):
     model = Research
     fields = '__all__'
     success_url = reverse_lazy('researchList')
+
+#######################################################################
+
 
 class MaterialView(generic.ListView):
     model = Material
@@ -207,26 +246,73 @@ class MaterialCreate(CreateView):
     fields = '__all__'
     success_url = reverse_lazy('materialList')
 
+
 class MaterialDelete(DeleteView):
     model = Material
     fields = '__all__'
     success_url = reverse_lazy('materialList')
 
+
 class MaterialDetail(DetailView):
     model = Material
+
 
 class MaterialUpdate(UpdateView):
     model = Material
     fields = '__all__'
     success_url = reverse_lazy('materialList')
 
+#######################################################################
+
 
 class MaterialListCreate(generic.CreateView):
     model = MaterialList
-    form_class = MaterialListForm
-    # fields = '__all__'
+    # form_class = MaterialListForm2
+    fields = '__all__'
     paginate_by = 4
-    success_url = reverse_lazy('monumentList')
+    success_url = reverse_lazy('materialListList')
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False,)
+        self.object.save()
+        for materials in form.cleaned_data['materials']:
+            m2ml = Material2MaterialList()
+            m2ml.materialList = self.object
+            m2ml.material = materials
+            m2ml.save()
+        return super(ModelFormMixin, self).form_valid(form)
+
+
+class MaterialListView(generic.ListView):
+    model = MaterialList
+    paginate_by = 10
+
+
+class MaterialListDelete(DeleteView):
+    model = MaterialList
+    fields = '__all__'
+    success_url = reverse_lazy('materialListList')
+
+
+class MaterialListDetail(DetailView):
+    model = MaterialList
+
+
+class MaterialListUpdate(UpdateView):
+    model = MaterialList
+    # form_class = MaterialListForm2
+    fields = '__all__'
+    success_url = reverse_lazy('materialListList')
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False,)
+        self.object.save()
+        for materials in form.cleaned_data['materials']:
+            m2ml = Material2MaterialList()
+            m2ml.materialList = self.object
+            m2ml.material = materials
+            m2ml.save()
+        return super(ModelFormMixin, self).form_valid(form)
 
 
 

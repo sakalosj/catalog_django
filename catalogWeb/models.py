@@ -4,7 +4,6 @@ from django.db import models
 
 
 class Restorer(models.Model):
-    # restorer_id = models.AutoField(primary_key=True)
     first_name = models.CharField(max_length=45)
     last_name = models.CharField(max_length=45)
     description = models.CharField(max_length=200)
@@ -17,7 +16,6 @@ class Restorer(models.Model):
 
 
 class Monument(models.Model):
-    # object_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=45)
     description = models.CharField(max_length=45)
     date = models.DateField()
@@ -34,22 +32,28 @@ class Monument(models.Model):
         """
         return '%s' % (self.name)
 
+
+class Monument2Project(models.Model):
+    monument = models.ForeignKey(Monument,on_delete=models.CASCADE)
+    project = models.ForeignKey('Project',on_delete=models.CASCADE)
+    testfield = models.CharField(max_length=45)
+
+
 class ResearchRelation(models.Model):
     project = models.ForeignKey('Project', on_delete= models.CASCADE,blank=True,null=True)
-
     monument = models.ForeignKey(Monument, on_delete= models.PROTECT,blank=True,null=True)
     research = models.ForeignKey('Research', on_delete=models.CASCADE,blank=True,null=True)
     description = models.CharField(max_length=200)
 
+
 class Project(models.Model):
-    # project_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=45)
     garant = models.CharField(max_length=45)
     description = models.CharField(max_length=200)
     realized_by = models.CharField(max_length=45)
     realized_for = models.CharField(max_length=45)
     restorerList = models.ManyToManyField(Restorer,blank=True)
-    monumentList = models.ManyToManyField(Monument,blank=True)
+    monumentList = models.ManyToManyField(Monument,blank=True,through=Monument2Project)
     researchList = models.ManyToManyField('Research',blank=True)
 
     def __str__(self):
@@ -92,9 +96,12 @@ class Material2MaterialList(models.Model):
     description = models.CharField(max_length=200) #project specific info
 
 
+
 class Research(models.Model):
     name = models.CharField(max_length=45)
-    monumentList = models.ForeignKey(Monument,blank=True,null=True)
+    # monumentList = models.ForeignKey(Monument,blank=True,null=True,on_delete=models.SET_NULL)
+    projectRelation = models.OneToOneField(Monument2Project, on_delete=models.CASCADE)
+    monument2ProjectRelation = models.ForeignKey(Project,blank=True,null=True,on_delete=models.CASCADE)
     UVA = models.BooleanField()
     UVC = models.BooleanField()
     RUVA = models.BooleanField()
