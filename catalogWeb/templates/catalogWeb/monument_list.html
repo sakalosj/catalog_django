@@ -15,16 +15,16 @@
 
       {% for monument in monument_list %}
       <li>
-        <a href="{% url 'monumentDetail' monument.id %}"> {{  monument }}</a>
+          <a href="{% url 'monumentDetail' monument.id %}"> {{  monument }}</a>
           <a href="{% url 'monumentDelete' monument.id %}"> Del</a>
-            <a href="{% url 'monumentUpdate' monument.id %}"> Update</a>
+          <a href="{% url 'monumentUpdate' monument.id %}"> Update</a>
       </li>
       {% endfor %}
 
     </ul>
 
     {% else %}
-      <p>There are no books in the library.</p>
+      <p>There are no monuments.</p>
     {% endif %}
 {% endblock %}
 

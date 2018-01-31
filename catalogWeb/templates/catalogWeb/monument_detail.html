@@ -10,6 +10,11 @@
     <p>provenance  :  {{   monument.provenance    }} </p>
     <p>dimensions  :  {{   monument.dimensions    }} </p>
     <p>technique   :  {{   monument.technique     }} </p>
-    <p>materialList:  {{   monument.materialList  }} </p>
+
+    <p>materials: {{  monument.materialList }} </p>
+     {% for material in materials.all %}
+        <p ><strong>material:</strong> {{material}}</p>
+     {% endfor %}
+
 
 {% endblock content %}

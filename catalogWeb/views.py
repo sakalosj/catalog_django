@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from django.views import generic
@@ -129,12 +129,50 @@ class MonumentListView(generic.ListView):
     model = Monument
     paginate_by = 4
 
+def MonumentListViewF(request):
+    monumentList = Monument.objects.all()
+    context = {'monument_list' : monumentList}
+    return render(request, 'catalogWeb/monument_list.html', context)
+
 
 class MonumentCreate(CreateView):
     model = Monument
     fields = '__all__'
     success_url = reverse_lazy('monumentList')
 
+def MonumentCreateF(request):
+    #monumentList = Monument.objects.all()
+    #context = {'monument_list' : monumentList}
+
+    #materials = Material.objects.all()
+
+    pass
+    # If this is a POST request then process the Form data
+    if request.method == 'POST':
+
+        # Create a form instance and populate it with data from the request (binding):
+        form = MonumentForm(request.POST)
+        form2 = MaterialListForm2(request.POST)
+
+        # Check if the form is valid:
+        if form.is_valid() and form2.is_valid():
+            # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
+            # monumentInst.due_back = form.cleaned_data['renewal_date']
+            # monumentInst.save()
+            monument = form.save(commit=False)
+            monument.materialList = form2.save()
+            monument.save()
+            # redirect to a new URL:
+            return HttpResponseRedirect(reverse('monumentList'))
+
+    # If this is a GET (or any other method) create the default form.
+    else:
+        # proposed_renewal_date = datetime.date.today() + datetime.timedelta(weeks=3)
+        # form = MonumentForm(initial={'renewal_date': proposed_renewal_date, })
+        form = MonumentForm()
+        form2 = MaterialListForm2()
+
+    return render(request, 'catalogWeb/monument_form.html', {'form': form, 'form2': form2})
 
 class MonumentDelete(DeleteView):
     model = Monument
@@ -145,12 +183,54 @@ class MonumentDelete(DeleteView):
 class MonumentDetail(DetailView):
     model = Monument
 
+def MonumentDetailF(request,pk):
+    monument = get_object_or_404(Monument, pk=pk)
+    materials = monument.materialList.materials.all()
+    context = {'monument': monument,
+               'materials': materials}
+
+    return render(request, 'catalogWeb/monument_detail.html', context)
+
 
 class MonumentUpdate(UpdateView):
     model = Monument
     form_class = MonumentForm
     # fields = '__all__'
     success_url = reverse_lazy('monumentList')
+
+def MonumentUpdateF(request, pk):
+    monumentInstance = get_object_or_404(Monument, pk=pk)
+    # materialListInstance = get_object_or_404(MaterialList, pk=monumentInstance.materialList)
+    form = MonumentForm(request.POST or None, instance=monumentInstance)
+    form2 = MaterialListForm2(request.POST or None, instance=monumentInstance.materialList)
+    #monumentList = Monument.objects.all()
+    #context = {'monument_list' : monumentList}
+    #materials = Material.objects.all()
+
+    pass
+    # If this is a POST request then process the Form data
+    if request.method == 'POST':
+
+        # Check if the form is valid:
+        if form.is_valid() and form2.is_valid():
+            # process the data in form.cleaned_data as required (here we just write it to the model due_back field)
+            # monumentInst.due_back = form.cleaned_data['renewal_date']
+            # monumentInst.save()
+            form.save()
+            form2.save()
+            # redirect to a new URL:
+            return HttpResponseRedirect(reverse('monumentList'))
+
+    # If this is a GET (or any other method) create the default form.
+    else:
+        # proposed_renewal_date = datetime.date.today() + datetime.timedelta(weeks=3)
+        # form = MonumentForm(initial={'renewal_date': proposed_renewal_date, })
+        # form = MonumentForm(request.GET)
+        # form2 = MaterialListForm2()
+        pass
+
+
+    return render(request, 'catalogWeb/monument_form.html', {'form': form, 'form2': form2})
 
 #######################################################################
 
@@ -169,10 +249,10 @@ class ProjectCreate(CreateView):
         self.object = form.save(commit=False,)
         self.object.save()
         for monument in form.cleaned_data['monumentList']:
-            m2p = Monument2Project()
-            m2p.project = self.object
-            m2p.monument = monument
-            m2p.save()
+            monument2Project = Monument2Project()
+            monument2Project.project = self.object
+            monument2Project.monument = monument
+            monument2Project.save()
         return super(ModelFormMixin, self).form_valid(form)
 
 

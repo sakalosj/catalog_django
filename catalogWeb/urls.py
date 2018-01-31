@@ -12,11 +12,11 @@ urlpatterns = [
     url(r'restorer/details/(?P<pk>[0-9]+)/$', views.RestorerDetail.as_view(), name='restorerDetail'),
     url(r'restorer/update/(?P<pk>[0-9]+)/$', views.RestorerUpdate.as_view(), name='restorerUpdate'),
 
-    url(r'monument/list', views.MonumentListView.as_view(), name='monumentList'),
-    url(r'monument/add', views.MonumentCreate.as_view(), name='monumentCreate'),
+    url(r'monument/list', views.MonumentListViewF, name='monumentList'),
+    url(r'monument/add', views.MonumentCreateF, name='monumentCreate'),
     url(r'monument/del/(?P<pk>[0-9]+)/$', views.MonumentDelete.as_view(), name='monumentDelete'),
-    url(r'monument/details/(?P<pk>[0-9]+)/$', views.MonumentDetail.as_view(), name='monumentDetail'),
-    url(r'monument/update/(?P<pk>[0-9]+)/$', views.MonumentUpdate.as_view(), name='monumentUpdate'),
+    url(r'monument/details/(?P<pk>[0-9]+)/$', views.MonumentDetailF, name='monumentDetail'),
+    url(r'monument/update/(?P<pk>[0-9]+)/$', views.MonumentUpdateF, name='monumentUpdate'),
 
     url(r'project/list', views.ProjectListView.as_view(), name='projectList'),
     url(r'project/add', views.ProjectCreate.as_view(), name='projectCreate'),
