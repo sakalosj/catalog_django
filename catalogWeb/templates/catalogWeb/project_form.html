@@ -3,59 +3,96 @@
 {% extends "base_generic.html" %}
 
 
-<script>
-    $(document).ready(function() {
-
-        // JQuery code to be added in here.
-    alert("Hello! I am an alert box!!");
-});
-
-     alert("Hello! I am an alert box!!");
-    $("#form").submit( function(eventObj) {
-        $("<div>Test message2</div>").dialog();
-        $('<input />')
-          .attr('monumentList', "5")
-          .attr('monumentList', "6")
-          .appendTo('#form');
-      return true;
-  });
-</script>
-
 {% block content %}
 
 <script>
 
-{#  $(function(){  $('#form1').submit( function() {#}
-{#      alert("Hello! I am an alert box!!");#}
-{#         //alert("Hello! I am an alert box!!");#}
-{#        //event.preventDefault()#}
-{#        $('<input />').attr('type', 'hidden')#}
-{#          .attr('value', "6")#}
-{#            .attr('name',"monumentList")#}
-{#          .appendTo('#form1');#}
-{#      return true;#}
-{#  });#}
-{##}
-{#    $('#post-form').on('submit', function(event){#}
-{#    alert("Hello! I am an alert box!!");#}
-{#    console.log("form submitted!")  // sanity check#}
-{##}
-{#{);#}
-{#      })#}
+
+
+$(function(){ $('select').on(
+  { "focus": function() {
+      //console.log('clicked!', this, this.value);
+      this.selectedIndex = -1;
+    }
+  , "change": function(monument) {
+      text = $("#form_text").html();
+      choice = $(this).val();
+      {#///console.log('changed!', this, choice);#}
+      {#this.blur();#}
+      {#setTimeout(function() { alert('Chose '+ choice); }, 0);#}
+
+          {#$('#monuments').append('<p>'+monument+'<\p>');#}
+          {#$('<input />').attr('type', 'hidden').attr('name', 'monumnent').attr('value', choice).appendTo('#monuments')#}
+          {#$('#monuments').append(text);#}
+
+        $('<input />').attr('type', 'hidden').attr('name', 'action').attr('value', 'add').appendTo('form#form1')
+        $('form#form1').submit();
+    }
+  });
+
+
+
+})
 
 </script>
+
+<script id="form_text" type="text/plain">
+{{ researchForm }}
+</script>
+
+{#############################################################}
 
 
     <form id="form1" action="" method="post" >
         {% csrf_token %}
         <ul>
-            {{ form.as_ul }}
-
-            <p>aaaaaaaaaaaaaaaaaaaaaaa</p>
+            {{ projectForm.as_ul }}
         </ul>
-{#        <input type="hidden" value="5" name="monumentList">#}
-        <input type="submit" value="Submit" />
+{#         <ul>#}
+{#            {{ researchFormSet.as_ul }}#}
+{#        </ul>#}
 
+
+    <p>number of forms : {{researchFormSet|length  }}</p>
+        {{ researchFormSet.management_form }}
+    <table>
+        {% for form in researchFormSet %}
+            {{ form.DELETE.value  }}
+            {% if   not form.DELETE.value or  form.DELETE.value is Null %}
+                {{ form }}
+                <p>test</p>
+                {{ form.monument  }}
+            {% endif %}
+
+
+
+
+        {% endfor %}
+
+    </table>
+
+
+
+
+
+
+
+
+{#        <input type="hidden" value="5" name="monumentList">#}
+{#        <a href="">Add monument</a>#}
+{##}
+        <select>
+         {% for monument in monuments %}
+                <option value='{{ monument.id }}'> {{ monument.name}} </option>
+         {% endfor %}
+        </select>
+{##}
+{##}
+{##}
+{#        <div id="monuments">#}
+{##}
+{#        </div>#}
+        <input type="submit" value="submit" action="submit" />
 
     </form>
 

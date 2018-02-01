@@ -19,7 +19,7 @@ urlpatterns = [
     url(r'monument/update/(?P<pk>[0-9]+)/$', views.MonumentUpdateF, name='monumentUpdate'),
 
     url(r'project/list', views.ProjectListView.as_view(), name='projectList'),
-    url(r'project/add', views.ProjectCreate.as_view(), name='projectCreate'),
+    url(r'project/add', views.ProjectCreateF, name='projectCreate'),
     url(r'project/del/(?P<pk>[0-9]+)/$', views.ProjectDelete.as_view(), name='projectDelete'),
     url(r'project/details/(?P<pk>[0-9]+)/$', views.ProjectDetail.as_view(), name='projectDetail'),
     url(r'project/update/(?P<pk>[0-9]+)/$', views.ProjectUpdate.as_view(), name='projectUpdate'),

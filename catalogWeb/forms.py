@@ -1,7 +1,8 @@
 from django import forms
 from django.forms import HiddenInput
 
-from .models import Restorer, MaterialList, Material2MaterialList, Material, Monument, SelectDateWidget2
+from .models import Restorer, MaterialList, Material2MaterialList, Material, Monument, SelectDateWidget2, Project, \
+    Research
 
 
 class RestorerForm(forms.ModelForm):
@@ -80,3 +81,17 @@ class MaterialListForm2(forms.ModelForm):
             Material2MaterialList.objects.create(materialList=materialList, material=material,description='TEST')
         return materialList
 
+class ProjectForm(forms.ModelForm):
+    class Meta():
+        model = Project
+        exclude = ['monumentList']
+
+class ResearchForm(forms.ModelForm):
+    class Meta():
+        model = Research
+        # exclude = ['monument','project']
+        fields = '__all__'
+        widgets = {
+            'monument': forms.HiddenInput(),
+            'project': forms.HiddenInput(),
+        }

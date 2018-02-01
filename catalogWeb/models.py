@@ -19,7 +19,7 @@ class Restorer(models.Model):
     last_name = models.CharField(max_length=45)
     description = models.CharField(max_length=200)
 
-    def __str__(self):
+    def __strR__(self):
         """
         String for representing the Model object.
         """
@@ -51,6 +51,7 @@ class Monument2Project(models.Model):
     testfield = models.CharField(max_length=45)
 
 
+
 class ResearchRelation(models.Model):
     project = models.ForeignKey('Project', on_delete= models.CASCADE, blank=True, null=True)
     monument = models.ForeignKey(Monument, on_delete= models.PROTECT, blank=True, null=True)
@@ -66,7 +67,6 @@ class Project(models.Model):
     realized_for = models.CharField(max_length=45)
     restorerList = models.ManyToManyField(Restorer,blank=True)
     monumentList = models.ManyToManyField(Monument,blank=True,through=Monument2Project)
-    researchList = models.ManyToManyField('Research',blank=True)
 
     def __str__(self):
         """
@@ -99,7 +99,7 @@ class MaterialList(models.Model):
         """
         String for representing the Model object.
         """
-        return 'id:%s' % (self.id)
+        return 'id: %s' % (self.id)
 
 
 class Material2MaterialList(models.Model):
@@ -115,10 +115,8 @@ class Material2MaterialList(models.Model):
 
 
 class Research(models.Model):
-    name = models.CharField(max_length=45)
-    # monumentList = models.ForeignKey(Monument,blank=True,null=True,on_delete=models.SET_NULL)
-    projectRelation = models.OneToOneField(Monument2Project, on_delete=models.CASCADE)
-    monument2ProjectRelation = models.ForeignKey(Project,blank=True,null=True,on_delete=models.CASCADE)
+    monument = models.ForeignKey(Monument,blank=True,null=True,on_delete=models.PROTECT)
+    project = models.ForeignKey(Project,blank=True,null=True,on_delete=models.CASCADE)
     UVA = models.BooleanField()
     UVC = models.BooleanField()
     RUVA = models.BooleanField()

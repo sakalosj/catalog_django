@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'catalogWeb.apps.CatalogwebConfig',
-    'jsonfield'
+    'jsonfield',
+    'djangoformsetjs',
     # 'django_tables2',
     # 'djangojs',
     # 'eztables',

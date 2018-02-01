@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.forms import formset_factory, modelformset_factory
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
@@ -7,7 +8,8 @@ from django.views.generic import CreateView, DeleteView, DetailView
 from django.urls import reverse, reverse_lazy
 from django.views.generic.edit import ModelFormMixin, UpdateView
 
-from .forms import RestorerForm, RestorerRemoveForm, MaterialListForm, MonumentForm, MaterialListForm2
+from .forms import RestorerForm, RestorerRemoveForm, MaterialListForm, MonumentForm, MaterialListForm2, ProjectForm, \
+    ResearchForm
 from .models import Restorer, Monument, Project, ResearchRelation, Research, Material, MaterialList, Monument2Project, \
     Material2MaterialList
 from django.views.decorators.csrf import csrf_exempt
@@ -242,7 +244,7 @@ class ProjectListView(generic.ListView):
 
 class ProjectCreate(CreateView):
     model = Project
-    fields = '__all__'
+    form_class = ProjectForm
     success_url = reverse_lazy('projectList')
 
     def form_valid(self, form):
@@ -254,6 +256,62 @@ class ProjectCreate(CreateView):
             monument2Project.monument = monument
             monument2Project.save()
         return super(ModelFormMixin, self).form_valid(form)
+
+def ProjectCreateF(request):
+    monuments = Monument.objects.all()
+    ResearchFormSet = formset_factory(ResearchForm, extra=0, can_delete=True)
+
+    if request.method == 'POST':
+        projectForm = ProjectForm(request.POST)
+        researchFormSet = ResearchFormSet(request.POST)
+        researchForm = ResearchForm(request.POST)
+
+
+        # for obj in researchFormSet.deleted_objects:
+        #     obj.delete()
+        # Check if the form is valid:
+        a = projectForm.is_valid()
+        b = researchFormSet.is_valid()
+
+        if projectForm.is_valid() and researchFormSet.is_valid():
+
+            # for obj in researchFormSet.deleted_objects:
+            #     obj.delete()
+
+            if request.POST['action'] == "add":
+                #researchFormSet.save()
+
+                formset_dictionary_copy = request.POST.copy()
+                formset_dictionary_copy['form-TOTAL_FORMS'] = int(formset_dictionary_copy['form-TOTAL_FORMS']) + 1
+                researchFormSet = ResearchFormSet(formset_dictionary_copy)
+
+                return render(request, 'catalogWeb/project_form.html',
+                              {'projectForm': projectForm, 'researchFormSet': researchFormSet,
+                               'researchForm': researchForm, 'monuments': monuments})
+
+            elif request.POST['action'] == "Edit":
+                pass
+            elif request.POST['action'] == "Delete":
+                pass
+            elif request.POST['action'] == "submit":
+                project = projectForm.save(commit=False)
+                project.save()
+                researchFormSet.save(commit=False)
+        else:
+            projectForm = ProjectForm(request.POST)
+            researchForm = ResearchForm(request.POST)
+            researchFormSet = ResearchFormSet(request.POST)
+
+
+        # If this is a GET (or any other method) create the default form.
+    else:
+        # proposed_renewal_date = datetime.date.today() + datetime.timedelta(weeks=3)
+        # form = MonumentForm(initial={'renewal_date': proposed_renewal_date, })
+        projectForm = ProjectForm()
+        researchForm = ResearchForm()
+        researchFormSet = ResearchFormSet()
+
+    return render(request, 'catalogWeb/project_form.html', {'projectForm': projectForm,'researchFormSet': researchFormSet, 'researchForm': researchForm, 'monuments': monuments})
 
 
 class ProjectDelete(DeleteView):
@@ -268,7 +326,7 @@ class ProjectDetail(DetailView):
 
 class ProjectUpdate(UpdateView):
     model = Project
-    fields = '__all__'
+    form_class = ProjectForm
     success_url = reverse_lazy('projectList')
 
     def form_valid(self, form):
