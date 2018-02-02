@@ -6,7 +6,7 @@
     {% csrf_token %}
     <table>
         {{ form.as_table }}
-         {{ form2.as_table }}
+{#         {{ form2.as_table }}#}
 
 
 {#        <select multiple>#}
@@ -20,5 +20,5 @@
 
 </form>
 
-    <a href="{% url 'materialListCreate' %}">  Add Materiallist</a>
+{#    <a href="{% url 'materialListCreate' %}">  Add Materiallist</a>#}
 {% endblock %}

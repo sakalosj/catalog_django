@@ -1,8 +1,8 @@
 from django import forms
-from django.forms import HiddenInput
+from django.forms import HiddenInput, SelectMultiple, MultipleHiddenInput
 
-from .models import Restorer, MaterialList, Material2MaterialList, Material, Monument, SelectDateWidget2, Project, \
-    Research
+from .models import Restorer, Material, Monument, SelectDateWidget2, Project, \
+    Research, Monument2Project, Monument2Material
 
 
 class RestorerForm(forms.ModelForm):
@@ -16,82 +16,58 @@ class RestorerRemoveForm(forms.Form):
     pk = forms.IntegerField()
 
 
-class MaterialListForm(forms.ModelForm):
-    class Meta():
-        model = Monument
-        fields = '__all__'
-
-    def save(self, commit=True):
-        materialList = MaterialList.objects.create(
-            name=self.cleaned_data.get('name'))  # Save the child so we have an ID for the m2m
-        materials = [material for material in self.cleaned_data.get('materials')]
-
-        for material in materials:
-            Material2MaterialList.objects.create(materialList=materialList, material=material,
-                                                 description='TEST').save()
-
-        return self.instance
-
 
 class MonumentForm(forms.ModelForm):
     date = forms.DateField(widget=SelectDateWidget2)
-
-    def __init__(self, *args, **kwargs):
-        super(MonumentForm, self).__init__(*args, **kwargs)
-        # snip the other fields for the sake of brevity
-        # Adding content to the form
-        # queryset = MaterialList.objects.filter( id__exact = 1)
-        # queryset = MaterialList.objects.get(id=1)
-        # self.fields['materialList'] = forms.CharField()
-        # for i in self.fields['materialList']:
-        #     pass
-        #     forms.ModelMultipleChoiceField(
-        #     queryset=[MaterialList.objects.filter( id__exact = 1)]
-        # )
 
     class Meta():
         model = Monument
         exclude = ['materialList']
         # MaterialList = forms.ModelMultipleChoiceField(queryset=MaterialList.objects.filter(materials__material2materiallist__materialList_id__exact= 1))
 
-    test = forms.CharField(widget=forms.TextInput)
-
-    # def save(self, commit=True):
-    #     materialList = MaterialList.objects.create(name = self.cleaned_data.get('name'))  # Save the child so we have an ID for the m2m
-    #     materials = [material for material in  self.cleaned_data.get('materials') ]
-    #
-    #     for material in materials:
-    #         Material2MaterialList.objects.create(materialList = materialList, material = material, description = 'TEST' ).save()
-    #
-    #     return self.instance
-
-
-class MaterialListForm2(forms.ModelForm):
-    class Meta():
-        model = MaterialList
-        fields = '__all__'
-
 
     def save(self, commit=True):
-        materialList = MaterialList.objects.update_or_create(id=self.instance.id)[0]  # Save the child so we have an ID for the m2m
-        materials = [material for material in self.cleaned_data.get('materials')]
-        Material2MaterialList.objects.filter(materialList = self.instance.id ).delete()
+        materials = [material for material in  self.cleaned_data.get('materials') ]
+        self.instance.save()
+        for material in self.cleaned_data.get('materials'):
+            Monument2Material.objects.create(material = material, monument = self.instance, description = 'TEST' )
 
-        for material in materials:
-            Material2MaterialList.objects.create(materialList=materialList, material=material,description='TEST')
-        return materialList
+        return self.instance
+
+
+
 
 class ProjectForm(forms.ModelForm):
+    monumentList = forms.ModelMultipleChoiceField(
+        queryset=Monument.objects.all(),
+        widget=MultipleHiddenInput
+    )
     class Meta():
         model = Project
-        exclude = ['monumentList']
+        fields = '__all__'
+        # exclude = ['monumentList']
+        # widgets = {
+        #     'monumentList': forms.HiddenInput(),
+        # }
+
+    def save(self, monumentList, commit=True):
+        project = self.instance
+        project.save()
+        project.restorerList.set(self.cleaned_data['restorerList'])
+        for monument in self.cleaned_data['monumentList']:
+            Monument2Project.objects.create(monument=monument, project=project)
+        return self.instance
+
+
+
 
 class ResearchForm(forms.ModelForm):
     class Meta():
         model = Research
-        # exclude = ['monument','project']
-        fields = '__all__'
+        exclude = ['monument','project']
+        # fields = '__all__'
         widgets = {
             'monument': forms.HiddenInput(),
             'project': forms.HiddenInput(),
         }
+

@@ -19,7 +19,7 @@ class Restorer(models.Model):
     last_name = models.CharField(max_length=45)
     description = models.CharField(max_length=200)
 
-    def __strR__(self):
+    def __str__(self):
         """
         String for representing the Model object.
         """
@@ -35,7 +35,9 @@ class Monument(models.Model):
     technique = models.CharField(max_length=45)
     # picture_list_id_fk = models.CharField(max_length=45)
     # material = models.CharField(max_length=45)
-    materialList =  models.OneToOneField('MaterialList', on_delete=models.CASCADE, null=True)
+    materials = models.ManyToManyField('Material',through='Monument2Material',
+                                        # through_fields=('materialList', 'material')
+                                        blank=True)
 
     def __str__(self):
         """
@@ -45,10 +47,16 @@ class Monument(models.Model):
 
 
 class Monument2Project(models.Model):
-    monument = models.ForeignKey(Monument,on_delete=models.CASCADE)
+    monument = models.ForeignKey(Monument, null=True, on_delete=models.CASCADE)
     project = models.ForeignKey('Project',on_delete=models.CASCADE)
     # materialList = models.OneToOneField('MaterialList', on_delete=models.PROTECT)
     testfield = models.CharField(max_length=45)
+
+class Monument2Material(models.Model):
+    material = models.ForeignKey('Material', on_delete= models.PROTECT)
+    monument = models.ForeignKey('Monument', on_delete= models.CASCADE)
+    description = models.CharField(max_length=200) #project specific info
+
 
 
 
@@ -65,8 +73,8 @@ class Project(models.Model):
     description = models.CharField(max_length=200)
     realized_by = models.CharField(max_length=45)
     realized_for = models.CharField(max_length=45)
-    restorerList = models.ManyToManyField(Restorer,blank=True)
-    monumentList = models.ManyToManyField(Monument,blank=True,through=Monument2Project)
+    restorerList = models.ManyToManyField(Restorer, blank=True)
+    monumentList = models.ManyToManyField(Monument, blank=True, through=Monument2Project)
 
     def __str__(self):
         """
@@ -87,32 +95,6 @@ class Material(models.Model):
         return '%s' % self.name  #self.MaterialDefinition.name
 
 
-class MaterialList(models.Model):
-    materials =  models.ManyToManyField(
-        Material,
-        through='Material2MaterialList',
-        # through_fields=('materialList', 'material'),
-        blank=True
-    )
-
-    def __str__(self):
-        """
-        String for representing the Model object.
-        """
-        return 'id: %s' % (self.id)
-
-
-class Material2MaterialList(models.Model):
-    material = models.ForeignKey(Material, on_delete= models.PROTECT)
-    materialList = models.ForeignKey(MaterialList, on_delete= models.CASCADE)
-    description = models.CharField(max_length=200) #project specific info
-
-# class MaterialDefinition(models.Model):
-#     name = models.CharField(max_length=45)
-#     dataStructure = JSONField()
-
-
-
 
 class Research(models.Model):
     monument = models.ForeignKey(Monument,blank=True,null=True,on_delete=models.PROTECT)
@@ -131,7 +113,20 @@ class Research(models.Model):
         """
         String for representing the Model object.
         """
-        return '%s' % (self.name)
+        return '%s' % self.id
+
+
+############################################################
+class Picture(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.CharField(max_length=255)
+    picture = models.ImageField(upload_to='pictures')
+    pictureList = models.ForeignKey(Monument,blank=True,null=True,on_delete=models.PROTECT)
+
+class PictureList(models.Model):
+    pass
+
+
 
 
 

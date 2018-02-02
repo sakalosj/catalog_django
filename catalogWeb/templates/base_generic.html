@@ -11,7 +11,7 @@
 
     <!-- Add additional CSS in static file -->
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'catalogWeb/css/mystyle.css' %}">
 </head>
 <body>
 
@@ -22,7 +22,7 @@
         <li role="presentation"><a href="{% url 'monumentList' %}">Monuments</a></li>
         <li role="presentation"><a href="{% url 'researchList' %}">Research</a></li>
         <li role="presentation"><a href="{% url 'materialList' %}">Material</a></li>
-        <li role="presentation"><a href="{% url 'materialListList' %}">MaterialList</a></li>
+{#        <li role="presentation"><a href="{% url 'materialListList' %}">MaterialList</a></li>#}
     </ul>
     <div class="row">
         <div class="col-sm-2">

@@ -11,9 +11,9 @@
     <p>dimensions  :  {{   monument.dimensions    }} </p>
     <p>technique   :  {{   monument.technique     }} </p>
 
-    <p>materials: {{  monument.materialList }} </p>
-     {% for material in materials.all %}
-        <p ><strong>material:</strong> {{material}}</p>
+    <p>materials: {{  monument.materials }} </p>
+     {% for material in monument.materials.all %}
+        <p >material: {{material}}</p>
      {% endfor %}
 
 

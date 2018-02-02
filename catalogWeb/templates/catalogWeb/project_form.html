@@ -9,36 +9,40 @@
 
 
 
-$(function(){ $('select').on(
-  { "focus": function() {
-      //console.log('clicked!', this, this.value);
-      this.selectedIndex = -1;
-    }
-  , "change": function(monument) {
-      text = $("#form_text").html();
-      choice = $(this).val();
-      {#///console.log('changed!', this, choice);#}
-      {#this.blur();#}
-      {#setTimeout(function() { alert('Chose '+ choice); }, 0);#}
+$(function(){
+    var monuments_slected = [];
+    $('#monument_select').on(
+      { "focus": function() {
+          //console.log('clicked!', this, this.value);
+          this.selectedIndex = -1;
+        }
+      , "change": function() {
 
-          {#$('#monuments').append('<p>'+monument+'<\p>');#}
-          {#$('<input />').attr('type', 'hidden').attr('name', 'monumnent').attr('value', choice).appendTo('#monuments')#}
-          {#$('#monuments').append(text);#}
+          choice = $(this).val();
+          monuments_slected.push(choice);
+          {#///console.log('changed!', this, choice);#}
+          {#this.blur();#}
+          {#setTimeout(function() { alert('Chose '+ choice); }, 0);#}
 
-        $('<input />').attr('type', 'hidden').attr('name', 'action').attr('value', 'add').appendTo('form#form1')
-        $('form#form1').submit();
-    }
-  });
+            $('<input />').attr('type', 'hidden').attr('name', 'monumentList').attr('value', choice).appendTo('form#form1')
+              {#$("#monuments").append("<a href=\"{% url 'monumentDetail' pk=choice %}\">Monument</a>")#}
+              $("#monuments").append("<p>Monument " +choice+"</p>")
 
+            {#$('form#form1').submit();#}
+        }
+      });
 
+$( "#form1" ).submit(function( event ) {
+
+  monumentListJSON = JSON.stringify(monuments_slected);
+  $('<input />').attr('type', 'hidden').attr('name', 'monumentListJSON').attr('value', monumentListJSON).appendTo('form#form1')
+    {#alert( "Handler for .submit() called." );#}
+});
 
 })
 
 </script>
 
-<script id="form_text" type="text/plain">
-{{ researchForm }}
-</script>
 
 {#############################################################}
 
@@ -48,44 +52,26 @@ $(function(){ $('select').on(
         <ul>
             {{ projectForm.as_ul }}
         </ul>
-{#         <ul>#}
-{#            {{ researchFormSet.as_ul }}#}
-{#        </ul>#}
-
-
-    <p>number of forms : {{researchFormSet|length  }}</p>
-        {{ researchFormSet.management_form }}
-    <table>
-        {% for form in researchFormSet %}
-            {{ form.DELETE.value  }}
-            {% if   not form.DELETE.value or  form.DELETE.value is Null %}
-                {{ form }}
-                <p>test</p>
-                {{ form.monument  }}
-            {% endif %}
 
 
 
-
-        {% endfor %}
-
-    </table>
-
-
-
-
-
-
-
-
-{#        <input type="hidden" value="5" name="monumentList">#}
+{#    <input type="hidden" name="restorerList" value="1">#}
+{#    <input type="hidden" name="restorerList" value="2">#}
+{#    <input type="hidden" name="restorerList" value="3">#}
+{#    <input type="hidden" name="restorerList" value="4">#}
+{#     <input type="hidden" name="monumentList" value="7">#}
+{#    <input type="hidden" name="monumentList" value="8">#}
+{#    <input type="hidden" name="monumentList" value="9">#}
+{#    <input type="hidden" name="monumentList" value="7">#}
+{#    #}
 {#        <a href="">Add monument</a>#}
-{##}
-        <select>
+{##}<div id="monuments">
+        <select id="monument_select" >
          {% for monument in monuments %}
                 <option value='{{ monument.id }}'> {{ monument.name}} </option>
          {% endfor %}
         </select>
+    </div>
 {##}
 {##}
 {##}
