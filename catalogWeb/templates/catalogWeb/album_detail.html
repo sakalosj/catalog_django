@@ -1,0 +1,18 @@
+{% extends "base_generic.html" %}
+
+
+{% block content %}
+    <h1>{{ album.name }}</h1>
+
+    <p>name        :  {{   album.id           }} </p>
+
+
+{#     {% for image  in album.imageList.all %}#}
+{#        <p >image: {{image.image.name}}</p>#}
+{#         <img src="{{image.image.url}}">#}
+{#     {% endfor %}#}
+
+    {{ album.as_div|safe }}
+
+
+{% endblock content %}

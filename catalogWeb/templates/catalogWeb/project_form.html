@@ -1,86 +1,45 @@
-
-
 {% extends "base_generic.html" %}
-
 
 {% block content %}
 
 <script>
+    $(function(){
+        var monuments_slected = [];
 
+        $('#monument_select').on({
+            "focus": function() {
+                this.selectedIndex = -1
+                },
+            "change": function() {
+                choice = $(this).val();
+                monuments_slected.push(choice);
+                $('<input />').attr('type', 'hidden').attr('name', 'monumentList').attr('value', choice).appendTo('form#form1')
+                $("#monuments").append("<p>Monument " +choice+"</p>")}
+            });
 
-
-$(function(){
-    var monuments_slected = [];
-    $('#monument_select').on(
-      { "focus": function() {
-          //console.log('clicked!', this, this.value);
-          this.selectedIndex = -1;
-        }
-      , "change": function() {
-
-          choice = $(this).val();
-          monuments_slected.push(choice);
-          {#///console.log('changed!', this, choice);#}
-          {#this.blur();#}
-          {#setTimeout(function() { alert('Chose '+ choice); }, 0);#}
-
-            $('<input />').attr('type', 'hidden').attr('name', 'monumentList').attr('value', choice).appendTo('form#form1')
-              {#$("#monuments").append("<a href=\"{% url 'monumentDetail' pk=choice %}\">Monument</a>")#}
-              $("#monuments").append("<p>Monument " +choice+"</p>")
-
-            {#$('form#form1').submit();#}
-        }
-      });
-
-$( "#form1" ).submit(function( event ) {
-
-  monumentListJSON = JSON.stringify(monuments_slected);
-  $('<input />').attr('type', 'hidden').attr('name', 'monumentListJSON').attr('value', monumentListJSON).appendTo('form#form1')
-    {#alert( "Handler for .submit() called." );#}
-});
+        $( "#form1" ).submit(function( event ) {
+                monumentListJSON = JSON.stringify(monuments_slected);
+                $('<input />').attr('type', 'hidden').attr('name', 'monumentListJSON').attr('value', monumentListJSON).appendTo('form#form1')
+            });
 
 })
-
 </script>
 
 
 {#############################################################}
 
-
-    <form id="form1" action="" method="post" >
-        {% csrf_token %}
-        <ul>
-            {{ projectForm.as_ul }}
-        </ul>
-
-
-
-{#    <input type="hidden" name="restorerList" value="1">#}
-{#    <input type="hidden" name="restorerList" value="2">#}
-{#    <input type="hidden" name="restorerList" value="3">#}
-{#    <input type="hidden" name="restorerList" value="4">#}
-{#     <input type="hidden" name="monumentList" value="7">#}
-{#    <input type="hidden" name="monumentList" value="8">#}
-{#    <input type="hidden" name="monumentList" value="9">#}
-{#    <input type="hidden" name="monumentList" value="7">#}
-{#    #}
-{#        <a href="">Add monument</a>#}
-{##}<div id="monuments">
+<form id="form1" action="" method="post" >
+    {% csrf_token %}
+    <ul>
+        {{ projectForm.as_ul }}
+    </ul>
+    <div id="monuments">
         <select id="monument_select" >
          {% for monument in monuments %}
                 <option value='{{ monument.id }}'> {{ monument.name}} </option>
          {% endfor %}
         </select>
     </div>
-{##}
-{##}
-{##}
-{#        <div id="monuments">#}
-{##}
-{#        </div>#}
-        <input type="submit" value="submit" action="submit" />
-
-    </form>
-
-
+    <input type="submit" value="submit" action="submit" />
+</form>
 {% endblock %}

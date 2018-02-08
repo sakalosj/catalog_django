@@ -4,14 +4,28 @@ import datetime
 
 from django.conf import settings
 from django.db import models
-from django.forms import Widget, Select, SelectDateWidget
+from django.forms import Widget, Select
 from django.utils import six, datetime_safe
 from django.utils.dates import MONTHS
 from django.utils.encoding import force_text, force_str
 from django.utils.formats import get_format
-from jsonfield import JSONField
+
 
 # Create your models here.
+class AlbumReferenceMixin:
+    def save(self):
+        if hasattr(self, 'album_id'):  # check if model has set album attribute (related to onetoone implementation)
+            if not hasattr(self, 'album'):  # check if there is set related object (django specific)
+                self.album = Album.objects.create()
+        else:
+            raise Exception('Inherited function have to contain property album referencing model Album')
+        super().save()
+
+    def delete(self):
+        if hasattr(self, 'album_id'):  # check if model has set album attribute (related to onetoone implementation)
+            if hasattr(self, 'album'):  # check if there is set related object (django specific)
+                self.album.delete()
+        super().delete()
 
 
 class Restorer(models.Model):
@@ -26,38 +40,36 @@ class Restorer(models.Model):
         return '%s, %s' % (self.last_name, self.first_name)
 
 
-class Monument(models.Model):
+class Monument(AlbumReferenceMixin, models.Model):
     name = models.CharField(max_length=45)
     description = models.CharField(max_length=45)
     date = models.DateField()
     provenance = models.CharField(max_length=45)
     dimensions = models.CharField(max_length=45)
     technique = models.CharField(max_length=45)
-    # picture_list_id_fk = models.CharField(max_length=45)
-    # material = models.CharField(max_length=45)
-    materials = models.ManyToManyField('Material',through='Monument2Material',
+    materials = models.ManyToManyField('Material', through='Monument2Material',
                                         # through_fields=('materialList', 'material')
                                         blank=True)
+    album = models.OneToOneField('Album')
 
     def __str__(self):
         """
         String for representing the Model object.
         """
-        return '%s' % (self.name)
+        return '%s' % self.name
 
 
 class Monument2Project(models.Model):
     monument = models.ForeignKey(Monument, null=True, on_delete=models.CASCADE)
-    project = models.ForeignKey('Project',on_delete=models.CASCADE)
+    project = models.ForeignKey('Project', on_delete=models.CASCADE)
     # materialList = models.OneToOneField('MaterialList', on_delete=models.PROTECT)
     testfield = models.CharField(max_length=45)
 
+
 class Monument2Material(models.Model):
-    material = models.ForeignKey('Material', on_delete= models.PROTECT)
-    monument = models.ForeignKey('Monument', on_delete= models.CASCADE)
-    description = models.CharField(max_length=200) #project specific info
-
-
+    material = models.ForeignKey('Material', on_delete=models.PROTECT)
+    monument = models.ForeignKey('Monument', on_delete=models.CASCADE)
+    description = models.CharField(max_length=200)  # project specific info
 
 
 class ResearchRelation(models.Model):
@@ -80,25 +92,25 @@ class Project(models.Model):
         """
         String for representing the Model object.
         """
-        return '%s' % (self.name)
+        return '%s' % self.name
 
 
-class Material(models.Model):
+class Material(AlbumReferenceMixin, models.Model):
     # MaterialDefinition = models.ForeignKey('MaterialDefinition')
     name = models.CharField(max_length=45)
-    description = models.CharField(max_length=200) #general info
+    description = models.CharField(max_length=200)  # general info
+    album = models.OneToOneField('Album')
 
     def __str__(self):
         """
         String for representing the Model object.
         """
-        return '%s' % self.name  #self.MaterialDefinition.name
+        return '%s' % self.name  # self.MaterialDefinition.name
 
 
-
-class Research(models.Model):
-    monument = models.ForeignKey(Monument,blank=True,null=True,on_delete=models.PROTECT)
-    project = models.ForeignKey(Project,blank=True,null=True,on_delete=models.CASCADE)
+class Research(AlbumReferenceMixin, models.Model):
+    monument = models.ForeignKey(Monument, blank=True, null=True, on_delete=models.PROTECT)
+    project = models.ForeignKey(Project, blank=True, null=True, on_delete=models.CASCADE)
     UVA = models.BooleanField()
     UVC = models.BooleanField()
     RUVA = models.BooleanField()
@@ -108,6 +120,7 @@ class Research(models.Model):
     ch_t_research = models.BooleanField()
     sondazny = models.CharField(max_length=200)
     other = models.CharField(max_length=200)
+    album = models.OneToOneField('Album')
 
     def __str__(self):
         """
@@ -117,19 +130,33 @@ class Research(models.Model):
 
 
 ############################################################
-class Picture(models.Model):
+
+
+############################################################
+
+
+class Image(models.Model):
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
-    picture = models.ImageField(upload_to='pictures')
-    pictureList = models.ForeignKey(Monument,blank=True,null=True,on_delete=models.PROTECT)
-
-class PictureList(models.Model):
-    pass
+    image = models.ImageField(upload_to='pictures/')
+    album = models.ForeignKey('Album', related_name='imageList', blank=True, null=True, on_delete=models.CASCADE)
 
 
+class Album(models.Model):
+    def as_div(self, imageDivID="album"):
+        if imageDivID is None:
+            imageDivID = 'album_id_%s' % self.id
+        htmlDivContent = ['<div id = %s>' % self]
+        for image in self.imageList.all():
+            htmlDivContent.append('<p> %s </p>' % image.name)
+            htmlDivContent.append('<image src=%s>' % image.image.url)
+        return '\n'.join(htmlDivContent)
 
-
-
+    def __str__(self):
+        """
+        String for representing the Model object.
+        """
+        return 'album_id_%s' % self.id
 
 ###################################################################################
 ###################################################################################

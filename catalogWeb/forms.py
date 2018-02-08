@@ -2,7 +2,7 @@ from django import forms
 from django.forms import HiddenInput, SelectMultiple, MultipleHiddenInput
 
 from .models import Restorer, Material, Monument, SelectDateWidget2, Project, \
-    Research, Monument2Project, Monument2Material
+    Research, Monument2Project, Monument2Material, Image, Album
 
 
 class RestorerForm(forms.ModelForm):
@@ -16,33 +16,36 @@ class RestorerRemoveForm(forms.Form):
     pk = forms.IntegerField()
 
 
-
 class MonumentForm(forms.ModelForm):
-    date = forms.DateField(widget=SelectDateWidget2)
-
-    class Meta():
+    class Meta:
         model = Monument
-        exclude = ['materialList']
+        exclude = ['materialList', 'album']
         # MaterialList = forms.ModelMultipleChoiceField(queryset=MaterialList.objects.filter(materials__material2materiallist__materialList_id__exact= 1))
 
+    date = forms.DateField(widget=SelectDateWidget2)
+    pictures = forms.ImageField(widget=forms.FileInput(attrs={'multiple': True}))
 
     def save(self, commit=True):
-        materials = [material for material in  self.cleaned_data.get('materials') ]
         self.instance.save()
+
+        Monument2Material.objects.filter(monument=self.instance.id).delete()
         for material in self.cleaned_data.get('materials'):
-            Monument2Material.objects.create(material = material, monument = self.instance, description = 'TEST' )
+            Monument2Material.objects.create(material=material, monument=self.instance, description='TEST')
+
+        files = self.cleaned_data.get('pictures')
+
+
+        # for file in files:
+        #     image = Image(files)
+            # album.save()
+        #     Image.objects.create(name=file, description=file, image=file, album=self.instance.album)
 
         return self.instance
 
 
 
-
 class ProjectForm(forms.ModelForm):
-    monumentList = forms.ModelMultipleChoiceField(
-        queryset=Monument.objects.all(),
-        widget=MultipleHiddenInput
-    )
-    class Meta():
+    class Meta:
         model = Project
         fields = '__all__'
         # exclude = ['monumentList']
@@ -50,24 +53,47 @@ class ProjectForm(forms.ModelForm):
         #     'monumentList': forms.HiddenInput(),
         # }
 
-    def save(self, monumentList, commit=True):
+    monumentList = forms.ModelMultipleChoiceField(
+        queryset=Monument.objects.all(),
+        widget=MultipleHiddenInput
+    )
+
+    def save(self, commit=True):
         project = self.instance
         project.save()
         project.restorerList.set(self.cleaned_data['restorerList'])
+
+        Monument2Project.objects.filter(project=self.instance.id).delete()
         for monument in self.cleaned_data['monumentList']:
             Monument2Project.objects.create(monument=monument, project=project)
+
         return self.instance
 
 
-
-
 class ResearchForm(forms.ModelForm):
-    class Meta():
+    class Meta:
         model = Research
-        exclude = ['monument','project']
-        # fields = '__all__'
+        exclude = ['monument', 'project', 'album']
         widgets = {
             'monument': forms.HiddenInput(),
             'project': forms.HiddenInput(),
         }
 
+
+class ImageForm(forms.ModelForm):
+    class Meta:
+        model = Image
+        exclude = ['pictureList']
+
+
+class AlbumForm(forms.ModelForm):
+    class Meta:
+        model = Album
+        fields = '__all__'
+        # exclude = ['pictureList']
+
+
+class MaterialForm(forms.ModelForm):
+    class Meta:
+        model = Material
+        exclude = ['album']

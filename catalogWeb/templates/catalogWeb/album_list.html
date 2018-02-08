@@ -1,0 +1,34 @@
+{% extends "base_generic.html" %}
+
+{% block sidebar %}
+  <ul class="sidebar-nav">
+    <li><a href="{% url 'albumCreate' %}">album add</a></li>
+    <li><a href="{% url 'albumList' %}">album list</a></li>
+  </ul>
+{% endblock sidebar %}
+
+
+{% block content %}
+    <h1>Restorer List</h1>
+
+    {% if album_list %}
+    <ul>
+
+      {% for album in album_list %}
+      <li>
+        <a href="{% url 'albumDetail' album.id %}"> {{  album }}</a>
+{#          <a href="{% url 'albumDelete' album.id %}"> Del</a>#}
+{#            <a href="{% url 'albumUpdate' album.id %}"> Update</a>#}
+{#      <a href=""> {{  album }}</a>#}
+{#          <a href=""> Del</a>#}
+{#            <a href=""> Update</a>#}
+      </li>
+      {% endfor %}
+
+    </ul>
+
+    {% else %}
+      <p>There are no images in the album.</p>
+    {% endif %}
+{% endblock %}
+

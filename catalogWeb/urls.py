@@ -36,5 +36,18 @@ urlpatterns = [
     url(r'material/details/(?P<pk>[0-9]+)/$', views.MaterialDetail.as_view(), name='materialDetail'),
     url(r'material/update/(?P<pk>[0-9]+)/$', views.MaterialUpdate.as_view(), name='materialUpdate'),
 
+    url(r'image/list', views.ImageListView.as_view(), name='imageList'),
+    url(r'image/add', views.ImageCreateF, name='imageCreate'),
+    url(r'imagelist/show', views.ImageListView.as_view(), name='imageList'),
+
+    url(r'album/list', views.AlbumListView.as_view(), name='albumList'),
+    url(r'album/add', views.AlbumCreate.as_view(), name='albumCreate'),
+    url(r'album/detail/(?P<pk>[0-9]+)/$', views.AlbumDetailView.as_view(), name='albumDetail'),
+
+
+    # url(r'picture/del/(?P<pk>[0-9]+)/$', views.PictureDelete.as_view(), name='pictureDelete'),
+    # url(r'picture/details/(?P<pk>[0-9]+)/$', views.PictureDetail.as_view(), name='pictureDetail'),
+    # url(r'picture/update/(?P<pk>[0-9]+)/$', views.PictureUpdate.as_view(), name='pictureUpdate'),
+
 ]
 

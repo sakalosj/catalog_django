@@ -1,0 +1,32 @@
+{% extends "base_generic.html" %}
+
+{% block sidebar %}
+  <ul class="sidebar-nav">
+    <li><a href="{% url 'imageCreate' %}">picture add</a></li>
+    <li><a href="{% url 'imageList' %}">picture list</a></li>
+  </ul>
+{% endblock sidebar %}
+
+
+{% block content %}
+    <h1>Research List</h1>
+
+    {% if picture_list %}
+    <ul>
+
+      {% for picture in picture_list %}
+      <li>
+                  <a href=""> {{  picture }}</a>
+{#          <a href="{% url 'pictureDetail' picture.id %}"> {{  picture }}</a>#}
+{#          <a href="{% url 'pictureDelete' picture.id %}"> Del</a>#}
+{#          <a href="{% url 'pictureUpdate' picture.id %}"> Update</a>#}
+      </li>
+      {% endfor %}
+
+    </ul>
+
+    {% else %}
+      <p>There are no books in the library.</p>
+    {% endif %}
+{% endblock %}
+
