@@ -11,10 +11,14 @@
     <p>dimensions  :  {{   monument.dimensions    }} </p>
     <p>technique   :  {{   monument.technique     }} </p>
 
-    <p>materials: {{  monument.materials }} </p>
+    <p>materials: {{  monument.materials_id }} </p>
      {% for material in monument.materials.all %}
         <p >material: {{material}}</p>
      {% endfor %}
+
+{#    {{ monument.album.as_div|safe }}#}
+
+    {{ album_html|safe }}
 
 
 {% endblock content %}

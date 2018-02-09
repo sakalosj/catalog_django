@@ -23,9 +23,9 @@ class MonumentForm(forms.ModelForm):
         # MaterialList = forms.ModelMultipleChoiceField(queryset=MaterialList.objects.filter(materials__material2materiallist__materialList_id__exact= 1))
 
     date = forms.DateField(widget=SelectDateWidget2)
-    pictures = forms.ImageField(widget=forms.FileInput(attrs={'multiple': True}))
 
-    def save(self, commit=True):
+    def save(self, album, commit=True):
+        self.instance.album = album
         self.instance.save()
 
         Monument2Material.objects.filter(monument=self.instance.id).delete()
@@ -92,8 +92,12 @@ class AlbumForm(forms.ModelForm):
         fields = '__all__'
         # exclude = ['pictureList']
 
+    pictures = forms.ImageField(widget=forms.FileInput(attrs={'multiple': True}))
+
 
 class MaterialForm(forms.ModelForm):
     class Meta:
         model = Material
         exclude = ['album']
+
+

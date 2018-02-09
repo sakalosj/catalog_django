@@ -41,7 +41,7 @@ urlpatterns = [
     url(r'imagelist/show', views.ImageListView.as_view(), name='imageList'),
 
     url(r'album/list', views.AlbumListView.as_view(), name='albumList'),
-    url(r'album/add', views.AlbumCreate.as_view(), name='albumCreate'),
+    url(r'album/add', views.AlbumCreateF, name='albumCreate'),
     url(r'album/detail/(?P<pk>[0-9]+)/$', views.AlbumDetailView.as_view(), name='albumDetail'),
 
 

@@ -12,20 +12,20 @@ from django.utils.formats import get_format
 
 
 # Create your models here.
-class AlbumReferenceMixin:
-    def save(self):
-        if hasattr(self, 'album_id'):  # check if model has set album attribute (related to onetoone implementation)
-            if not hasattr(self, 'album'):  # check if there is set related object (django specific)
-                self.album = Album.objects.create()
-        else:
-            raise Exception('Inherited function have to contain property album referencing model Album')
-        super().save()
-
-    def delete(self):
-        if hasattr(self, 'album_id'):  # check if model has set album attribute (related to onetoone implementation)
-            if hasattr(self, 'album'):  # check if there is set related object (django specific)
-                self.album.delete()
-        super().delete()
+# class AlbumReferenceMixin:
+#     def save(self):
+#         if hasattr(self, 'album_id'):  # check if model has set album attribute (related to onetoone implementation)
+#             if not hasattr(self, 'album'):  # check if there is set related object (django specific)
+#                 self.album = Album.objects.create()
+#         else:
+#             raise Exception('Inherited function have to contain property album referencing model Album')
+#         super().save()
+#
+#     def delete(self):
+#         if hasattr(self, 'album_id'):  # check if model has set album attribute (related to onetoone implementation)
+#             if hasattr(self, 'album'):  # check if there is set related object (django specific)
+#                 self.album.delete()
+#         super().delete()
 
 
 class Restorer(models.Model):
@@ -40,7 +40,7 @@ class Restorer(models.Model):
         return '%s, %s' % (self.last_name, self.first_name)
 
 
-class Monument(AlbumReferenceMixin, models.Model):
+class Monument(models.Model):
     name = models.CharField(max_length=45)
     description = models.CharField(max_length=45)
     date = models.DateField()
@@ -50,7 +50,7 @@ class Monument(AlbumReferenceMixin, models.Model):
     materials = models.ManyToManyField('Material', through='Monument2Material',
                                         # through_fields=('materialList', 'material')
                                         blank=True)
-    album = models.OneToOneField('Album')
+    album = models.OneToOneField('Album', on_delete=models.PROTECT)
 
     def __str__(self):
         """
@@ -95,7 +95,7 @@ class Project(models.Model):
         return '%s' % self.name
 
 
-class Material(AlbumReferenceMixin, models.Model):
+class Material(models.Model):
     # MaterialDefinition = models.ForeignKey('MaterialDefinition')
     name = models.CharField(max_length=45)
     description = models.CharField(max_length=200)  # general info
@@ -108,7 +108,7 @@ class Material(AlbumReferenceMixin, models.Model):
         return '%s' % self.name  # self.MaterialDefinition.name
 
 
-class Research(AlbumReferenceMixin, models.Model):
+class Research(models.Model):
     monument = models.ForeignKey(Monument, blank=True, null=True, on_delete=models.PROTECT)
     project = models.ForeignKey(Project, blank=True, null=True, on_delete=models.CASCADE)
     UVA = models.BooleanField()

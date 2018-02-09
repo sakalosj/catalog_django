@@ -5,6 +5,7 @@ from django.views import generic
 from django.views.generic import CreateView, DeleteView, DetailView
 from django.urls import reverse, reverse_lazy
 from django.views.generic.edit import ModelFormMixin, UpdateView
+
 from .forms import RestorerForm, RestorerRemoveForm, MonumentForm, ProjectForm, ResearchForm, ImageForm, MaterialForm, \
     AlbumForm
 from .models import Restorer, Monument, Project, Research, Material, Monument2Project, Image, Album
@@ -122,21 +123,21 @@ class RestorerUpdate(UpdateView):
 
 def MonumentListViewF(request):
     monumentList = Monument.objects.all()
-    context = {'monument_list' : monumentList}
+    context = {'monument_list': monumentList}
     return render(request, 'catalogWeb/monument_list.html', context)
 
 
 def MonumentCreateF(request):
-    albumInstance = get_object_or_404(Album, id=id)
+    # albumInstance = get_object_or_404(Album, id=id)
     form = MonumentForm(request.POST or None, request.FILES or None)
     form2 = AlbumForm(request.POST or None, request.FILES or None)
     if form.is_valid() and form2.is_valid():
-        form.save()
-        form2.save()
+        albumInstance = AlbumCreateF2(request)
+        monumentInstance = form.save(albumInstance)
+
+
         return HttpResponseRedirect(reverse('monumentList'))
     return render(request, 'catalogWeb/monument_form.html', {'form': form, 'form2': form2})
-
-
 
 
 
@@ -145,9 +146,17 @@ class MonumentDelete(DeleteView):
     fields = '__all__'
     success_url = reverse_lazy('monumentList')
 
+    def delete(self, request, *args, **kwargs):
+        related_album = Album.objects.get(monument__id=kwargs['pk'])
+        returnValue = super().delete(self, request, *args, **kwargs)
+        related_album.delete()
+        return returnValue
+
 def MonumentDetailF(request,pk):
     monument = get_object_or_404(Monument, pk=pk)
-    context = {'monument': monument}
+    album_html = albumShow(monument.album)
+
+    context = {'monument': monument, 'album_html': album_html}
     return render(request, 'catalogWeb/monument_detail.html', context)
 
 
@@ -188,7 +197,7 @@ def ProjectCreateF(request):
     monuments = Monument.objects.all()
     if request.method == 'POST':
         projectForm = ProjectForm(request.POST)
-        if projectForm.is_valid() :
+        if projectForm.is_valid():
             projectForm.save(json.loads(request.POST['monumentListJSON']))
             return HttpResponseRedirect(reverse('projectList'))
 
@@ -318,3 +327,38 @@ class AlbumCreate(generic.CreateView):
     fields = '__all__'
     paginate_by = 10
     success_url = reverse_lazy('albumList')
+
+def AlbumCreateF(request):
+    form = AlbumForm(request.POST or None, request.FILES or None)
+    if form.is_valid():
+        instance = form.save()
+        files = request.FILES.getlist('pictures')
+        for image in files:
+            image = Image(image=image, album=instance)
+            image.save()
+        return HttpResponseRedirect(reverse('imageList'))
+
+    return render(request, 'catalogWeb/album_form.html', {'form': form})
+
+
+def AlbumCreateF2(request):
+    form = AlbumForm(request.POST or None, request.FILES or None)
+    if form.is_valid():
+        instance = form.save()
+        files = request.FILES.getlist('pictures')
+        for image in files:
+            image = Image(image=image, album=instance)
+            image.save()
+        return instance
+    return Album.objects.create()
+
+def albumShow(album, imageDivID="album", edit=False):
+    if imageDivID is None:
+        imageDivID = 'album_id_%s' % album.id
+    htmlDivContent = ['<div id = %s>' % album]
+    for image in album.imageList.all():
+        htmlDivContent.append('<p> %s </p>' % image.name)
+        htmlDivContent.append('<figure>'
+                                '<image src=%s><figcaption> %s </figcaption>'
+                              '</figure>' % (image.image.url, 'test'))
+    return '\n'.join(htmlDivContent)
