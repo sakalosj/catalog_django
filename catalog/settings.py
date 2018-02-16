@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'catalogWeb.apps.CatalogwebConfig',
+    'album.apps.AlbumConfig',
     'jsonfield',
     'djangoformsetjs',
     # 'django_tables2',

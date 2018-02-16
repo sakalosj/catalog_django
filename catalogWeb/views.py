@@ -1,4 +1,6 @@
 import json
+
+from django.forms import inlineformset_factory
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.views import generic
@@ -6,9 +8,12 @@ from django.views.generic import CreateView, DeleteView, DetailView
 from django.urls import reverse, reverse_lazy
 from django.views.generic.edit import ModelFormMixin, UpdateView
 
-from .forms import RestorerForm, RestorerRemoveForm, MonumentForm, ProjectForm, ResearchForm, ImageForm, MaterialForm, \
-    AlbumForm
-from .models import Restorer, Monument, Project, Research, Material, Monument2Project, Image, Album
+from album.forms import AlbumForm, ImageForm
+from album.models import Album, Image
+from album.views import album_show, album_process_form, album_edit_html_is_valid, album_edit_html
+from album.widgets import PictureWidget
+from .forms import RestorerForm, RestorerRemoveForm, MonumentForm, ProjectForm, ResearchForm,  MaterialForm
+from .models import Restorer, Monument, Project, Research, Material, Monument2Project
 
 
 def index(request):
@@ -121,54 +126,59 @@ class RestorerUpdate(UpdateView):
 
 #######################################################################
 
-def MonumentListViewF(request):
-    monumentList = Monument.objects.all()
-    context = {'monument_list': monumentList}
+def monument_list(request):
+    monument_list = Monument.objects.all()
+    context = {'monument_list': monument_list}
     return render(request, 'catalogWeb/monument_list.html', context)
 
 
-def MonumentCreateF(request):
-    # albumInstance = get_object_or_404(Album, id=id)
-    form = MonumentForm(request.POST or None, request.FILES or None)
-    form2 = AlbumForm(request.POST or None, request.FILES or None)
-    if form.is_valid() and form2.is_valid():
-        albumInstance = AlbumCreateF2(request)
-        monumentInstance = form.save(albumInstance)
+def monument_create(request):
+    monument_form = MonumentForm(request.POST or None, request.FILES or None)
+    album_form = AlbumForm(request.POST or None, request.FILES or None)
 
-
+    if monument_form.is_valid() and album_form.is_valid():
+        monument_instance = monument_form.save()
+        ''' in form cleaned data multiple files are not available,
+         therefore files are processed via view function no in form'''
+        album_process_form(request, monument_instance.album)
         return HttpResponseRedirect(reverse('monumentList'))
-    return render(request, 'catalogWeb/monument_form.html', {'form': form, 'form2': form2})
 
+    return render(request, 'catalogWeb/monument_form.html', {'monument_form': monument_form, 'album_form': album_form})
 
 
 class MonumentDelete(DeleteView):
     model = Monument
     fields = '__all__'
-    success_url = reverse_lazy('monumentList')
+    success_url = reverse_lazy('monument_list')
 
-    def delete(self, request, *args, **kwargs):
-        related_album = Album.objects.get(monument__id=kwargs['pk'])
-        returnValue = super().delete(self, request, *args, **kwargs)
-        related_album.delete()
-        return returnValue
 
-def MonumentDetailF(request,pk):
+def monument_detail(request, pk):
     monument = get_object_or_404(Monument, pk=pk)
-    album_html = albumShow(monument.album)
-
-    context = {'monument': monument, 'album_html': album_html}
+    album_html = album_show(monument.album)
+    context = {'monument': monument,
+               'album_html': album_html
+               }
     return render(request, 'catalogWeb/monument_detail.html', context)
 
 
-def MonumentUpdateF(request, pk):
-    monumentInstance = get_object_or_404(Monument, pk=pk)
-    form = MonumentForm(request.POST or None, request.FILES or None, instance=monumentInstance)
+def monument_update(request, pk):
+    monument_instance = get_object_or_404(Monument, pk=pk)
+    monument_form = MonumentForm(request.POST or None, request.FILES or None, instance=monument_instance)
+    ImageFormSet = inlineformset_factory(Album, Image,  extra=0, form=ImageForm, widgets={'image': PictureWidget,})
+    album_form = AlbumForm(request.POST or None, request.FILES or None)
 
-    if request.method == 'POST' and form.is_valid():
-            form.save()
+    if request.method == 'POST':
+        album_formset = ImageFormSet(request.POST, request.FILES, instance=monument_instance.album)
+        if monument_form.is_valid() and album_formset.is_valid() and album_form.is_valid():
+            album_formset.save()
+            album_process_form(request, monument_instance.album)
+            monument_form.save()
             return HttpResponseRedirect(reverse('monumentList'))
+        else:
+            return render(request, 'catalogWeb/monument_form.html', {'monument_form': monument_form, 'album_formset': album_formset, 'album_form': album_form})
 
-    return render(request, 'catalogWeb/monument_form.html', {'form': form})
+    album_formset = ImageFormSet(instance=monument_instance.album)
+    return render(request, 'catalogWeb/monument_form.html', {'monument_form': monument_form, 'album_formset': album_formset, 'album_form': album_form})
 
 #######################################################################
 
@@ -192,6 +202,7 @@ class ProjectCreate(CreateView):
             monument2Project.monument = monument
             monument2Project.save()
         return super(ModelFormMixin, self).form_valid(form)
+
 
 def ProjectCreateF(request):
     monuments = Monument.objects.all()
@@ -280,6 +291,20 @@ class MaterialCreate(CreateView):
     form_class = MaterialForm
     success_url = reverse_lazy('materialList')
 
+def material_create(request,pk = None):
+    material_form = MaterialForm(request.POST or None, request.FILES or None)
+    aaa = Material.objects.filter(pk=pk)
+    if not aaa.exists():
+        album = Album.objects.create()
+    album_form = AlbumForm(request.POST or None, request.FILES or None, instance=album)
+    album_form = album_edit_html(request,album.id)
+
+    if material_form.is_valid() :
+        material_instance = material_form.save()
+        # album_edit_html(request, material_form.id)
+        return HttpResponseRedirect(reverse('monumentList'))
+
+    return render(request, 'catalogWeb/material_form.html', {'material_form': material_form, 'album_form': album_form, 'album_id': album.id})
 
 class MaterialDelete(DeleteView):
     model = Material
@@ -300,65 +325,65 @@ class MaterialUpdate(UpdateView):
 ###########################################33
 
 
-def ImageCreateF(request):
-    form = ImageForm(request.POST or None, request.FILES or None)
-    if form.is_valid():
-        form.save()
-        return HttpResponseRedirect(reverse('imageList'))
-    return render(request, 'catalogWeb/image_form.html', {'form': form})
-
-
-class ImageListView(generic.ListView):
-    model = Image
-    paginate_by = 10
-
-def ImageDetailF(request):
-    pass
-
-class AlbumDetailView(generic.DetailView):
-    model = Album
-
-class AlbumListView(generic.ListView):
-    model = Album
-    paginate_by = 10
-
-class AlbumCreate(generic.CreateView):
-    model = Album
-    fields = '__all__'
-    paginate_by = 10
-    success_url = reverse_lazy('albumList')
-
-def AlbumCreateF(request):
-    form = AlbumForm(request.POST or None, request.FILES or None)
-    if form.is_valid():
-        instance = form.save()
-        files = request.FILES.getlist('pictures')
-        for image in files:
-            image = Image(image=image, album=instance)
-            image.save()
-        return HttpResponseRedirect(reverse('imageList'))
-
-    return render(request, 'catalogWeb/album_form.html', {'form': form})
-
-
-def AlbumCreateF2(request):
-    form = AlbumForm(request.POST or None, request.FILES or None)
-    if form.is_valid():
-        instance = form.save()
-        files = request.FILES.getlist('pictures')
-        for image in files:
-            image = Image(image=image, album=instance)
-            image.save()
-        return instance
-    return Album.objects.create()
-
-def albumShow(album, imageDivID="album", edit=False):
-    if imageDivID is None:
-        imageDivID = 'album_id_%s' % album.id
-    htmlDivContent = ['<div id = %s>' % album]
-    for image in album.imageList.all():
-        htmlDivContent.append('<p> %s </p>' % image.name)
-        htmlDivContent.append('<figure>'
-                                '<image src=%s><figcaption> %s </figcaption>'
-                              '</figure>' % (image.image.url, 'test'))
-    return '\n'.join(htmlDivContent)
+# def image_create(request):
+#     form = ImageForm(request.POST or None, request.FILES or None)
+#     if form.is_valid():
+#         form.save()
+#         return HttpResponseRedirect(reverse('imageList'))
+#     return render(request, 'catalogWeb/image_form.html', {'form': form})
+#
+#
+# class ImageListView(generic.ListView):
+#     model = Image
+#     paginate_by = 10
+#
+# def image_detail(request):
+#     pass
+#
+# class AlbumDetailView(generic.DetailView):
+#     model = Album
+#
+# class AlbumListView(generic.ListView):
+#     model = Album
+#     paginate_by = 10
+#
+# class AlbumCreate(generic.CreateView):
+#     model = Album
+#     fields = '__all__'
+#     paginate_by = 10
+#     success_url = reverse_lazy('albumList')
+#
+# def album_create(request):
+#     form = AlbumForm(request.POST or None, request.FILES or None)
+#     if form.is_valid():
+#         instance = form.save()
+#         files = request.FILES.getlist('pictures')
+#         for image in files:
+#             image = Image(image=image, album=instance)
+#             image.save()
+#         return HttpResponseRedirect(reverse('imageList'))
+#
+#     return render(request, 'catalogWeb/album_form.html', {'form': form})
+#
+#
+# def album_process_form(request):
+#     form = AlbumForm(request.POST or None, request.FILES or None)
+#     if form.is_valid():
+#         instance = form.save()
+#         files = request.FILES.getlist('pictures')
+#         for image in files:
+#             image = Image(image=image, album=instance)
+#             image.save()
+#         return instance
+#     return Album.objects.create()
+#
+# def album_show(album, imageDivID="album", edit=False):
+#     if imageDivID is None:
+#         imageDivID = 'album_id_%s' % album.id
+#     htmlDivContent = ['<div id = %s>' % album]
+#     for image in album.imageList.all():
+#         htmlDivContent.append('<p> %s </p>' % image.name)
+#         htmlDivContent.append('<figure>'
+#                                 '<image src=%s><figcaption> %s </figcaption>'
+#                               '</figure>' % (image.image.url, 'test'))
+#     return '\n'.join(htmlDivContent)

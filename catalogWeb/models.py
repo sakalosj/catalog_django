@@ -26,6 +26,7 @@ from django.utils.formats import get_format
 #             if hasattr(self, 'album'):  # check if there is set related object (django specific)
 #                 self.album.delete()
 #         super().delete()
+from album.models import AlbumMixin
 
 
 class Restorer(models.Model):
@@ -40,7 +41,7 @@ class Restorer(models.Model):
         return '%s, %s' % (self.last_name, self.first_name)
 
 
-class Monument(models.Model):
+class Monument(AlbumMixin, models.Model):
     name = models.CharField(max_length=45)
     description = models.CharField(max_length=45)
     date = models.DateField()
@@ -50,7 +51,7 @@ class Monument(models.Model):
     materials = models.ManyToManyField('Material', through='Monument2Material',
                                         # through_fields=('materialList', 'material')
                                         blank=True)
-    album = models.OneToOneField('Album', on_delete=models.PROTECT)
+    album = models.OneToOneField('album.Album', null=True)
 
     def __str__(self):
         """
@@ -95,11 +96,11 @@ class Project(models.Model):
         return '%s' % self.name
 
 
-class Material(models.Model):
+class Material(AlbumMixin, models.Model):
     # MaterialDefinition = models.ForeignKey('MaterialDefinition')
     name = models.CharField(max_length=45)
     description = models.CharField(max_length=200)  # general info
-    album = models.OneToOneField('Album')
+    album = models.OneToOneField('album.Album', null=True)
 
     def __str__(self):
         """
@@ -108,7 +109,7 @@ class Material(models.Model):
         return '%s' % self.name  # self.MaterialDefinition.name
 
 
-class Research(models.Model):
+class Research(AlbumMixin, models.Model):
     monument = models.ForeignKey(Monument, blank=True, null=True, on_delete=models.PROTECT)
     project = models.ForeignKey(Project, blank=True, null=True, on_delete=models.CASCADE)
     UVA = models.BooleanField()
@@ -120,7 +121,7 @@ class Research(models.Model):
     ch_t_research = models.BooleanField()
     sondazny = models.CharField(max_length=200)
     other = models.CharField(max_length=200)
-    album = models.OneToOneField('Album')
+    album = models.OneToOneField('album.Album', null=True)
 
     def __str__(self):
         """
@@ -135,28 +136,28 @@ class Research(models.Model):
 ############################################################
 
 
-class Image(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.CharField(max_length=255)
-    image = models.ImageField(upload_to='pictures/')
-    album = models.ForeignKey('Album', related_name='imageList', blank=True, null=True, on_delete=models.CASCADE)
-
-
-class Album(models.Model):
-    def as_div(self, imageDivID="album"):
-        if imageDivID is None:
-            imageDivID = 'album_id_%s' % self.id
-        htmlDivContent = ['<div id = %s>' % self]
-        for image in self.imageList.all():
-            htmlDivContent.append('<p> %s </p>' % image.name)
-            htmlDivContent.append('<image src=%s>' % image.image.url)
-        return '\n'.join(htmlDivContent)
-
-    def __str__(self):
-        """
-        String for representing the Model object.
-        """
-        return 'album_id_%s' % self.id
+# class Image(models.Model):
+#     name = models.CharField(max_length=255)
+#     description = models.CharField(max_length=255)
+#     image = models.ImageField(upload_to='pictures/')
+#     album = models.ForeignKey('Album', related_name='imageList', blank=True, null=True, on_delete=models.CASCADE)
+#
+#
+# class Album(models.Model):
+#     def as_div(self, imageDivID="album"):
+#         if imageDivID is None:
+#             imageDivID = 'album_id_%s' % self.id
+#         htmlDivContent = ['<div id = %s>' % self]
+#         for image in self.imageList.all():
+#             htmlDivContent.append('<p> %s </p>' % image.name)
+#             htmlDivContent.append('<image src=%s>' % image.image.url)
+#         return '\n'.join(htmlDivContent)
+#
+#     def __str__(self):
+#         """
+#         String for representing the Model object.
+#         """
+#         return 'album_id_%s' % self.id
 
 ###################################################################################
 ###################################################################################

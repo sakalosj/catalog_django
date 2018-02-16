@@ -2,7 +2,7 @@ from django import forms
 from django.forms import HiddenInput, SelectMultiple, MultipleHiddenInput
 
 from .models import Restorer, Material, Monument, SelectDateWidget2, Project, \
-    Research, Monument2Project, Monument2Material, Image, Album
+    Research, Monument2Project, Monument2Material
 
 
 class RestorerForm(forms.ModelForm):
@@ -24,8 +24,8 @@ class MonumentForm(forms.ModelForm):
 
     date = forms.DateField(widget=SelectDateWidget2)
 
-    def save(self, album, commit=True):
-        self.instance.album = album
+    def save(self): #, album, commit=True):
+        # self.instance.album = album
         self.instance.save()
 
         Monument2Material.objects.filter(monument=self.instance.id).delete()
@@ -37,7 +37,7 @@ class MonumentForm(forms.ModelForm):
 
         # for file in files:
         #     image = Image(files)
-            # album.save()
+        #     album.save()
         #     Image.objects.create(name=file, description=file, image=file, album=self.instance.album)
 
         return self.instance
@@ -48,9 +48,9 @@ class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
         fields = '__all__'
-        # exclude = ['monumentList']
+        # exclude = ['monument_list']
         # widgets = {
-        #     'monumentList': forms.HiddenInput(),
+        #     'monument_list': forms.HiddenInput(),
         # }
 
     monumentList = forms.ModelMultipleChoiceField(
@@ -79,20 +79,20 @@ class ResearchForm(forms.ModelForm):
             'project': forms.HiddenInput(),
         }
 
-
-class ImageForm(forms.ModelForm):
-    class Meta:
-        model = Image
-        exclude = ['pictureList']
-
-
-class AlbumForm(forms.ModelForm):
-    class Meta:
-        model = Album
-        fields = '__all__'
-        # exclude = ['pictureList']
-
-    pictures = forms.ImageField(widget=forms.FileInput(attrs={'multiple': True}))
+#
+# class ImageForm(forms.ModelForm):
+#     class Meta:
+#         model = Image
+#         exclude = ['pictureList']
+#
+#
+# class AlbumForm(forms.ModelForm):
+#     class Meta:
+#         model = Album
+#         fields = '__all__'
+#         # exclude = ['pictureList']
+#
+#     pictures = forms.ImageField(widget=forms.FileInput(attrs={'multiple': True}))
 
 
 class MaterialForm(forms.ModelForm):
