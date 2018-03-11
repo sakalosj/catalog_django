@@ -61,7 +61,7 @@ def getTable(request):
 
 #@csrf_exempt
 def getVariableValue(request):
-    request.session["t"]="5"
+    request.session["t"] = "5"
     if request.method == 'POST':
         request.session[request.POST['variable']] = request.POST['value']
         data = eval(request.session['model']).objects.all()
@@ -293,18 +293,18 @@ class MaterialCreate(CreateView):
 
 def material_create(request,pk = None):
     material_form = MaterialForm(request.POST or None, request.FILES or None)
-    aaa = Material.objects.filter(pk=pk)
-    if not aaa.exists():
-        album = Album.objects.create()
-    album_form = AlbumForm(request.POST or None, request.FILES or None, instance=album)
-    album_form = album_edit_html(request,album.id)
+    album_form = AlbumForm(request.POST or None, request.FILES or None)
 
-    if material_form.is_valid() :
+
+    if material_form.is_valid():
         material_instance = material_form.save()
-        # album_edit_html(request, material_form.id)
+        album_process_form(request, material_instance.album)
         return HttpResponseRedirect(reverse('monumentList'))
 
-    return render(request, 'catalogWeb/material_form.html', {'material_form': material_form, 'album_form': album_form, 'album_id': album.id})
+    return render(request, 'catalogWeb/material_form.html', {'material_form': material_form, 'album_form': album_form})
+
+
+
 
 class MaterialDelete(DeleteView):
     model = Material
@@ -321,6 +321,27 @@ class MaterialUpdate(UpdateView):
     fields = '__all__'
     success_url = reverse_lazy('materialList')
 
+
+def material_update(request, pk):
+    material_instance = get_object_or_404(Monument, pk=pk)
+    material_form = MonumentForm(request.POST or None, request.FILES or None, instance=material_instance)
+    ImageFormSet = inlineformset_factory(Album, Image, extra=0, form=ImageForm, widgets={'image': PictureWidget, })
+    album_form = AlbumForm(request.POST or None, request.FILES or None)
+
+    if request.method == 'POST':
+        album_formset = ImageFormSet(request.POST, request.FILES, instance=material_instance.album)
+        if material_form.is_valid() and album_formset.is_valid() and album_form.is_valid():
+            album_formset.save()
+            album_process_form(request, material_instance.album)
+            material_form.save()
+            return HttpResponseRedirect(reverse('materialList'))
+        else:
+            return render(request, 'catalogWeb/material_form.html',
+                          {'material_form': material_form, 'album_formset': album_formset, 'album_form': album_form})
+
+    album_formset = ImageFormSet(instance=material_instance.album)
+    return render(request, 'catalogWeb/material_form.html',
+                  {'material_form': material_form, 'album_formset': album_formset, 'album_form': album_form})
 
 ###########################################33
 

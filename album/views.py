@@ -1,4 +1,4 @@
-from django.forms import inlineformset_factory
+from django.forms import inlineformset_factory, formset_factory, modelformset_factory
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 
@@ -97,6 +97,8 @@ def album_show(album, image_div_id="album", edit=False):
     return '\n'.join(html_div_content)
 
 # @csrf_exempt
+
+
 def album_edit(request,pk):
     album_instance = get_object_or_404(Album, pk=pk)
     ImageFormSet = inlineformset_factory(Album, Image,  extra=0, form=ImageForm, widgets={'image': PictureWidget,})
@@ -123,7 +125,6 @@ def album_edit(request,pk):
             c = Context({'album_formset': album_formset, 'album_form': album_form})
             h = t.render({'album_formset': album_formset, 'album_form': album_form})
             return JsonResponse({'success': True, 'album_form': h})
-
 
     if request.method == 'GET':
         return render(request, 'album/album_form.html', {})
@@ -156,8 +157,8 @@ def album_edit_html(request, pk):
             h = t.render({'album_formset': album_formset, 'album_form': album_form})
             return JsonResponse({'success': True, 'album_form': h})
 
-    if request.method == 'GET':
-        t = loader.get_template('album/album_form.html')
+    else:
+        t = loader.get_template('album/album_form2.html')
         c = Context({'album_form': album_form})
         h = t.render({'album_form': album_form})
         return h
