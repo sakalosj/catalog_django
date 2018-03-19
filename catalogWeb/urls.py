@@ -33,22 +33,10 @@ urlpatterns = [
     url(r'material/list', views.MaterialView.as_view(), name='materialList'),
     url(r'material/add', views.material_create, name='materialCreate'),
     url(r'material/del/(?P<pk>[0-9]+)/$', views.MaterialDelete.as_view(), name='materialDelete'),
-    url(r'material/details/(?P<pk>[0-9]+)/$', views.MaterialDetail.as_view(), name='materialDetail'),
-    url(r'material/update/(?P<pk>[0-9]+)/$', views.MaterialUpdate.as_view(), name='materialUpdate'),
+    url(r'material/details/(?P<pk>[0-9]+)/$', views.material_detail, name='materialDetail'),
+    url(r'material/update/(?P<pk>[0-9]+)/$', views.material_update, name='materialUpdate'),
 
     url(r'album', include('album.urls')),
-    # url(r'image/list', views.ImageListView.as_view(), name='imageList'),
-    # url(r'image/add', views.image_create, name='imageCreate'),
-    # url(r'imagelist/show', views.ImageListView.as_view(), name='imageList'),
-    #
-    # url(r'album/list', views.AlbumListView.as_view(), name='albumList'),
-    # url(r'album/add', views.album_create, name='albumCreate'),
-    # url(r'album/detail/(?P<pk>[0-9]+)/$', views.AlbumDetailView.as_view(), name='albumDetail'),
-    #
-
-    # url(r'picture/del/(?P<pk>[0-9]+)/$', views.PictureDelete.as_view(), name='pictureDelete'),
-    # url(r'picture/details/(?P<pk>[0-9]+)/$', views.PictureDetail.as_view(), name='pictureDetail'),
-    # url(r'picture/update/(?P<pk>[0-9]+)/$', views.PictureUpdate.as_view(), name='pictureUpdate'),
 
 ]
 

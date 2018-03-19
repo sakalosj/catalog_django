@@ -9,8 +9,9 @@
 
 
 {% block content %}
-    <h1>Restorer List</h1>
-
+    <h1>Material List</h1>
+{{   request.resolver_match.url_name }}
+    {{  tab_name }}
     {% if material_list %}
     <ul>
 

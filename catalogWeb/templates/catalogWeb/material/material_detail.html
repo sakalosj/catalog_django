@@ -6,4 +6,6 @@
     <p>First name: {{ material.first_name }}</p>
     <p>Last name: {{ material.last_name }}</p>
     <p>Description: {{ material.description }}</p>
+
+    {{ album_html|safe }}
 {% endblock content %}

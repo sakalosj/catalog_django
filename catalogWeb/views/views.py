@@ -16,59 +16,7 @@ from .forms import RestorerForm, RestorerRemoveForm, MonumentForm, ProjectForm, 
 from .models import Restorer, Monument, Project, Research, Material, Monument2Project
 
 
-def index(request):
-    return render(request, 'index.html',{'tableData': Restorer.objects.all()})
 
-def index2(request):
-    return render(request, 'index2.html',{'tableData': Restorer.objects.all()})
-
-def restorerAdd(request):
-    # if this is a POST request we need to process the form data
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = RestorerForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
-            form.save()
-            return HttpResponseRedirect('/')
-
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = RestorerForm()
-
-    return render(request, 'restorerAdd.html', {'form': form})
-
-def restorerList(request):
-    return render(request, 'restorerList.html', {'restorerList': Restorer.objects.all()})
-
-def restorerRemove(request):
-    if request.method == 'POST':
-        form = RestorerRemoveForm(request.POST)
-        if form.is_valid():
-            id = form.cleaned_data['pk']
-            Restorer.objects.filter(restorer_id=id).delete()
-            return HttpResponseRedirect('/')
-
-    else:
-        form = RestorerRemoveForm(request.POST)
-    return render(request, 'restorerRemove.html', {'form': form})
-
-def getTable(request):
-    return render(request, 'getTable.html', {'tableData': Restorer.objects.all()})
-
-#@csrf_exempt
-def getVariableValue(request):
-    request.session["t"] = "5"
-    if request.method == 'POST':
-        request.session[request.POST['variable']] = request.POST['value']
-        data = eval(request.session['model']).objects.all()
-        return HttpResponseRedirect("request.POST['variable']] request.POST['value']")
-    return render(request, 'getTable.html', {'tableData': eval(request.session['model']).objects.all()})
-
-######################################################################################
 def index_new(request):
     """
     View function for home page of site.
@@ -129,7 +77,7 @@ class RestorerUpdate(UpdateView):
 def monument_list(request):
     monument_list = Monument.objects.all()
     context = {'monument_list': monument_list}
-    return render(request, 'catalogWeb/monument_list.html', context)
+    return render(request, 'catalogWeb/monument/monument_list.html', context)
 
 
 def monument_create(request):
@@ -143,7 +91,7 @@ def monument_create(request):
         album_process_form(request, monument_instance.album)
         return HttpResponseRedirect(reverse('monumentList'))
 
-    return render(request, 'catalogWeb/monument_form.html', {'monument_form': monument_form, 'album_form': album_form})
+    return render(request, 'catalogWeb/monument/monument_form.html', {'monument_form': monument_form, 'album_form': album_form})
 
 
 class MonumentDelete(DeleteView):
@@ -158,7 +106,7 @@ def monument_detail(request, pk):
     context = {'monument': monument,
                'album_html': album_html
                }
-    return render(request, 'catalogWeb/monument_detail.html', context)
+    return render(request, 'catalogWeb/monument/monument_detail.html', context)
 
 
 def monument_update(request, pk):
@@ -175,10 +123,10 @@ def monument_update(request, pk):
             monument_form.save()
             return HttpResponseRedirect(reverse('monumentList'))
         else:
-            return render(request, 'catalogWeb/monument_form.html', {'monument_form': monument_form, 'album_formset': album_formset, 'album_form': album_form})
+            return render(request, 'catalogWeb/monument/monument_form.html', {'monument_form': monument_form, 'album_formset': album_formset, 'album_form': album_form})
 
     album_formset = ImageFormSet(instance=monument_instance.album)
-    return render(request, 'catalogWeb/monument_form.html', {'monument_form': monument_form, 'album_formset': album_formset, 'album_form': album_form})
+    return render(request, 'catalogWeb/monument/monument_form.html', {'monument_form': monument_form, 'album_formset': album_formset, 'album_form': album_form})
 
 #######################################################################
 
@@ -218,7 +166,7 @@ def ProjectCreateF(request):
     else:
         projectForm = ProjectForm()
         researchForm = ResearchForm()
-    return render(request, 'catalogWeb/project_form.html', {'projectForm': projectForm,'researchForm': researchForm, 'monuments': monuments})
+    return render(request, 'catalogWeb/project/project_form.html', {'projectForm': projectForm,'researchForm': researchForm, 'monuments': monuments})
 
 
 class ProjectDelete(DeleteView):
@@ -301,7 +249,7 @@ def material_create(request,pk = None):
         album_process_form(request, material_instance.album)
         return HttpResponseRedirect(reverse('monumentList'))
 
-    return render(request, 'catalogWeb/material_form.html', {'material_form': material_form, 'album_form': album_form})
+    return render(request, 'catalogWeb/material/material_form.html', {'material_form': material_form, 'album_form': album_form})
 
 
 
@@ -336,11 +284,11 @@ def material_update(request, pk):
             material_form.save()
             return HttpResponseRedirect(reverse('materialList'))
         else:
-            return render(request, 'catalogWeb/material_form.html',
+            return render(request, 'catalogWeb/material/material_form.html',
                           {'material_form': material_form, 'album_formset': album_formset, 'album_form': album_form})
 
     album_formset = ImageFormSet(instance=material_instance.album)
-    return render(request, 'catalogWeb/material_form.html',
+    return render(request, 'catalogWeb/material/material_form.html',
                   {'material_form': material_form, 'album_formset': album_formset, 'album_form': album_form})
 
 ###########################################33
