@@ -6,11 +6,11 @@ from catalogWeb.models import Restorer, Material, Monument, SelectDateWidget2, P
     Research, Monument2Project, Monument2Material
 
 
-class MaterialForm(forms.ModelForm):
+class ResearchForm(forms.ModelForm):
     class Meta:
-        model = Material
-        exclude = ['album']
-
-    # pictures = forms.ImageField(widget=forms.FileInput(attrs={'multiple': True}), required=False)
-
-
+        model = Research
+        exclude = ['monument', 'project', 'album']
+        widgets = {
+            'monument': forms.HiddenInput(),
+            'project': forms.HiddenInput(),
+        }

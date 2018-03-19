@@ -6,4 +6,10 @@
     <p>First name: {{ restorer.first_name }}</p>
     <p>Last name: {{ restorer.last_name }}</p>
     <p>Description: {{ restorer.description }}</p>
+
+    {{ album_html|safe }}
+
+    <a href="{% url 'restorerUpdate' pk=restorer.id %}">Edit</a>
+    <a href="{% url 'restorerDelete' pk=restorer.id %}">Delete</a>
+
 {% endblock content %}

@@ -20,5 +20,7 @@
 
     {{ album_html|safe }}
 
+    <a href="{% url 'monumentUpdate' pk=monument.id %}">Edit</a>
+    <a href="{% url 'monumentDelete' pk=monument.id %}">Delete</a>
 
 {% endblock content %}

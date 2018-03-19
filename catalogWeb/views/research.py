@@ -1,20 +1,12 @@
-import json
-
-from django.forms import inlineformset_factory
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect
 from django.views import generic
 from django.views.generic import CreateView, DeleteView, DetailView
-from django.urls import reverse, reverse_lazy
-from django.views.generic.edit import ModelFormMixin, UpdateView
+from django.urls import reverse_lazy
+from django.views.generic.edit import UpdateView
+from catalogWeb.helpers import add_tab_name
+from ..forms import ResearchForm
+from ..models import Research
 
-from album.forms import AlbumForm, ImageForm
-from album.models import Album, Image
-from album.views import album_show, album_process_form, album_edit_html_is_valid, album_edit_html
-from album.widgets import PictureWidget
-from ..forms import RestorerForm, RestorerRemoveForm, MonumentForm, ProjectForm, ResearchForm,  MaterialForm
-from ..models import Restorer, Monument, Project, Research, Material, Monument2Project
-
+TAB_NAME = 'research'
 
 
 class ResearchListView(generic.ListView):
@@ -22,11 +14,19 @@ class ResearchListView(generic.ListView):
     template_name = 'catalogWeb/research/research_list.html'
     paginate_by = 4
 
+    @add_tab_name(TAB_NAME)
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**kwargs)
+
 
 class ResearchCreate(CreateView):
     model = Research
     form_class = ResearchForm
     success_url = reverse_lazy('researchList')
+
+    @add_tab_name(TAB_NAME)
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**kwargs)
 
 
 class ResearchDelete(DeleteView):
@@ -34,9 +34,17 @@ class ResearchDelete(DeleteView):
     fields = '__all__'
     success_url = reverse_lazy('researchList')
 
+    @add_tab_name(TAB_NAME)
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**kwargs)
+
 
 class ResearchDetail(DetailView):
     model = Research
+
+    @add_tab_name(TAB_NAME)
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**kwargs)
 
 
 class ResearchUpdate(UpdateView):
@@ -44,3 +52,6 @@ class ResearchUpdate(UpdateView):
     form_class = ResearchForm
     success_url = reverse_lazy('researchList')
 
+    @add_tab_name(TAB_NAME)
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**kwargs)

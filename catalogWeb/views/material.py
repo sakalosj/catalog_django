@@ -1,24 +1,22 @@
-import json
-
 from django.forms import inlineformset_factory
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.views import generic
 from django.views.generic import CreateView, DeleteView, DetailView
 from django.urls import reverse, reverse_lazy
-from django.views.generic.edit import ModelFormMixin, UpdateView
+from django.views.generic.edit import UpdateView
 
 from album.forms import AlbumForm, ImageForm
 from album.models import Album, Image
 from album.views import album_show, album_process_form
 from album.widgets import PictureWidget
 from catalogWeb.helpers import add_tab_name
-from ..forms import MonumentForm,  MaterialForm
-from ..models import Monument, Material
-
+from ..forms import MaterialForm
+from ..models import Material
 
 
 TAB_NAME = 'material'
+
 
 class MaterialView(generic.ListView):
     model = Material
@@ -26,8 +24,8 @@ class MaterialView(generic.ListView):
     paginate_by = 4
 
     @add_tab_name('material')
-    def get_context_data(self):
-        return super().get_context_data()
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**kwargs)
 
 
 class MaterialCreate(CreateView):
@@ -36,20 +34,23 @@ class MaterialCreate(CreateView):
     success_url = reverse_lazy('materialList')
 
     @add_tab_name('material')
-    def get_context_data(self,*args, **kwargs):
-        return super().get_context_data(*args, **kwargs)
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**kwargs)
 
 
-def material_create(request, pk = None):
+def material_create(request):
     material_form = MaterialForm(request.POST or None, request.FILES or None)
     album_form = AlbumForm(request.POST or None, request.FILES or None)
-
+    context = {
+        'material_form': material_form,
+        'album_form': album_form
+    }
     if material_form.is_valid() and album_form.is_valid():
         material_instance = material_form.save()
         album_process_form(request, material_instance.album)
         return HttpResponseRedirect(reverse('materialList'))
 
-    return render(request, 'catalogWeb/material/material_form.html', {'material_form': material_form, 'album_form': album_form})
+    return render(request, 'catalogWeb/material/material_form.html', context)
 
 
 class MaterialDelete(DeleteView):
@@ -57,6 +58,10 @@ class MaterialDelete(DeleteView):
     fields = '__all__'
     template_name = 'catalogWeb/material/material_confirm_delete.html'
     success_url = reverse_lazy('materialList')
+
+    @add_tab_name('material')
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**kwargs)
 
 
 class MaterialDetail(DetailView):
@@ -70,6 +75,7 @@ def material_detail(request, pk):
                'album_html': album_html,
                'tab_name': TAB_NAME,
                }
+
     return render(request, 'catalogWeb/material/material_detail.html', context)
 
 
@@ -85,6 +91,11 @@ def material_update(request, pk):
     ImageFormSet = inlineformset_factory(Album, Image, extra=0, form=ImageForm, widgets={'image': PictureWidget, })
     album_form = AlbumForm(request.POST or None, request.FILES or None)
 
+    context = {'material_form': material_form,
+               'album_form': album_form,
+               'tab_name': TAB_NAME,
+               }
+
     if request.method == 'POST':
         album_formset = ImageFormSet(request.POST, request.FILES, instance=material_instance.album)
         if material_form.is_valid() and album_formset.is_valid() and album_form.is_valid():
@@ -93,14 +104,9 @@ def material_update(request, pk):
             material_form.save()
             return HttpResponseRedirect(reverse('materialList'))
         else:
-            return render(request, 'catalogWeb/material/material_form.html',
-                          {'material_form': material_form,
-                           'album_formset': album_formset,
-                           'album_form': album_form,
-                           'tab_name': TAB_NAME,
-                           })
+            context['album_formset'] = album_formset
+            return render(request, 'catalogWeb/material/material_form.html', context)
 
     album_formset = ImageFormSet(instance=material_instance.album)
-    return render(request, 'catalogWeb/material/material_form.html',
-                  {'material_form': material_form, 'album_formset': album_formset, 'album_form': album_form,'tab_name': TAB_NAME,})
-
+    context['album_formset'] = album_formset
+    return render(request, 'catalogWeb/material/material_form.html', context)

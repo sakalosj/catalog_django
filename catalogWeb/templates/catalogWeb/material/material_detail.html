@@ -8,4 +8,7 @@
     <p>Description: {{ material.description }}</p>
 
     {{ album_html|safe }}
+
+    <a href="{% url 'materialUpdate' pk=material.id %}">Edit</a>
+    <a href="{% url 'materialDelete' pk=material.id %}">Delete</a>
 {% endblock content %}

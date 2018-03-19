@@ -1,22 +1,18 @@
-import json
-
 from django.forms import inlineformset_factory
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
-from django.views import generic
-from django.views.generic import CreateView, DeleteView, DetailView
+from django.views.generic import DeleteView
 from django.urls import reverse, reverse_lazy
-from django.views.generic.edit import ModelFormMixin, UpdateView
-
 from album.forms import AlbumForm, ImageForm
 from album.models import Album, Image
-from album.views import album_show, album_process_form, album_edit_html_is_valid, album_edit_html
+from album.views import album_show, album_process_form
 from album.widgets import PictureWidget
 from catalogWeb.helpers import add_tab_name
-from ..forms import RestorerForm, RestorerRemoveForm, MonumentForm, ProjectForm, ResearchForm,  MaterialForm
-from ..models import Restorer, Monument, Project, Research, Material, Monument2Project
+from ..forms import MonumentForm
+from ..models import Monument
 
 TAB_NAME = 'monument'
+
 
 def monument_list(request):
     monuments = Monument.objects.all()
@@ -54,8 +50,8 @@ class MonumentDelete(DeleteView):
     success_url = reverse_lazy('monument_list')
 
     @add_tab_name(TAB_NAME)
-    def get_context_data(self, *args, **kwargs):
-        return super().get_context_data(*args, **kwargs)
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**kwargs)
 
 
 def monument_detail(request, pk):
@@ -71,7 +67,7 @@ def monument_detail(request, pk):
 def monument_update(request, pk):
     monument_instance = get_object_or_404(Monument, pk=pk)
     monument_form = MonumentForm(request.POST or None, request.FILES or None, instance=monument_instance)
-    ImageFormSet = inlineformset_factory(Album, Image,  extra=0, form=ImageForm, widgets={'image': PictureWidget,})
+    ImageFormSet = inlineformset_factory(Album, Image,  extra=0, form=ImageForm, widgets={'image': PictureWidget, })
     album_form = AlbumForm(request.POST or None, request.FILES or None)
 
     context = {
@@ -86,7 +82,7 @@ def monument_update(request, pk):
             album_formset.save()
             album_process_form(request, monument_instance.album)
             monument_form.save()
-            return HttpResponseRedirect(reverse('monumentList'))
+            return HttpResponseRedirect(reverse('monumentDetail', kwargs={'pk': pk}))
         else:
             context['album_formset'] = album_formset
             return render(request, 'catalogWeb/monument/monument_form.html', context)
@@ -94,4 +90,3 @@ def monument_update(request, pk):
     album_formset = ImageFormSet(instance=monument_instance.album)
     context['album_formset'] = album_formset
     return render(request, 'catalogWeb/monument/monument_form.html', context)
-

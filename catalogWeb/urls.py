@@ -7,10 +7,10 @@ urlpatterns = [
     url(r'^$', views.index_new, name='index_new'),
 
     url(r'restorer/list', views.RestorerListView.as_view(), name='restorerList'),
-    url(r'restorer/add', views.RestorerCreate.as_view(), name='restorerCreate'),
+    url(r'restorer/add', views.restorer_create, name='restorerCreate'),
     url(r'restorer/del/(?P<pk>[0-9]+)/$', views.RestorerDelete.as_view(), name='restorerDelete'),
-    url(r'restorer/details/(?P<pk>[0-9]+)/$', views.RestorerDetail.as_view(), name='restorerDetail'),
-    url(r'restorer/update/(?P<pk>[0-9]+)/$', views.RestorerUpdate.as_view(), name='restorerUpdate'),
+    url(r'restorer/details/(?P<pk>[0-9]+)/$', views.restorer_detail, name='restorerDetail'),
+    url(r'restorer/update/(?P<pk>[0-9]+)/$', views.restorer_update, name='restorerUpdate'),
 
     url(r'monument/list', views.monument_list, name='monumentList'),
     url(r'monument/add', views.monument_create, name='monumentCreate'),

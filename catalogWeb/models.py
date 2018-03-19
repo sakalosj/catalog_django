@@ -29,10 +29,11 @@ from django.utils.formats import get_format
 from album.models import AlbumMixin
 
 
-class Restorer(models.Model):
+class Restorer(AlbumMixin, models.Model):
     first_name = models.CharField(max_length=45)
     last_name = models.CharField(max_length=45)
     description = models.CharField(max_length=200)
+    album = models.OneToOneField('album.Album', null=True)
 
     def __str__(self):
         """
@@ -74,8 +75,8 @@ class Monument2Material(models.Model):
 
 
 class ResearchRelation(models.Model):
-    project = models.ForeignKey('Project', on_delete= models.CASCADE, blank=True, null=True)
-    monument = models.ForeignKey(Monument, on_delete= models.PROTECT, blank=True, null=True)
+    project = models.ForeignKey('Project', on_delete=models.CASCADE, blank=True, null=True)
+    monument = models.ForeignKey(Monument, on_delete=models.PROTECT, blank=True, null=True)
     research = models.ForeignKey('Research', on_delete=models.CASCADE, blank=True, null=True)
     description = models.CharField(max_length=200)
 
@@ -87,7 +88,7 @@ class Project(models.Model):
     realized_by = models.CharField(max_length=45)
     realized_for = models.CharField(max_length=45)
     restorerList = models.ManyToManyField(Restorer, blank=True)
-    monumentList = models.ManyToManyField(Monument, blank=True, through=Monument2Project)
+    monument_list = models.ManyToManyField(Monument, blank=True, through=Monument2Project)
 
     def __str__(self):
         """
