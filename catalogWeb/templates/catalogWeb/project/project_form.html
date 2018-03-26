@@ -17,29 +17,106 @@
                 $("#monuments").append("<p>Monument " +choice+"</p>")}
             });
 
-        $( "#form1" ).submit(function( event ) {
+        {#$( "#form1" ).submit(function( event ) {#}
                 {##}
-                $('<input />').attr('type', 'hidden').attr('name', 'monumentListJSON').attr('value', monumentListJSON).appendTo('form#form1')
-            });
+        {#        $('<input />').attr('type', 'hidden').attr('name', 'monumentListJSON').attr('value', monumentListJSON).appendTo('form#form1')#}
+        {#    });#}
 
 })
 </script>
 
 
+<script type="text/javascript">
+    var frm = $('#form1');
+    frm.submit(function () {
+        $.ajax({
+            type: frm.attr('method'),
+            url: frm.attr('action'),
+            data: frm.serialize(),
+            success: function (data) {
+                $("#SOME-DIV").html(data);
+            },
+            error: function(data) {
+                $("#MESSAGE-DIV").html("Something went wrong!");
+            }
+        });
+        return false;
+    });
+</script>
+
+
 {#############################################################}
 
-<form id="form1" action="" method="post" >
+<form id="form1" action="{{ request.path }}" method="post" >
     {% csrf_token %}
-    <ul>
-        {{ projectForm.as_ul }}
-    </ul>
-    <div id="monuments">
-        <select id="monument_select" >
-         {% for monument in monuments %}
-                <option value='{{ monument.id }}'> {{ monument.name}} </option>
-         {% endfor %}
-        </select>
+{#    <ul>#}
+{#        {{ project_form.as_ul }}#}
+{#    </ul>#}
+{#    <div id="monuments">#}
+{#        <select id="monument_select" >#}
+{#         {% for monument in monuments %}#}
+{#                <option value='{{ monument.id }}'> {{ monument.name}} </option>#}
+{#         {% endfor %}#}
+{#        </select>#}
+{#    </div>#}
+{#    <input type="submit" value="submit" action="submit" />#}
+{{ project_form.non_field_errors }}
+    <div class="fieldWrapper">
+        {{ project_form.name.errors }}
+        {{ project_form.name.label_tag }}
+        {{ project_form.name }}
     </div>
-    <input type="submit" value="submit" action="submit" />
+
+    <div class="fieldWrapper">
+        {{ project_form.garant.errors }}
+        {{ project_form.garant.label_tag }}
+        {{ project_form.garant }}
+    </div>
+
+    <div class="fieldWrapper">
+        {{ project_form.description.errors }}
+        {{ project_form.description.label_tag }}
+        {{ project_form.description }}
+    </div>
+
+    <div class="fieldWrapper">
+        {{ project_form.realized_by.errors }}
+        {{ project_form.realized_by.label_tag }}
+        {{ project_form.realized_by }}
+    </div>
+
+    <div class="fieldWrapper">
+        {{ project_form.realized_for.errors }}
+        {{ project_form.realized_for.label_tag }}
+        {{ project_form.realized_for }}
+    </div>
+
+    <div class="fieldWrapper">
+        {{ project_form.restorerList.errors }}
+        {{ project_form.restorerList.label_tag }}
+        {{ project_form.restorerList }}
+    </div>
+
+    <div class="fieldWrapper">
+        {{ project_form.monument_list.errors }}
+        {{ project_form.monument_list.label_tag }}
+        {{ project_form.monument_list }}
+    </div>
+
+    {% if project_form.instance.id is not None %}
+        <p>Research:</p>
+        <ul>
+        {% for research in project_form.instance.research_set.all  %}
+            <li>
+             <a href="{% url 'researchDetail' research.id %}"> {{  research }}</a>
+             <a href="{% url 'researchDelete' research.id %}"> Del</a>
+             <a href="{% url 'researchUpdate' research.id %}"> Update</a>
+            </li>
+        {% endfor %}
+        </ul>
+        <a href="{% url 'researchCreate' project_id=project_form.instance.id %}?redirect_to={{ request.path }}">Add research</a>
+
+    {% endif %}
+<a href="" id="test">Add research</a>
 </form>
 {% endblock %}

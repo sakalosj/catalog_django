@@ -20,7 +20,7 @@ TAB_NAME = 'restorer'
 class RestorerListView(generic.ListView):
     model = Restorer
     template_name = 'catalogWeb/restorer/restorer_list.html'
-    paginate_by = 4
+    paginate_by = 10
 
     @add_tab_name(TAB_NAME)
     def get_context_data(self, **kwargs):
@@ -44,7 +44,8 @@ def restorer_create(request):
         'restorer_form': restorer_form,
         'album_form': album_form,
         'tab_name': TAB_NAME,
-            }
+        'redirect_to': request.GET.get('redirect_to'),
+    }
 
     if restorer_form.is_valid() and album_form.is_valid():
         restorer_instance = restorer_form.save()
@@ -75,14 +76,19 @@ class RestorerDetail(DetailView):
     def get_context_data(self, **kwargs):
         return super().get_context_data(**kwargs)
 
+
 def restorer_detail(request, pk):
     restorer = get_object_or_404(Restorer, pk=pk)
     album_html = album_show(restorer.album)
-    context = {'restorer': restorer,
-               'album_html': album_html,
-               'tab_name': TAB_NAME,
-               }
+    context = {
+        'restorer': restorer,
+        'album_html': album_html,
+        'tab_name': TAB_NAME,
+        'redirect_to': request.GET.get('redirect_to'),
+    }
+
     return render(request, 'catalogWeb/restorer/restorer_detail.html', context)
+
 
 class RestorerUpdate(UpdateView):
     model = Restorer
@@ -105,7 +111,8 @@ def restorer_update(request, pk):
         'restorer_form': restorer_form,
         'album_form': album_form,
         'tab_name': TAB_NAME,
-              }
+        'redirect_to': request.GET.get('redirect_to'),
+    }
 
     if request.method == 'POST':
         album_formset = ImageFormSet(request.POST, request.FILES, instance=restorer_instance.album)

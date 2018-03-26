@@ -15,14 +15,8 @@
     <div class="content_element">
         <p>Restorers:</p>
         {% for restorer in project.restorerList.all %}
-            <p>
-                {{ restorer }}
-
-            </p>
+            <p>{{ restorer }}</p>
         {% endfor %}
-        {% if 1 == 1 %}
-            <a href="{% url 'restorerCreate' project_id=project.id %}?redirect_to={{ request.path }}"> Edit restorer list</a>
-        {% endif %}
     </div>
 
     <div class="content_element">
@@ -39,8 +33,8 @@
         {% endfor %}
 
         <p>
-            <a href="{% url 'researchCreate' project_id=project.id %}?redirect_to={{ request.path }}"> Add research</a>
+            <a href="{% url 'researchCreateForProject' project_id=project.id %}?redirect_to={{ request.path }}"> Add research</a>
         </p>
     </div>
-
+    
 {% endblock content %}

@@ -15,18 +15,18 @@ class ProjectForm(forms.ModelForm):
         #     'monument_list': forms.HiddenInput(),
         # }
 
-    monumentList = forms.ModelMultipleChoiceField(
-        queryset=Monument.objects.all(),
-        widget=MultipleHiddenInput
-    )
+    # monumentList = forms.ModelMultipleChoiceField(
+    #     queryset=Monument.objects.all(),
+    #     widget=MultipleHiddenInput
+    # )
 
     def save(self, commit=True):
         project = self.instance
         project.save()
         project.restorerList.set(self.cleaned_data['restorerList'])
-
+        #project.monument_list.set(self.cleaned_data['monument_list'])
         Monument2Project.objects.filter(project=self.instance.id).delete()
-        for monument in self.cleaned_data['monumentList']:
+        for monument in self.cleaned_data['monument_list']:
             Monument2Project.objects.create(monument=monument, project=project)
 
         return self.instance

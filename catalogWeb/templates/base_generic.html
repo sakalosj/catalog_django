@@ -35,7 +35,7 @@
         <li role="presentation" class="{% if tab_name == 'material' %}active{% endif %}">
             <a href="{% url 'materialList' %}">Material</a>
         </li>
-{#        <li role="presentation"><a href="{% url 'materialListList' %}">MaterialList</a></li>#}
+
     </ul>
     <div class="row">
         <div class="col-sm-2">
@@ -47,23 +47,26 @@
             {% block pagination %}
                 {% if is_paginated %}
                     <div class="pagination">
-            <span class="page-links">
-                {% if page_obj.has_previous %}
-                    <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
-                {% endif %}
-                <span class="page-current">
-                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                </span>
-                {% if page_obj.has_next %}
-                    <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
-                {% endif %}
-            </span>
+                        <span class="page-links">
+                            {% if page_obj.has_previous %}
+                                <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+                            {% endif %}
+                            <span class="page-current">
+                                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                            </span>
+                            {% if page_obj.has_next %}
+                                <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+                            {% endif %}
+                        </span>
                     </div>
                 {% endif %}
             {% endblock pagination %}
-
-
         </div>
+
+    {% if redirect_to and redirect_to != None %}
+        <a class="btn" href={{  redirect_to  }}>Back</a>
+
+    {% endif %}
     </div>
 
 </div>

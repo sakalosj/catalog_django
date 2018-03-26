@@ -19,6 +19,7 @@ def monument_list(request):
     context = {
         'monument_list': monuments,
         'tab_name': TAB_NAME,
+        'redirect_to': request.GET.get('redirect_to'),
             }
 
     return render(request, 'catalogWeb/monument/monument_list.html', context)
@@ -31,6 +32,7 @@ def monument_create(request):
         'monument_form': monument_form,
         'album_form': album_form,
         'tab_name': TAB_NAME,
+        'redirect_to': request.GET.get('redirect_to'),
             }
 
     if monument_form.is_valid() and album_form.is_valid():
@@ -57,10 +59,13 @@ class MonumentDelete(DeleteView):
 def monument_detail(request, pk):
     monument = get_object_or_404(Monument, pk=pk)
     album_html = album_show(monument.album)
-    context = {'monument': monument,
-               'album_html': album_html,
-               'tab_name': TAB_NAME,
-               }
+    context = {
+        'monument': monument,
+        'album_html': album_html,
+        'tab_name': TAB_NAME,
+        'redirect_to': request.GET.get('redirect_to'),
+    }
+
     return render(request, 'catalogWeb/monument/monument_detail.html', context)
 
 
@@ -74,7 +79,8 @@ def monument_update(request, pk):
         'monument_form': monument_form,
         'album_form': album_form,
         'tab_name': TAB_NAME,
-              }
+        'redirect_to': request.GET.get('redirect_to'),
+    }
 
     if request.method == 'POST':
         album_formset = ImageFormSet(request.POST, request.FILES, instance=monument_instance.album)

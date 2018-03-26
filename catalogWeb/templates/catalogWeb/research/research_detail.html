@@ -15,4 +15,10 @@
     <p>ch_t_research: {{ research.ch_t_research }}</p>
     <p>sondazny     : {{ research.sondazny      }}</p>
     <p>other        : {{ research.other         }}</p>
+
+
+    {{ album_html|safe }}
+
+    <a href="{% url 'researchUpdate' pk=research.id %}">Edit</a>
+    <a href="{% url 'researchDelete' pk=research.id %}">Delete</a>
 {% endblock content %}

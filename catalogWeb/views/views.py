@@ -41,7 +41,7 @@ def index_new(request):
 
 class RestorerListView(generic.ListView):
     model = Restorer
-    paginate_by = 4
+    paginate_by = 10
 
 
 class RestorerCreate(CreateView):
@@ -133,7 +133,7 @@ def monument_update(request, pk):
 
 class ProjectListView(generic.ListView):
     model = Project
-    paginate_by = 4
+    paginate_by = 10
 
 
 class ProjectCreate(CreateView):
@@ -202,7 +202,7 @@ class ProjectUpdate(UpdateView):
 
 class ResearchListView(generic.ListView):
     model = Research
-    paginate_by = 4
+    paginate_by = 10
 
 
 class ResearchCreate(CreateView):
@@ -231,7 +231,7 @@ class ResearchUpdate(UpdateView):
 
 class MaterialView(generic.ListView):
     model = Material
-    paginate_by = 4
+    paginate_by = 10
 
 
 class MaterialCreate(CreateView):

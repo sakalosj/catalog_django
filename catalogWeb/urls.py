@@ -7,7 +7,7 @@ urlpatterns = [
     url(r'^$', views.index_new, name='index_new'),
 
     url(r'restorer/list', views.RestorerListView.as_view(), name='restorerList'),
-    url(r'restorer/add', views.restorer_create, name='restorerCreate'),
+    url(r'restorer/add/(?:(?P<project_id>[0-9]+)/)?$', views.restorer_create, name='restorerCreate'),
     url(r'restorer/del/(?P<pk>[0-9]+)/$', views.RestorerDelete.as_view(), name='restorerDelete'),
     url(r'restorer/details/(?P<pk>[0-9]+)/$', views.restorer_detail, name='restorerDetail'),
     url(r'restorer/update/(?P<pk>[0-9]+)/$', views.restorer_update, name='restorerUpdate'),
@@ -19,16 +19,17 @@ urlpatterns = [
     url(r'monument/update/(?P<pk>[0-9]+)/$', views.monument_update, name='monumentUpdate'),
 
     url(r'project/list', views.ProjectListView.as_view(), name='projectList'),
-    url(r'project/add', views.ProjectCreateF, name='projectCreate'),
+    url(r'project/add', views.project_create, name='projectCreate'),
     url(r'project/del/(?P<pk>[0-9]+)/$', views.ProjectDelete.as_view(), name='projectDelete'),
-    url(r'project/details/(?P<pk>[0-9]+)/$', views.ProjectDetail.as_view(), name='projectDetail'),
-    url(r'project/update/(?P<pk>[0-9]+)/$', views.ProjectUpdate.as_view(), name='projectUpdate'),
+    url(r'project/details/(?P<pk>[0-9]+)/$', views.project_detail, name='projectDetail'),
+    url(r'project/update/(?P<pk>[0-9]+)/$', views.project_update, name='projectUpdate'),
 
     url(r'research/list', views.ResearchListView.as_view(), name='researchList'),
-    url(r'research/add', views.ResearchCreate.as_view(), name='researchCreate'),
+    url(r'research/add/(?:(?P<project_id>[0-9]+)/)?$', views.research_create, name='researchCreate'),
+    # url(r'research/add', views.research_create, name='researchCreate'),
     url(r'research/del/(?P<pk>[0-9]+)/$', views.ResearchDelete.as_view(), name='researchDelete'),
-    url(r'research/details/(?P<pk>[0-9]+)/$', views.ResearchDetail.as_view(), name='researchDetail'),
-    url(r'research/update/(?P<pk>[0-9]+)/$', views.ResearchUpdate.as_view(), name='researchUpdate'),
+    url(r'research/details/(?P<pk>[0-9]+)/$', views.research_detail, name='researchDetail'),
+    url(r'research/update/(?P<pk>[0-9]+)/$', views.research_update, name='researchUpdate'),
 
     url(r'material/list', views.MaterialView.as_view(), name='materialList'),
     url(r'material/add', views.material_create, name='materialCreate'),

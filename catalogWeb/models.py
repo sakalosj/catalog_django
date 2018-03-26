@@ -111,7 +111,11 @@ class Material(AlbumMixin, models.Model):
 
 
 class Research(AlbumMixin, models.Model):
-    monument = models.ForeignKey(Monument, blank=True, null=True, on_delete=models.PROTECT)
+    # monument = models.ForeignKey(Monument, blank=True, null=True, on_delete=models.PROTECT)
+    name = models.CharField(max_length=45, blank=True, null=True)
+    description = models.CharField(max_length=200, blank=True, null=True)  # general info
+    date = models.DateField(blank=True, null=True)
+    monument = models.ManyToManyField(Monument, blank=True)
     project = models.ForeignKey(Project, blank=True, null=True, on_delete=models.CASCADE)
     UVA = models.BooleanField()
     UVC = models.BooleanField()
@@ -128,8 +132,11 @@ class Research(AlbumMixin, models.Model):
         """
         String for representing the Model object.
         """
-        return '%s' % self.id
+        return '%s' % self.name
 
+# class ResearchManager(models.Manager):
+#     def create_research(self, project, monuments):
+#         research =  self.create(project=project)
 
 ############################################################
 

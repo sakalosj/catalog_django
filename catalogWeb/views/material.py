@@ -21,7 +21,7 @@ TAB_NAME = 'material'
 class MaterialView(generic.ListView):
     model = Material
     template_name = 'catalogWeb/material/material_list.html'
-    paginate_by = 4
+    paginate_by = 10
 
     @add_tab_name('material')
     def get_context_data(self, **kwargs):
@@ -43,7 +43,8 @@ def material_create(request):
     album_form = AlbumForm(request.POST or None, request.FILES or None)
     context = {
         'material_form': material_form,
-        'album_form': album_form
+        'album_form': album_form,
+        'redirect_to': request.GET.get('redirect_to'),
     }
     if material_form.is_valid() and album_form.is_valid():
         material_instance = material_form.save()
@@ -74,6 +75,7 @@ def material_detail(request, pk):
     context = {'material': material,
                'album_html': album_html,
                'tab_name': TAB_NAME,
+               'redirect_to': request.GET.get('redirect_to'),
                }
 
     return render(request, 'catalogWeb/material/material_detail.html', context)
@@ -94,6 +96,7 @@ def material_update(request, pk):
     context = {'material_form': material_form,
                'album_form': album_form,
                'tab_name': TAB_NAME,
+               'redirect_to': request.GET.get('redirect_to'),
                }
 
     if request.method == 'POST':
