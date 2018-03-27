@@ -16,26 +16,26 @@
         <p>Restorers:</p>
         {% for restorer in project.restorerList.all %}
             <p>
-                {{ restorer }}
+                <a href="{% url 'restorerDetail' restorer.id %}"> {{  restorer }}</a>
 
             </p>
         {% endfor %}
-        {% if 1 == 1 %}
-            <a href="{% url 'restorerCreate' project_id=project.id %}?redirect_to={{ request.path }}"> Edit restorer list</a>
-        {% endif %}
+{#        {% if 1 == 1 %}#}
+{#            <a href="{% url 'restorerCreate' project_id=project.id %}?redirect_to={{ request.path }}"> Edit restorer list</a>#}
+{#        {% endif %}#}
     </div>
 
     <div class="content_element">
         <p>Monuments:</p>
         {% for monument in project.monument_list.all %}
-            <p> {{ monument }}</p>
+            <p> <a href="{% url 'monumentDetail' monument.id %}"> {{  monument }}</a></p>
         {% endfor %}
     </div>
 
     <div class="content_element">
         <p>Research:</p>
          {% for research in project.research_set.all  %}
-            <p>{{ research }}</p>
+            <a href="{% url 'researchDetail' research.id %}"> {{  research }}</a>
         {% endfor %}
 
         <p>

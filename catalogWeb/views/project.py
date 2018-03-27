@@ -1,6 +1,6 @@
 import json
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.views import generic
 from django.views.generic import CreateView, DeleteView, DetailView
 from django.urls import reverse, reverse_lazy
@@ -58,6 +58,9 @@ def project_create(request, return_id=False):
         'tab_name': TAB_NAME,
         'redirect_to': request.GET.get('redirect_to'),
     }
+
+    if request.is_ajax():
+        pass
 
     if project_form.is_valid():
         project = project_form.save()
@@ -139,16 +142,27 @@ def project_update(request, pk):
         'redirect_to': request.GET.get('redirect_to'),
     }
 
+    if request.is_ajax():
+        pass
+
     if request.method == 'POST':
         # album_formset = ImageFormSet(request.POST, request.FILES, instance=project_instance.album)
         if project_form.is_valid(): #and album_formset.is_valid() and album_form.is_valid():
             # album_formset.save()
             # album_process_form(request, project_instance.album)
             project_form.save()
-            return HttpResponseRedirect(reverse('projectDetail', kwargs={'pk': pk}))
+            if request.is_ajax():
+                return JsonResponse({'success': True})
+            else:
+                return HttpResponseRedirect(reverse('projectDetail', kwargs={'pk': pk}))
+
         else:
             # context['album_formset'] = album_formset
-            return render(request, 'catalogWeb/project/project_form.html', context)
+            if request.is_ajax():
+                return JsonResponse({'error': True,
+                                     'form': project_form.as_ul()})
+            else:
+                return render(request, 'catalogWeb/project/project_form.html', context)
 
     # album_formset = ImageFormSet(instance=project_instance.album)
     # context['album_formset'] = album_formset

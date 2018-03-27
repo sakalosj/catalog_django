@@ -2,48 +2,25 @@
 
 {% block content %}
 
-<script>
-    $(function(){
-        var monuments_slected = [];
+{#<script>#}
+{#    $(function(){#}
+{#        var monuments_slected = [];#}
+{##}
+{#        $('#monument_select').on({#}
+{#            "focus": function() {#}
+{#                this.selectedIndex = -1#}
+{#                },#}
+{#            "change": function() {#}
+{#                choice = $(this).val();#}
+{#                monuments_slected.push(choice);#}
+{#                $('<input />').attr('type', 'hidden').attr('name', 'monumentList').attr('value', choice).appendTo('form#form1')#}
+{#                $("#monuments").append("<p>Monument " +choice+"</p>")}#}
+{#            });#}
+{#    })#}
+{#</script>#}
 
-        $('#monument_select').on({
-            "focus": function() {
-                this.selectedIndex = -1
-                },
-            "change": function() {
-                choice = $(this).val();
-                monuments_slected.push(choice);
-                $('<input />').attr('type', 'hidden').attr('name', 'monumentList').attr('value', choice).appendTo('form#form1')
-                $("#monuments").append("<p>Monument " +choice+"</p>")}
-            });
-
-        {#$( "#form1" ).submit(function( event ) {#}
-                {##}
-        {#        $('<input />').attr('type', 'hidden').attr('name', 'monumentListJSON').attr('value', monumentListJSON).appendTo('form#form1')#}
-        {#    });#}
-
-})
-</script>
-
-
-<script type="text/javascript">
-    var frm = $('#form1');
-    frm.submit(function () {
-        $.ajax({
-            type: frm.attr('method'),
-            url: frm.attr('action'),
-            data: frm.serialize(),
-            success: function (data) {
-                $("#SOME-DIV").html(data);
-            },
-            error: function(data) {
-                $("#MESSAGE-DIV").html("Something went wrong!");
-            }
-        });
-        return false;
-    });
-</script>
-
+{% load static %}
+<script src="{% static 'catalogWeb/scripts/ajax_submit.js' %}"></script>
 
 {#############################################################}
 
@@ -61,47 +38,51 @@
 {#    </div>#}
 {#    <input type="submit" value="submit" action="submit" />#}
 {{ project_form.non_field_errors }}
-    <div class="fieldWrapper">
-        {{ project_form.name.errors }}
-        {{ project_form.name.label_tag }}
-        {{ project_form.name }}
-    </div>
+{#    <div class="fieldWrapper">#}
+{#        {{ project_form.name.errors }}#}
+{#        {{ project_form.name.label_tag }}#}
+{#        {{ project_form.name }}#}
+{#    </div>#}
+{##}
+{#    <div class="fieldWrapper">#}
+{#        {{ project_form.garant.errors }}#}
+{#        {{ project_form.garant.label_tag }}#}
+{#        {{ project_form.garant }}#}
+{#    </div>#}
+{##}
+{#    <div class="fieldWrapper">#}
+{#        {{ project_form.description.errors }}#}
+{#        {{ project_form.description.label_tag }}#}
+{#        {{ project_form.description }}#}
+{#    </div>#}
+{##}
+{#    <div class="fieldWrapper">#}
+{#        {{ project_form.realized_by.errors }}#}
+{#        {{ project_form.realized_by.label_tag }}#}
+{#        {{ project_form.realized_by }}#}
+{#    </div>#}
+{##}
+{#    <div class="fieldWrapper">#}
+{#        {{ project_form.realized_for.errors }}#}
+{#        {{ project_form.realized_for.label_tag }}#}
+{#        {{ project_form.realized_for }}#}
+{#    </div>#}
+{##}
+{#    <div class="fieldWrapper">#}
+{#        {{ project_form.restorerList.errors }}#}
+{#        {{ project_form.restorerList.label_tag }}#}
+{#        {{ project_form.restorerList }}#}
+{#    </div>#}
+{##}
+{#    <div class="fieldWrapper">#}
+{#        {{ project_form.monument_list.errors }}#}
+{#        {{ project_form.monument_list.label_tag }}#}
+{#        {{ project_form.monument_list }}#}
+{#    </div>#}
 
-    <div class="fieldWrapper">
-        {{ project_form.garant.errors }}
-        {{ project_form.garant.label_tag }}
-        {{ project_form.garant }}
-    </div>
-
-    <div class="fieldWrapper">
-        {{ project_form.description.errors }}
-        {{ project_form.description.label_tag }}
-        {{ project_form.description }}
-    </div>
-
-    <div class="fieldWrapper">
-        {{ project_form.realized_by.errors }}
-        {{ project_form.realized_by.label_tag }}
-        {{ project_form.realized_by }}
-    </div>
-
-    <div class="fieldWrapper">
-        {{ project_form.realized_for.errors }}
-        {{ project_form.realized_for.label_tag }}
-        {{ project_form.realized_for }}
-    </div>
-
-    <div class="fieldWrapper">
-        {{ project_form.restorerList.errors }}
-        {{ project_form.restorerList.label_tag }}
-        {{ project_form.restorerList }}
-    </div>
-
-    <div class="fieldWrapper">
-        {{ project_form.monument_list.errors }}
-        {{ project_form.monument_list.label_tag }}
-        {{ project_form.monument_list }}
-    </div>
+<div id="form_data">
+    {{ project_form.as_ul }}
+</div>
 
     {% if project_form.instance.id is not None %}
         <p>Research:</p>
@@ -114,9 +95,9 @@
             </li>
         {% endfor %}
         </ul>
-        <a href="{% url 'researchCreate' project_id=project_form.instance.id %}?redirect_to={{ request.path }}">Add research</a>
+        <a class="ajax_submit" href="{% url 'researchCreate' project_id=project_form.instance.id %}?redirect_to={{ request.path }}">Add research</a>
 
     {% endif %}
-<a href="" id="test">Add research</a>
+<input type="submit" value="Submit" />
 </form>
 {% endblock %}
