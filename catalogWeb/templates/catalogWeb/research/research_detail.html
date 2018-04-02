@@ -12,9 +12,14 @@
     <p>IR           : {{ research.IR            }}</p>
     <p>RTG          : {{ research.RTG           }}</p>
     <p>CT           : {{ research.CT            }}</p>
+    {% if research.CT %}
+        <p>CT date           : {{ research.CT_date            }}</p>
+        <p>CT description           : {{ research.CT_description          }}</p>
+    {% endif %}
     <p>ch_t_research: {{ research.ch_t_research }}</p>
     <p>sondazny     : {{ research.sondazny      }}</p>
     <p>other        : {{ research.other         }}</p>
+
 
 
     {{ album_html|safe }}

@@ -89,9 +89,9 @@
         <ul>
         {% for research in project_form.instance.research_set.all  %}
             <li>
-             <a href="{% url 'researchDetail' research.id %}"> {{  research }}</a>
-             <a href="{% url 'researchDelete' research.id %}"> Del</a>
-             <a href="{% url 'researchUpdate' research.id %}"> Update</a>
+             <a href="{% url 'researchDetail' research.id %}?redirect_to={{ request.path }}"> {{  research }}</a>
+             <a href="{% url 'researchDelete' research.id %}?redirect_to={{ request.path }}"> Del</a>
+             <a href="{% url 'researchUpdate' research.id %}?redirect_to={{ request.path }}"> Update</a>
             </li>
         {% endfor %}
         </ul>

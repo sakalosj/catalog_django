@@ -44,9 +44,12 @@ class Restorer(AlbumMixin, models.Model):
 
 class Monument(AlbumMixin, models.Model):
     name = models.CharField(max_length=45)
+    author = models.CharField(max_length=45, blank=True, null=True)
     description = models.CharField(max_length=45)
     date = models.DateField()
+    placement = models.CharField(max_length=45, blank=True, null=True)
     provenance = models.CharField(max_length=45)
+    owner = models.CharField(max_length=45, blank=True, null=True)
     dimensions = models.CharField(max_length=45)
     technique = models.CharField(max_length=45)
     materials = models.ManyToManyField('Material', through='Monument2Material',
@@ -123,6 +126,8 @@ class Research(AlbumMixin, models.Model):
     IR = models.BooleanField()
     RTG = models.BooleanField()
     CT = models.BooleanField()
+    CT_date = models.DateField(blank=True, null=True)
+    CT_description = models.TextField(blank=True, null=True)
     ch_t_research = models.BooleanField()
     sondazny = models.CharField(max_length=200)
     other = models.CharField(max_length=200)

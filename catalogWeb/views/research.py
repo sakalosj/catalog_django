@@ -121,6 +121,8 @@ def research_update(request, pk):
             album_formset.save()
             album_process_form(request, research_instance.album)
             research_form.save()
+            if request.POST['redirect_to'] is not 'None':
+                return HttpResponseRedirect(request.POST['redirect_to'])
             return HttpResponseRedirect(reverse('researchDetail', kwargs={'pk': pk}))
         else:
             context['album_formset'] = album_formset

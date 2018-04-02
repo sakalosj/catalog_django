@@ -37,10 +37,6 @@
          {% for research in project.research_set.all  %}
             <a href="{% url 'researchDetail' research.id %}"> {{  research }}</a>
         {% endfor %}
-
-        <p>
-            <a href="{% url 'researchCreate' project_id=project.id %}?redirect_to={{ request.path }}"> Add research</a>
-        </p>
     </div>
 
 {% endblock content %}

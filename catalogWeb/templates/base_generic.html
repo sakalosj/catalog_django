@@ -5,7 +5,8 @@
     {% block title %}<title>Resto DB</title>{% endblock title %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+{#    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">#}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -20,20 +21,20 @@
 
 <div class="container-fluid" role="navigation">
     <ul class="nav nav-tabs">
-        <li role="presentation" class="{% if tab_name == 'restorer' %}active{% endif %}">
-            <a href="{% url 'restorerList' %}">Restorers</a>
+        <li role="presentation" class="nav-item {% if tab_name == 'restorer' %}active{% endif %}">
+            <a class="nav-link" href="{% url 'restorerList' %}">Restorers</a>
         </li>
-        <li role="presentation" class="{% if tab_name == 'project' %}active{% endif %}">
-            <a href="{% url 'projectList' %}">Projects</a>
+        <li role="presentation" class="nav-item {% if tab_name == 'project' %}active{% endif %}">
+            <a class="nav-link" href="{% url 'projectList' %}">Projects</a>
         </li>
-        <li role="presentation" class="{% if tab_name == 'monument' %}active{% endif %}">
-            <a href="{% url 'monumentList' %}">Monuments</a>
+        <li role="presentation" class="nav-item {% if tab_name == 'monument' %}active{% endif %}">
+            <a class="nav-link" href="{% url 'monumentList' %}">Monuments</a>
         </li>
-        <li role="presentation" class="{% if tab_name == 'research' %}active{% endif %}">
-            <a href="{% url 'researchList' %}">Research</a>
+        <li role="presentation" class="nav-item {% if tab_name == 'research' %}active{% endif %}">
+            <a class="nav-link" href="{% url 'researchList' %}">Research</a>
         </li>
-        <li role="presentation" class="{% if tab_name == 'material' %}active{% endif %}">
-            <a href="{% url 'materialList' %}">Material</a>
+        <li role="presentation" class="nav-item {% if tab_name == 'material' %}active{% endif %}">
+            <a class="nav-link" href="{% url 'materialList' %}">Material</a>
         </li>
 
     </ul>
