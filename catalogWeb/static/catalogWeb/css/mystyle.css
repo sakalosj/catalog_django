@@ -23,7 +23,7 @@ ul.nav-tabs li a {
     padding: 14px 16px;
     text-decoration: none;
     transition: 0.3s;
-    font-size: 17px;
+    font-size: 20px;
 }
 
 /* Change background color of links on hover */
@@ -61,7 +61,7 @@ ul.tab li a:focus, .active {
 }
 
 ul.sidebar-nav  {
-    padding: 0;
+    padding: 10px;
 }
 
 .sidebar-nav li{
@@ -70,3 +70,11 @@ ul.sidebar-nav  {
 /*.sidebar-nav a:hover, .offcanvas a:focus{*/
     /*color: #f1f1f1;*/
 /*}*/
+
+
+/******************
+***   Helper   ***
+*******************/
+.text-nowrap {
+    white-space: nowrap;
+}

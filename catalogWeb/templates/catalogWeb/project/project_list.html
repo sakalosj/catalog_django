@@ -2,29 +2,75 @@
 
 {% block sidebar %}
   <ul class="sidebar-nav">
-    <li><a href="{% url 'projectCreate' %}">project add</a></li>
-    <li><a href="{% url 'projectList' %}">project list</a></li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'projectCreate' %}">
+            <span class="text-nowrap">Project add</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'projectList' %}">
+            <span class="text-nowrap">Project list</span>
+        </a></li>
   </ul>
 {% endblock sidebar%}
 
 {% block content %}
-    <h1>project List</h1>
 
     {% if project_list %}
-    <ul>
+
+<table class="table table-bordered">
+    <thead >
+        <th>Project</th>
+        <th>Garant</th>
+        <th>Realized for</th>
+        <th>Realized by</th>
+{#        <th>START.FINIS date?</th>#}
+    </thead>
 
       {% for project in project_list %}
-      <li>
-          <a href="{% url 'projectDetail' project.id %}"> {{  project }}</a>
+      <tr>
+        <td>
+            <a href="{% url 'projectDetail' project.id %}"> {{  project }}</a>
+        </td>
+        <td>
+            {{  project.garant }}
+        </td>
+
+            <td>
+            {{  project.realized_for }}
+        </td>
+            <td>
+            {{  project.realized_by }}
+        </td>
+        <td>
+
           <a href="{% url 'projectDelete' project.id %}"> Del</a>
           <a href="{% url 'projectUpdate' project.id %}"> Update</a>
-      </li>
+        </td>
+      </tr>
       {% endfor %}
 
-    </ul>
 
+</table>
     {% else %}
-      <p>There are no books in the library.</p>
+      <p>No Project</p>
     {% endif %}
 {% endblock %}
 
+
+
+{##}
+{#<table>#}
+{#    <tr>#}
+{#        <th>Field 1</th>#}
+{#        ...#}
+{#        <th>Field N</th>#}
+{#    </tr>#}
+{#    {% for item in query_results %}#}
+{#    <tr> #}
+{#        <td>{{ item.field1 }}</td>#}
+{#        ...#}
+{#        <td>{{ item.fieldN }}</td>#}
+{#    </tr>#}
+{#    {% endfor %}#}
+{#</table>#}
