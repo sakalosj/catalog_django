@@ -55,7 +55,7 @@ class Monument(AlbumMixin, models.Model):
     materials = models.ManyToManyField('Material', through='Monument2Material',
                                         # through_fields=('materialList', 'material')
                                         blank=True)
-    album = models.OneToOneField('album.Album', null=True)
+    album = models.OneToOneField('album.Album', null=True,)
 
     def __str__(self):
         """

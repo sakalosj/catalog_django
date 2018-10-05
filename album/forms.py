@@ -1,7 +1,8 @@
 from django import forms
 
-from album.models import Image, Album
-from album.widgets import PictureWidget
+from album.fields import PictureFields
+from album.models import Image, Album, Image2
+from album.widgets import PictureWidget, PictureWidget2
 
 
 class ImageForm(forms.ModelForm):
@@ -9,9 +10,20 @@ class ImageForm(forms.ModelForm):
         model = Image
         exclude = ['pictureList']
         widgets = {
-            'image': PictureWidget,
+            'image': PictureWidget2,
         }
 
+# class Image2Form(forms.Form):
+#     a = PictureFields()
+class Image2Form(forms.ModelForm):
+    # picture = PictureFields()
+    class Meta:
+        model = Image2
+        fields = ['name']
+        # widgets = {
+        #     'picture': PictureWidget,
+        #     'test': forms.TextInput
+        # }
 
 class AlbumForm(forms.ModelForm):
     class Meta:

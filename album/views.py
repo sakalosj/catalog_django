@@ -8,7 +8,7 @@ from django.urls import reverse_lazy, reverse
 from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 
-from album.forms import ImageForm, AlbumForm
+from album.forms import ImageForm, AlbumForm, Image2Form
 from album.models import Image, Album
 from album.widgets import PictureWidget
 
@@ -22,6 +22,23 @@ def image_create(request):
 
 
 class ImageListView(generic.ListView):
+    model = Image
+    paginate_by = 10
+
+
+def image2_detail(request, pk):
+    image = get_object_or_404(Image, pk=pk)
+    return render(request, 'album/single_image_tmpl.html', {'image': image})
+
+def image2_create(request):
+    form = Image2Form(request.POST or None, request.FILES or None)
+    if form.is_valid():
+        form.save()
+        return HttpResponseRedirect(reverse('image2List'))
+    return render(request, 'album/image2_form.html', {'form': form})
+
+
+class Image2ListView(generic.ListView):
     model = Image
     paginate_by = 10
 
@@ -99,7 +116,7 @@ def album_show(album, image_div_id="album", edit=False):
 # @csrf_exempt
 
 
-def album_edit(request,pk):
+def album_edit(request, pk):
     album_instance = get_object_or_404(Album, pk=pk)
     ImageFormSet = inlineformset_factory(Album, Image,  extra=0, form=ImageForm, widgets={'image': PictureWidget,})
     album_form = AlbumForm(request.POST or None, request.FILES or None)
@@ -129,9 +146,11 @@ def album_edit(request,pk):
     if request.method == 'GET':
         return render(request, 'album/album_form.html', {})
 
+@csrf_exempt
 def album_edit_html(request, pk):
     album_instance = get_object_or_404(Album, pk=pk)
-    ImageFormSet = inlineformset_factory(Album, Image, extra=0, form=ImageForm, widgets={'image': PictureWidget, })
+    ImageFormSet = inlineformset_factory(Album, Image, extra=0, form=ImageForm )
+    # ImageFormSet = inlineformset_factory(Album, Image, extra=0, form=ImageForm, widgets={'image': PictureWidget, })
     album_form = AlbumForm(request.POST or None, request.FILES or None)
 
     if request.is_ajax():
@@ -161,7 +180,9 @@ def album_edit_html(request, pk):
         t = loader.get_template('album/album_form2.html')
         c = Context({'album_form': album_form})
         h = t.render({'album_form': album_form})
-        return h
+        # return h
+        #def render(request, template_name, context=None, content_type=None, status=None, using=None):
+        return render(request,'album/album_form2.html',context={'album_form': album_form})
 
 def album_edit_html_is_valid(request):
     ImageFormSet = inlineformset_factory(Album, Image, extra=0, form=ImageForm, widgets={'image': PictureWidget, })
@@ -193,3 +214,4 @@ def album_edit_html_is_valid(request):
 #                                 '<image src=%s><figcaption> %s </figcaption>'
 #                               '</figure>' % (image.image.url, 'test'))
 #     return '\n'.join(htmlDivContent)
+

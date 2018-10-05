@@ -2,31 +2,33 @@
 
 {% block sidebar %}
   <ul class="sidebar-nav">
-    <li><a href="{% url 'imageCreate' %}">picture add</a></li>
-    <li><a href="{% url 'imageList' %}">picture list</a></li>
+{#    <li><a href="{% url 'imageCreate' %}">image add</a></li>#}
+{#    <li><a href="{% url 'imageList' %}">image list</a></li>#}
   </ul>
 {% endblock sidebar %}
 
 
 {% block content %}
-    <h1>Research List</h1>
+    <h1>Image List</h1>
 
-    {% if picture_list %}
+    {% if image_list %}
     <ul>
 
-      {% for picture in picture_list %}
+      {% for image in image_list %}
       <li>
-                  <a href=""> {{  picture }}</a>
-{#          <a href="{% url 'pictureDetail' picture.id %}"> {{  picture }}</a>#}
-{#          <a href="{% url 'pictureDelete' picture.id %}"> Del</a>#}
-{#          <a href="{% url 'pictureUpdate' picture.id %}"> Update</a>#}
+        <a href="{% url 'image2Detail' image.id %}"> {{  image }}</a>
+{#          <a href="{% url 'imageDelete' image.id %}"> Del</a>#}
+{#            <a href="{% url 'imageUpdate' image.id %}"> Update</a>#}
+{#      <a href=""> {{  image }}</a>#}
+{#          <a href=""> Del</a>#}
+{#            <a href=""> Update</a>#}
       </li>
       {% endfor %}
 
     </ul>
 
     {% else %}
-      <p>There are no books in the library.</p>
+      <p>There are no images in the image.</p>
     {% endif %}
 {% endblock %}
 

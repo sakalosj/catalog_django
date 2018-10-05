@@ -3,12 +3,24 @@ from django.db import models
 # Create your models here.
 from django.forms import modelform_factory, inlineformset_factory
 
+from album import fields
+from album.widgets import PictureWidget
+
 
 class Image(models.Model):
     name = models.CharField(max_length=255, blank=True)
     description = models.CharField(max_length=255, blank=True)
     image = models.ImageField(upload_to='pictures/')
     album = models.ForeignKey('Album', related_name='imageList', blank=True, null=True, on_delete=models.CASCADE)
+
+
+    def formfield(self, **kwargs):
+        return
+
+class Image2(models.Model):
+    name = models.CharField(max_length=255, blank=True)
+    picture = fields.PictureFields()
+    album = models.ForeignKey('Album', related_name='imageList2', blank=True, null=True, on_delete=models.CASCADE)
 
 
 class Album(models.Model):
@@ -24,7 +36,6 @@ class Album(models.Model):
 
     def generate_formset(self, *args, **kwargs):
         return self.ImageFormSet(*args, **kwargs)
-
 
     def __str__(self):
         """
