@@ -1,7 +1,6 @@
-<head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-</head>
+{% extends "base_generic.html" %}
 
+{% block content %}
 <script>
 var initial = 'True'
 fn = function() {
@@ -44,13 +43,13 @@ fn = function() {
 
 {#$("input#dwnld").click(fn)#}
 
-$(document).ready(function() {
+$(function() {
     {#document.getElementById("dwnld").addEventListener("click", fn)#}
     {#$().on('click', '#dwnld', fn)#}
     {#$("#dwnld").click(fn)#}
     $("#form_ajax").ready(fn)
     $("#form_ajax").submit(fn)
-    } );
+});
 </script>
 
 {#<form id="form_1" action="" method="post" enctype="multipart/form-data">#}
@@ -63,18 +62,23 @@ $(document).ready(function() {
 {#    <input type="submit" value="Submit" />#}
 {#</form>#}
 
-<form id="form_ajax" action="{% url 'album_edit' 1 %}" method="get" enctype="multipart/form-data" >
-{#    {% csrf_token %}#}
+<form id="form_ajax" action="{% url 'album_edit' 21 %}" method="get" enctype="multipart/form-data" >
+    {% csrf_token %}
 {#    <input id="initial" name="initial" type="hidden" value="True">#}
     <table id="form_ajax_table">
-        {{ album_form }}
-
-        {{ album_formset }}
+        {{ form.as_table }}
     </table>
-<input type="submit" value="Submit ajax" />
+<input type="submit" value="Submit ajaxxx" />
 </form>
 
 
+<form action="" method="post" enctype="multipart/form-data" >
+    {% csrf_token %}
+    <table id="form_ajax_table">
+        {{ form.as_table }}
+    </table>
+    <input type="submit" value="Submit" />
+</form>
 {#    <form id="form_1" action="" method="post" enctype="multipart/form-data">#}
 {#    {% csrf_token %}#}
 {#    <table>#}
@@ -86,8 +90,7 @@ $(document).ready(function() {
 {#</form>#}
 
 
-<form id="picture"  enctype="multipart/form-data" >
-{#    {% csrf_token %}#}
-    {#    <input id="initial" name="initial" type="hidden" value="True">#}
-    <input type="submit" value="Submit ajax2" />
-</form>
+{% endblock %}
+
+
+{{ request.path }}

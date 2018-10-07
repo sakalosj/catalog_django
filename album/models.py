@@ -44,6 +44,18 @@ class Album(models.Model):
         return 'album_id_%s' % self.id
 
 
+class Test(models.Model):
+
+    name = models.CharField(max_length=255, blank=True)
+    album = models.OneToOneField(Album, on_delete=models.CASCADE, blank=True, null=True)
+
+
+    def __str__(self):
+        """
+        String for representing the Model object.
+        """
+        return 'test_%s' % self.id
+
 class AlbumMixin:
     def save(self, *args, **kwargs):
         if hasattr(self, 'album_id'):  # check if model has set album attribute (related to onetoone implementation)

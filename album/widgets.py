@@ -5,7 +5,7 @@ from django.utils.safestring import mark_safe
 from django.forms import ImageField, Widget, Select
 
 
-class PictureWidget(MultiWidget):
+class PictureWidget(Widget):
 
     def render(self, name, value, attrs=None):
         html = Template('<img src="%s"/>' % value.url)

@@ -37,7 +37,7 @@ urlpatterns = [
     url(r'material/details/(?P<pk>[0-9]+)/$', views.material_detail, name='materialDetail'),
     url(r'material/update/(?P<pk>[0-9]+)/$', views.material_update, name='materialUpdate'),
 
-    url(r'album', include('album.urls')),
+    url(r'album/', include('album.urls')),
 
 ]
 
