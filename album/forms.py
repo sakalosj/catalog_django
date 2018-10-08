@@ -41,6 +41,12 @@ class AlbumForm1(forms.ModelForm):
 
     pictures = forms.ImageField(widget=forms.FileInput(attrs={'multiple': True}))
 
+class AlbumForm2(forms.Form):
+
+    # list_pictures =
+    add_pictures = forms.ImageField(widget=forms.FileInput(attrs={'multiple': True}))
+
+
 
 class TestForm(forms.ModelForm):
     class Meta:

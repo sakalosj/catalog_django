@@ -175,14 +175,19 @@ def album_edit_html(request, pk):
             t = loader.get_template('album/album_ajax_form.html')
             c = Context({'album_formset': album_formset, 'album_form': album_form})
             h = t.render({'album_formset': album_formset, 'album_form': album_form})
+            ttt = album_formset + album_form
             return JsonResponse({'success': True, 'album_form': h})
 
     else:
         t = loader.get_template('album/album_form2.html')
         c = Context({'album_form': album_form})
+        c1 = {'album_form': album_form}
         h = t.render({'album_form': album_form})
+        h1 = t.render(c1, request)
         # return h
         #def render(request, template_name, context=None, content_type=None, status=None, using=None):
+        h2 = render(request,'album/album_form2.html',context={'album_form': album_form})
+        # return h1
         return render(request,'album/album_form2.html',context={'album_form': album_form,'album_formset':album_formset})
 
 @csrf_exempt
@@ -218,9 +223,13 @@ def album_edit_ajax(request, pk):
     else:
         t = loader.get_template('album/album_form2.html')
         c = Context({'album_form': album_form})
+        c1 = {'album_form': album_form}
         h = t.render({'album_form': album_form})
+        h1 = t.render(c1, request)
         # return h
         #def render(request, template_name, context=None, content_type=None, status=None, using=None):
+        h2 = render(request,'album/album_form2.html',context={'album_form': album_form})
+
         return render(request,'album/album_form2.html',context={'album_form': album_form})
 
 def album_edit_html_is_valid(request):
