@@ -1,3 +1,4 @@
+<p>test_form</p>
 {% extends "base_generic.html" %}
 
 {% block content %}
@@ -43,12 +44,44 @@ fn = function() {
 
 {#$("input#dwnld").click(fn)#}
 
+load_album_form_ajax = function() {
+    console.log("load_album_form_ajax");
+    {#event.preventDefault();#}
+    $("#id_pictures").serialize();
+    $.ajax({
+        contentType: false,
+        processData: false,
+        {#data: data1,#}
+        {#method: $(this).attr('method'),#}
+        method: 'POST',
+        url: '{% url 'album_edit' 1 %}',
+        success: function (response) {
+
+            console.log(response);
+            if (response['success']) {
+                initial = 'False'
+                $("#ajax_container").html(response['album_form']);
+                $("#form_ajax").attr("method", "POST");
+            }
+            if (response['error']) {
+                $("#feedbackmessage").html("<div class='alert alert-danger'>" +
+                    response['error']['comment'] + "</div>");
+            }
+        },
+        error: function (request, status, error) {
+            console.log(request.responseText);
+        }
+    });
+}
+
 $(function() {
+    console.log('test_form on ready');
     {#document.getElementById("dwnld").addEventListener("click", fn)#}
     {#$().on('click', '#dwnld', fn)#}
     {#$("#dwnld").click(fn)#}
-    $("#form_ajax").ready(fn)
-    $("#form_ajax").submit(fn)
+    {#$("#form_ajax").ready(fn)#}
+    {#$("#form_ajax").submit(fn)#}
+    {#load_album_form_ajax()#}
 });
 </script>
 
@@ -62,23 +95,25 @@ $(function() {
 {#    <input type="submit" value="Submit" />#}
 {#</form>#}
 
-<form id="form_ajax" action="{% url 'album_edit' 21 %}" method="get" enctype="multipart/form-data" >
-    {% csrf_token %}
+    <p>test_form</p>
+
+{#<form id="form_ajax" action="{% url 'album_edit' 1 %}" method="get" enctype="multipart/form-data" >#}
+{#    {% csrf_token %}#}
 {#    <input id="initial" name="initial" type="hidden" value="True">#}
-    <table id="form_ajax_table">
-        {{ form.as_table }}
-    </table>
-<input type="submit" value="Submit ajaxxx" />
-</form>
-
-
-<form action="" method="post" enctype="multipart/form-data" >
-    {% csrf_token %}
-    <table id="form_ajax_table">
-        {{ form.as_table }}
-    </table>
-    <input type="submit" value="Submit" />
-</form>
+{#    <table id="form_ajax_table">#}
+{#        {{ form.as_table }}#}
+{#    </table>#}
+{#<input type="submit" value="Submit ajaxxx" />#}
+{#</form>#}
+{##}
+{##}
+{#<form action="" method="get" enctype="multipart/form-data" >#}
+{#    {% csrf_token %}#}
+{#    <table id="form_ajax_table">#}
+{#        {{ form.as_table }}#}
+{#    </table>#}
+{#    <input type="submit" value="Submit" />#}
+{#</form>#}
 {#    <form id="form_1" action="" method="post" enctype="multipart/form-data">#}
 {#    {% csrf_token %}#}
 {#    <table>#}
@@ -89,6 +124,10 @@ $(function() {
 {#    <input type="submit" value="Submit" />#}
 {#</form>#}
 
+
+    {% if album_id  %}
+        {%  include 'album/album_container.html' %}
+    {% endif %}
 
 {% endblock %}
 

@@ -155,28 +155,42 @@ def album_edit_html(request, pk):
     album_formset = ImageFormSet_1(instance=album_instance)
 
     if request.is_ajax():
-        if request.POST['initial'] == 'True':
+        album_formset = ImageFormSet_1(request.POST, request.FILES, instance=album_instance)
+        if album_formset.is_valid() and album_form.is_valid():
+            album_formset.save()
+            album_process_form(request, album_instance)
             album_formset = ImageFormSet_1(instance=album_instance)
-            html = render(request, 'album/album_ajax_form.html',
-                          {'album_formset': album_formset, 'album_form': album_form})
-            t = loader.get_template('album/album_ajax_form.html')
-            c = Context({'album_formset': album_formset, 'album_form': album_form})
-            h = t.render({'album_formset': album_formset, 'album_form': album_form})
-            return JsonResponse({'success': True, 'album_form': h})
+        ttt = album_formset.as_table() + album_form.as_table()
+        return JsonResponse({'success': True, 'album_form': ttt})
 
-        if request.POST['initial'] == 'False':
-            album_formset = ImageFormSet_1(request.POST, request.FILES, instance=album_instance)
-            if album_formset.is_valid() and album_form.is_valid():
-                album_formset.save()
-                album_process_form(request, album_instance)
-                album_formset = ImageFormSet_1(instance=album_instance)
-            html = render(request, 'album/album_ajax_form.html',
-                          {'album_formset': album_formset, 'album_form': album_form})
-            t = loader.get_template('album/album_ajax_form.html')
-            c = Context({'album_formset': album_formset, 'album_form': album_form})
-            h = t.render({'album_formset': album_formset, 'album_form': album_form})
-            ttt = album_formset + album_form
-            return JsonResponse({'success': True, 'album_form': h})
+    else:
+        t = loader.get_template('album/album_form2.html')
+        c = Context({'album_form': album_form})
+        c1 = {'album_form': album_form}
+        h = t.render({'album_form': album_form})
+        h1 = t.render(c1, request)
+        # return h
+        #def render(request, template_name, context=None, content_type=None, status=None, using=None):
+        h2 = render(request,'album/album_form2.html',context={'album_form': album_form})
+        # return h1
+        return render(request,'album/album_form2.html',context={'album_form': album_form,'album_formset':album_formset})
+
+@csrf_exempt
+def album_edit_html2(request, pk):
+    album_instance = get_object_or_404(Album, pk=pk)
+    ImageFormSet_1 = inlineformset_factory(Album, Image, extra=0, form=ImageForm )
+    # ImageFormSet = inlineformset_factory(Album, Image, extra=0, form=ImageForm, widgets={'image': PictureWidget, })
+    album_form = AlbumForm(request.POST or None, request.FILES or None)
+    album_formset = ImageFormSet_1(instance=album_instance)
+
+    if request.is_ajax():
+        album_formset = ImageFormSet_1(request.POST, request.FILES, instance=album_instance)
+        if album_formset.is_valid() and album_form.is_valid():
+            album_formset.save()
+            album_process_form(request, album_instance)
+            album_formset = ImageFormSet_1(instance=album_instance)
+        ttt = album_formset.as_table() + album_form.as_table()
+        return JsonResponse({'success': True, 'album_form': ttt})
 
     else:
         t = loader.get_template('album/album_form2.html')
@@ -198,46 +212,53 @@ def album_edit_ajax(request, pk):
     album_form = AlbumForm(request.POST or None, request.FILES or None)
 
     if request.is_ajax():
-        if request.POST['initial'] == 'True':
-            album_formset = ImageFormSet(instance=album_instance)
-            html = render(request, 'album/album_ajax_form.html',
-                          {'album_formset': album_formset, 'album_form': album_form})
-            t = loader.get_template('album/album_ajax_form.html')
-            c = Context({'album_formset': album_formset, 'album_form': album_form})
-            h = t.render({'album_formset': album_formset, 'album_form': album_form})
-            return JsonResponse({'success': True, 'album_form': h})
 
-        if request.POST['initial'] == 'False':
+        if request.method == 'GET':
+            album_formset = ImageFormSet(instance=album_instance)
+        # if request.POST['initial'] == 'True':
+        #     album_formset = ImageFormSet(instance=album_instance)
+        #     html = render(request, 'album/album_ajax_form.html',
+        #                   {'album_formset': album_formset, 'album_form': album_form})
+        #     t = loader.get_template('album/album_ajax_form.html')
+        #     c = Context({'album_formset': album_formset, 'album_form': album_form})
+        #     h = t.render({'album_formset': album_formset, 'album_form': album_form})
+        #     return JsonResponse({'success': True, 'album_form': h})
+        #
+        # if request.POST['initial'] == 'False':
+
+        if request.method == 'POST':
             album_formset = ImageFormSet(request.POST, request.FILES, instance=album_instance)
             if album_formset.is_valid() and album_form.is_valid():
                 album_formset.save()
                 album_process_form(request, album_instance)
                 album_formset = ImageFormSet(instance=album_instance)
-            html = render(request, 'album/album_ajax_form.html',
-                          {'album_formset': album_formset, 'album_form': album_form})
-            t = loader.get_template('album/album_ajax_form.html')
-            c = Context({'album_formset': album_formset, 'album_form': album_form})
-            h = t.render({'album_formset': album_formset, 'album_form': album_form})
-            return JsonResponse({'success': True, 'album_form': h})
+
+        # html = render(request, 'album/album_form3.html',
+        #               {'album_formset': album_formset, 'album_form': album_form})
+        t = loader.get_template('album/album_ajax_form.html')
+        c = Context({'album_formset': album_formset, 'album_form': album_form})
+        h = t.render({'album_formset': album_formset, 'album_form': album_form})
+        return JsonResponse({'success': True, 'album_ajax_form': h})
 
     else:
-        t = loader.get_template('album/album_form2.html')
+        t = loader.get_template('album/album_form3.html')
         c = Context({'album_form': album_form})
         c1 = {'album_form': album_form}
         h = t.render({'album_form': album_form})
         h1 = t.render(c1, request)
         # return h
         #def render(request, template_name, context=None, content_type=None, status=None, using=None):
-        h2 = render(request,'album/album_form2.html',context={'album_form': album_form})
+        h2 = render(request,'album/album_form3.html',context={'album_form': album_form})
 
-        return render(request,'album/album_form2.html',context={'album_form': album_form})
+
+        return render(request,'album/album_form3.html',context={'album_form': album_form})
 
 def album_edit_html_is_valid(request):
     ImageFormSet = inlineformset_factory(Album, Image, extra=0, form=ImageForm, widgets={'image': PictureWidget, })
     album_form = AlbumForm(request.POST or None, request.FILES or None)
     return album_form.is_valid()
 
-def test_list(request):
+def test_list(request, pk):
     image = get_object_or_404(Image, pk=pk)
     return render(request, 'album/single_image_tmpl.html', {'image': image})
 
@@ -256,6 +277,20 @@ def test_create(request):
         return HttpResponseRedirect(reverse('testList'))
 
     return render(request, 'album/test_form.html', {'form': form})
+
+def test_edit(request, pk):
+    test = get_object_or_404(Test, pk=pk)
+    form = TestForm(request.POST or None, request.FILES or None)
+    album= test.album
+    if form.is_valid():
+        instance = form.save()
+        files = request.FILES.getlist('pictures')
+        for image in files:
+            image = Image(image=image, album=instance)
+            image.save()
+        return HttpResponseRedirect(reverse('testList'))
+
+    return render(request, 'album/test_form.html', {'form': form, 'album_id': getattr(test.album, 'id', None)})
 
 class TestListView(generic.ListView):
     model = Test
