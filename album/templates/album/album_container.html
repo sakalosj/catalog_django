@@ -1,25 +1,17 @@
 
-<p>album_container</p>
-
-
     <script>
         var initial = 'True'
-        fn = function() {
+        post_form = function(event) {
             event.preventDefault();
-            var data0 = $("#form_ajax").serialize();
-            var data1 = new FormData( $("#form_ajax")[0] );
-            var data2 = new FormData($("#form_ajax").get(0));
-            data1.append('initial', initial)
-            for (var pair of data1.entries()) {
-                console.log(pair[0]+ ', ' + pair[1]);
-            }
+            var ajax_form_data = new FormData( $("#form_ajax")[0] );
+            ajax_form_data.append('initial', initial)
             $("#id_pictures").serialize();
             $.ajax({
                 contentType: false,
                 processData: false,
-                data: data1,
-                method: $(this).attr('method'),
-                {#method: 'POST',#}
+                data: ajax_form_data,
+                {#method: $(this).attr('method'),#}
+                method: 'POST',
                 url: '{% url 'album_edit' album_id %}',
                 success: function (response) {
 
@@ -39,8 +31,8 @@
                 }
             });
         }
+
         load_form = function() {
-            event.preventDefault();
             console.log('load_form() js');
             $.ajax({
                 contentType: false,
@@ -67,59 +59,24 @@
         }
 
 
-
-
-        {#$('#form_ajax').ready(fn);#}
-
-        {#$("input#dwnld").click(fn)#}
-
         $(function() {
-            {#document.getElementById("dwnld").addEventListener("click", fn)#}
-            {#$().on('click', '#dwnld', fn)#}
-            {#$("#dwnld").click(fn)#}
-            {#$("#form_ajax").ready(fn)#}
-            $("#form_ajax").submit(fn)
+            $("#form_ajax").submit(post_form)
+            {#$("#form_ajax [ id *= 'DELETE']").click(post_form)#}
+            {#$("#form_ajax #id_pictures").change(post_form)#}
+
+            {#$("#form_ajax").click(post_form)#}
+            $("#form_ajax").on('change',"#id_pictures",post_form)
+            $("#form_ajax").on('change',"[ id *= 'DELETE']",post_form)
             load_form()
         });
     </script>
 
-    <p>album_container</p>
-    {#<form id="form_1" action="" method="post" enctype="multipart/form-data">#}
-    {#    {% csrf_token %}#}
-    {#    <table>#}
-    {#        {{ album_formset }}#}
-    {#        {{ album_form.as_table }}#}
-    {##}
-    {#    </table>#}
-    {#    <input type="submit" value="Submit" />#}
-    {#</form>#}
     <div id="album_container">
         <form id="form_ajax" action="{% url 'album_edit' album_id %}" method="get" enctype="multipart/form-data" >
             {% csrf_token %}
                 <table id="form_ajax_table">
                 </table>
-            <input type="submit" value="Submit ajaxXx" />
+{#            <input type="submit" value="Submit ajaxXx" />#}
         </form>
     </div>
-
-
-    {#    <form action="" method="get" enctype="multipart/form-data" >#}
-    {#        {% csrf_token %}#}
-    {#        <table id="form_ajax_table">#}
-    {#            {{ form.as_table }}#}
-    {#        </table>#}
-    {#        <input type="submit" value="Submit" />#}
-    {#    </form>#}
-    {#    <form id="form_1" action="" method="post" enctype="multipart/form-data">#}
-    {#    {% csrf_token %}#}
-    {#    <table>#}
-    {#        {{ album_formset }}#}
-    {#        {{ album_form.as_table }}#}
-    {##}
-    {#    </table>#}
-    {#    <input type="submit" value="Submit" />#}
-    {#</form>#}
-
-
-
-<span>{{ request.path }}</span>
+{#<span>{{ request.path }}</span>#}
