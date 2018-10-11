@@ -2,7 +2,8 @@
     <script>
         var initial = 'True'
         post_form = function(event) {
-            event.preventDefault();
+            console.log('post_form() js');
+            {#event.preventDefault();#}
             var ajax_form_data = new FormData( $("#form_ajax")[0] );
             ajax_form_data.append('initial', initial)
             $("#id_pictures").serialize();
@@ -60,7 +61,8 @@
 
 
         $(function() {
-            $("#form_ajax").submit(post_form)
+            $(".album_submit").click(post_form)
+            {#$("").submit(post_form)#}
             {#$("#form_ajax [ id *= 'DELETE']").click(post_form)#}
             {#$("#form_ajax #id_pictures").change(post_form)#}
 
