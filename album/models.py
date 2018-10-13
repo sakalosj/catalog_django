@@ -23,6 +23,7 @@ class Image2(models.Model):
     album = models.ForeignKey('Album', related_name='imageList2', blank=True, null=True, on_delete=models.CASCADE)
 
 
+
 class Album(models.Model):
 
     def as_div(self, imageDivID="album"):

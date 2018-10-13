@@ -241,7 +241,7 @@ def album_edit_ajax(request, pk):
         return JsonResponse({'success': True, 'album_ajax_form': h})
 
     else:
-        t = loader.get_template('album/album_form3.html')
+        t = loader.get_template('album/album_form33.html')
         c = Context({'album_form': album_form})
         c1 = {'album_form': album_form}
         h = t.render({'album_form': album_form})
@@ -280,14 +280,15 @@ def test_create(request):
 
 def test_edit(request, pk):
     test = get_object_or_404(Test, pk=pk)
-    form = TestForm(request.POST or None, request.FILES or None)
+    form = TestForm(request.POST or None, request.FILES or None, instance=test)
     album= test.album
     if form.is_valid():
-        instance = form.save()
-        files = request.FILES.getlist('pictures')
-        for image in files:
-            image = Image(image=image, album=instance)
-            image.save()
+        form.save()
+        # instance = form.save()
+        # files = request.FILES.getlist('pictures')
+        # for image in files:
+        #     image = Image(image=image, album=instance)
+        #     image.save()
         return HttpResponseRedirect(reverse('testList'))
 
     return render(request, 'album/test_form.html', {'form': form, 'album_id': getattr(test.album, 'id', None)})

@@ -7,8 +7,7 @@
         {% csrf_token %}
 
         <table>
-        {{ form }}
-
+            {{ form }}
         </table>
 
     </form>
@@ -17,8 +16,5 @@
         {%  include 'album/album_container.html' %}
     {% endif %}
 
-    <input type="submit" value="Submit" form="form_11"/>
+    <input type="submit" class="album_submit" value="Submit" form="form_11"/>
 {% endblock %}
-
-
-{{ request.path }}

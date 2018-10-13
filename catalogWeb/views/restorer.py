@@ -37,24 +37,32 @@ class RestorerCreate(CreateView):
         return super().get_context_data(**kwargs)
 
 
-def restorer_create(request):
+def restorer_create(request, pk=None):
+    if not pk:
+        restorer_instance = Restorer()
+        restorer_instance.save()
     restorer_form = RestorerForm(request.POST or None, request.FILES or None)
-    album_form = AlbumForm(request.POST or None, request.FILES or None)
+
+    restorer_instance = get_object_or_404(Restorer, pk=pk)
+    restorer_form = RestorerForm(request.POST or None, request.FILES or None, instance=restorer_instance)
+    album_id = restorer_instance.album.id
+
+    template = 'catalogWeb/generic/generic_form.html'
     context = {
-        'restorer_form': restorer_form,
-        'album_form': album_form,
+        'form': restorer_form,
+        'album_id': album_id,
         'tab_name': TAB_NAME,
         'redirect_to': request.GET.get('redirect_to'),
     }
 
-    if restorer_form.is_valid() and album_form.is_valid():
-        restorer_instance = restorer_form.save()
-        ''' in form cleaned data multiple files are not available,
-         therefore files are processed via view function no in form'''
-        album_process_form(request, restorer_instance.album)
-        return HttpResponseRedirect(reverse('restorerList'))
+    if request.method == 'POST':
+        if restorer_form.is_valid():
+            restorer_form.save()
+            return HttpResponseRedirect(reverse('restorerDetail', kwargs={'pk': pk}))
+        else:
+            return render(request, template, context)
 
-    return render(request, 'catalogWeb/restorer/restorer_form.html', context)
+    return render(request, template, context)
 
 
 class RestorerDelete(DeleteView):
@@ -104,27 +112,21 @@ class RestorerUpdate(UpdateView):
 def restorer_update(request, pk):
     restorer_instance = get_object_or_404(Restorer, pk=pk)
     restorer_form = RestorerForm(request.POST or None, request.FILES or None, instance=restorer_instance)
-    ImageFormSet = inlineformset_factory(Album, Image,  extra=0, form=ImageForm, widgets={'image': PictureWidget, })
-    album_form = AlbumForm(request.POST or None, request.FILES or None)
+    album_id = restorer_instance.album.id
 
+    template = 'catalogWeb/generic/generic_form.html'
     context = {
-        'restorer_form': restorer_form,
-        'album_form': album_form,
+        'form': restorer_form,
+        'album_id': album_id,
         'tab_name': TAB_NAME,
         'redirect_to': request.GET.get('redirect_to'),
     }
 
     if request.method == 'POST':
-        album_formset = ImageFormSet(request.POST, request.FILES, instance=restorer_instance.album)
-        if restorer_form.is_valid() and album_formset.is_valid() and album_form.is_valid():
-            album_formset.save()
-            album_process_form(request, restorer_instance.album)
+        if restorer_form.is_valid():
             restorer_form.save()
             return HttpResponseRedirect(reverse('restorerDetail', kwargs={'pk': pk}))
         else:
-            context['album_formset'] = album_formset
-            return render(request, 'catalogWeb/restorer/restorer_form.html', context)
+            return render(request, template, context)
 
-    album_formset = ImageFormSet(instance=restorer_instance.album)
-    context['album_formset'] = album_formset
-    return render(request, 'catalogWeb/restorer/restorer_form.html', context)
+    return render(request, template, context)
