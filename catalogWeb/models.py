@@ -33,7 +33,7 @@ class Restorer(AlbumMixin, models.Model):
     first_name = models.CharField(max_length=45)
     last_name = models.CharField(max_length=45)
     description = models.CharField(max_length=200)
-    album = models.OneToOneField('album.Album', null=True)
+    album = models.OneToOneField('album.Album', null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         """
@@ -55,7 +55,7 @@ class Monument(AlbumMixin, models.Model):
     materials = models.ManyToManyField('Material', through='Monument2Material',
                                         # through_fields=('materialList', 'material')
                                         blank=True)
-    album = models.OneToOneField('album.Album', null=True,)
+    album = models.OneToOneField('album.Album', null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         """
@@ -104,7 +104,7 @@ class Material(AlbumMixin, models.Model):
     # MaterialDefinition = models.ForeignKey('MaterialDefinition')
     name = models.CharField(max_length=45)
     description = models.CharField(max_length=200)  # general info
-    album = models.OneToOneField('album.Album', null=True)
+    album = models.OneToOneField('album.Album', null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         """
@@ -131,7 +131,7 @@ class Research(AlbumMixin, models.Model):
     ch_t_research = models.BooleanField()
     sondazny = models.CharField(max_length=200)
     other = models.CharField(max_length=200)
-    album = models.OneToOneField('album.Album', null=True)
+    album = models.OneToOneField('album.Album', null=True, on_delete=models.CASCADE)
 
     def __str__(self):
         """

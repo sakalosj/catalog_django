@@ -29,6 +29,7 @@ class RestorerListView(generic.ListView):
 
 class RestorerCreate(CreateView):
     model = Restorer
+    template_name = 'catalogWeb/restorer/restorer_form.html'
     fields = '__all__'
     success_url = reverse_lazy('restorerList')
 
@@ -37,13 +38,16 @@ class RestorerCreate(CreateView):
         return super().get_context_data(**kwargs)
 
 
+
+
+
 def restorer_create(request, pk=None):
-    if not pk:
-        restorer_instance = Restorer()
-        restorer_instance.save()
+    # if not pk:
+    #     restorer_instance = Restorer()
+    #     restorer_instance.save()
     restorer_form = RestorerForm(request.POST or None, request.FILES or None)
 
-    restorer_instance = get_object_or_404(Restorer, pk=pk)
+    # restorer_instance = get_object_or_404(Restorer, pk=pk)
     restorer_form = RestorerForm(request.POST or None, request.FILES or None, instance=restorer_instance)
     album_id = restorer_instance.album.id
 
