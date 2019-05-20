@@ -11,8 +11,9 @@ urlpatterns = [
     url(r'^list', views.AlbumListView.as_view(), name='albumList'),
     url(r'^add', views.album_create, name='albumCreate'),
     url(r'^detail/(?P<pk>[0-9]+)/$', views.AlbumDetailView.as_view(), name='albumDetail'),
-    # url(r'^edit/(?P<pk>[0-9]+)/$', views.album_edit_html2, name='album_edit'),
-    url(r'^edit/(?P<pk>[0-9]+)/$', views.album_edit_ajax, name='album_edit'),
+    url(r'^edit1/(?P<pk>[0-9]+)/$', views.album_edit_html, name='album_edit1'),
+    url(r'^edit2/(?P<pk>[0-9]+)/$', views.album_edit_html2, name='album_edit2'),
+    url(r'^edita/(?P<pk>[0-9]+)/$', views.album_edit_ajax, name='album_edita'),
 
     url(r'image/list', views.ImageListView.as_view(), name='imageList'),
     url(r'image/add', views.image_create, name='imageCreate'),

@@ -7,9 +7,10 @@ from django.forms import ImageField, Widget, Select
 
 class PictureWidget(Widget):
 
-    def render(self, name, value, attrs=None):
-        html = Template('<img src="%s"/>' % value.url)
-        return mark_safe(html.substitute(link=value))
+    def render(self, name, value, attrs=None, renderer=None):
+        if value:
+            html = Template('<img src="%s"/>' % value.url)
+            return mark_safe(html.substitute(link=value))
 
 
 class PictureWidget2(MultiWidget):
@@ -27,5 +28,8 @@ class PictureWidget2(MultiWidget):
             return value.split("|")
         return ['', '']
 
-class AlbumWidget(Select):
-    pass
+class AlbumWidget(Widget):
+
+    def render(self, name, value, attrs=None, renderer=None):
+        pass
+

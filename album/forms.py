@@ -8,9 +8,12 @@ from album.widgets import PictureWidget, PictureWidget2
 class ImageForm(forms.ModelForm):
     class Meta:
         model = Image
-        exclude = ['pictureList']
+        fields = '__all__'
+        # exclude = ['pictureList']
+
         widgets = {
-            'image': PictureWidget,
+            'picture': PictureWidget,
+            # 'test': forms.TextInput
         }
 
 # class Image2Form(forms.Form):

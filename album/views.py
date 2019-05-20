@@ -50,6 +50,10 @@ def image_detail(request):
 class AlbumDetailView(generic.DetailView):
     model = Album
 
+    def get(self, request, pk):
+        album = get_object_or_404(Album,pk=pk)
+        return render(request, 'album/album_detail.html', {'album': album})
+
 
 class AlbumListView(generic.ListView):
     model = Album
@@ -149,31 +153,26 @@ def album_edit(request, pk):
 @csrf_exempt
 def album_edit_html(request, pk):
     album_instance = get_object_or_404(Album, pk=pk)
-    ImageFormSet_1 = inlineformset_factory(Album, Image, extra=0, form=ImageForm )
-    # ImageFormSet = inlineformset_factory(Album, Image, extra=0, form=ImageForm, widgets={'image': PictureWidget, })
+    ImageFormSet_1 = inlineformset_factory(Album, Image, extra=1, form=ImageForm )
     album_form = AlbumForm(request.POST or None, request.FILES or None)
     album_formset = ImageFormSet_1(instance=album_instance)
 
-    if request.is_ajax():
+    if request.method == 'POST':
         album_formset = ImageFormSet_1(request.POST, request.FILES, instance=album_instance)
-        if album_formset.is_valid() and album_form.is_valid():
+        if album_formset.is_valid():
             album_formset.save()
-            album_process_form(request, album_instance)
-            album_formset = ImageFormSet_1(instance=album_instance)
-        ttt = album_formset.as_table() + album_form.as_table()
-        return JsonResponse({'success': True, 'album_form': ttt})
+            return HttpResponseRedirect(reverse('albumDetail', kwargs={'pk': pk}))
 
-    else:
-        t = loader.get_template('album/album_form2.html')
-        c = Context({'album_form': album_form})
-        c1 = {'album_form': album_form}
-        h = t.render({'album_form': album_form})
-        h1 = t.render(c1, request)
-        # return h
-        #def render(request, template_name, context=None, content_type=None, status=None, using=None):
-        h2 = render(request,'album/album_form2.html',context={'album_form': album_form})
-        # return h1
-        return render(request,'album/album_form2.html',context={'album_form': album_form,'album_formset':album_formset})
+    # t = loader.get_template('album/album_form_html.html')
+    # c = Context({'album_form_html': album_form})
+    # c1 = {'album_form_html': album_form}
+    # h = t.render({'album_form_html': album_form})
+    # h1 = t.render(c1, request)
+    # return h
+    #def render(request, template_name, context=None, content_type=None, status=None, using=None):
+    # h2 = render(request,'album/album_form_html.html',context={'album_form': album_form})
+    # return h1
+    return render(request,'album/album_form_html.html',context={'album_form': album_form,'album_formset':album_formset})
 
 @csrf_exempt
 def album_edit_html2(request, pk):

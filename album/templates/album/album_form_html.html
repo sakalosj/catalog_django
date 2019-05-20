@@ -1,0 +1,43 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+{#<form id="form_1" action="" method="post" enctype="multipart/form-data">#}
+{#    {% csrf_token %}#}
+{#    <table>#}
+{#        {{ album_formset }}#}
+{#        {{ album_form.as_table }}#}
+{##}
+{#    </table>#}
+{#    <input type="submit" value="Submit" />#}
+{#</form>#}
+
+{#<form id="form_ajax" action="{% url 'album_edit1' 21 %}" method="get" enctype="multipart/form-data" >#}
+{#    {% csrf_token %}#}
+{#    <input id="initial" name="initial" type="hidden" value="True">#}
+{#    <table id="form_ajax_table">#}
+{##}
+{#    </table>#}
+{#<input type="submit" value="Submit ajax" />#}
+{#</form>#}
+
+
+        <form id="form_1" action="" method="post"  enctype="multipart/form-data">
+    {% csrf_token %}
+    <table>
+        {{ album_formset.management_form  }}
+        {{ album_formset }}
+{#        {{ album_form.as_table }}#}
+
+    </table>
+    <input type="submit" value="Submit" />
+</form>
+
+{#    {{  album_form.as_table  }}#}
+{#    {{  album_formser.as_table  }}#}
+
+
+{% endblock %}
+
+
+{{ request.path }}

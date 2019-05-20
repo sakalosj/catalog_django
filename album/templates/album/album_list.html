@@ -9,24 +9,24 @@
 
 
 {% block content %}
-    <h1>Research List</h1>
+    <h1>Album List</h1>
 
-    {% if picture_list %}
+    {% if album_list %}
     <ul>
 
-      {% for picture in picture_list %}
+      {% for album in album_list %}
       <li>
-                  <a href=""> {{  picture }}</a>
-{#          <a href="{% url 'pictureDetail' picture.id %}"> {{  picture }}</a>#}
-{#          <a href="{% url 'pictureDelete' picture.id %}"> Del</a>#}
-{#          <a href="{% url 'pictureUpdate' picture.id %}"> Update</a>#}
+                  <a href="{% url 'albumDetail' album.id %}"> {{  album }}</a>
+{#          <a href="{% url 'albumDetail' album.id %}"> {{  album }}</a>#}
+{#          <a href="{% url 'albumDelete' album.id %}"> Del</a>#}
+          <a href="{% url 'album_edit1' album.id %}"> Update</a>
       </li>
       {% endfor %}
 
     </ul>
 
     {% else %}
-      <p>There are no books in the library.</p>
+      <p>There are no albums</p>
     {% endif %}
 {% endblock %}
 

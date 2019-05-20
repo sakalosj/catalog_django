@@ -16,9 +16,9 @@
 
       {% for restorer in restorer_list %}
       <li>
-        <a href="{% url 'restorerDetail' restorer.id %}"> {{  restorer }}</a>
+          <a href="{% url 'restorerDetail' restorer.id %}"> {{  restorer }}</a>
           <a href="{% url 'restorerDelete' restorer.id %}"> Del</a>
-            <a href="{% url 'restorerUpdate' restorer.id %}"> Update</a>
+          <a href="{% url 'restorerUpdate' restorer.id %}"> Update</a>
       </li>
       {% endfor %}
 
