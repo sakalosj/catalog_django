@@ -17,6 +17,7 @@ from .models import Restorer, Monument, Project, Research, Material, Monument2Pr
 
 
 
+
 def index_new(request):
     """
     View function for home page of site.

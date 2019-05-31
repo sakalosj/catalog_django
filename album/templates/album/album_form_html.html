@@ -1,4 +1,4 @@
-{% extends "base_generic.html" %}
+{#{% extends "base_generic.html" %}#}
 
 {% block content %}
 
@@ -25,9 +25,13 @@
         <form id="form_1" action="" method="post"  enctype="multipart/form-data">
     {% csrf_token %}
     <table>
-        {{ album_formset.management_form  }}
+{#        <p>formset</p>#}
+{#        {{ album_formset.management_form  }}#}
         {{ album_formset }}
+{#        <p>form</p>#}
 {#        {{ album_form.as_table }}#}
+{#<tr><th><label for="">Pictures:</label></th><td><ul class="errorlist"><li>Upload a valid image. The file you uploaded was either not an image or a corrupted image.</li></ul><input type="file" name="imageList-0-PiCtUrEs" multiple accept="image/*" id="id_imageList-0-PiCtUrEs"><input type="hidden" name="imageList-0-album" value="8" id="id_imageList-0-album"><input type="hidden" name="imageList-0-id" value="1" id="id_imageList-0-id"></td></tr>#}
+<tr><th><label for="pictures">Pictures:</label></th><td><input type="file" name="picture" multiple accept="image/*" ></td></tr>
 
     </table>
     <input type="submit" value="Submit" />

@@ -35,8 +35,16 @@ class Album(models.Model):
             htmlDivContent.append('<image src=%s>' % image.image.url)
         return '\n'.join(htmlDivContent)
 
-    def generate_formset(self, *args, **kwargs):
+    def generate_forms(self, *args, **kwargs):
         return self.ImageFormSet(*args, **kwargs)
+
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse('albumDetail', args=[str(self.id)])
+
+    # def get_forms(self):
+
+
 
     def __str__(self):
         """
@@ -57,18 +65,29 @@ class Test(models.Model):
         """
         return 'test_%s' % self.id
 
-class AlbumMixin:
-    def save(self, *args, **kwargs):
-        if hasattr(self, 'album_id'):  # check if model has set album attribute (related to onetoone implementation)
+class AlbumMixin(models.Model):
+    """
+
+    """
+
+    album = models.OneToOneField('album.Album', null=True, on_delete=models.CASCADE)
+
+    class Meta:
+        abstract = True
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not hasattr(self, 'album_id'):  # check if model has set album attribute (related to onetoone implementation)
             # if not hasattr(self, 'album'):  # check if there is set related object (django specific)
-            if self.album is None:
-                self.album = Album.objects.create()
-        else:
             raise Exception('AlbumMixin Inherited function have to contain property album referencing model Album')
+
+    def save(self, *args, **kwargs):
+        if self.album is None:
+            self.album = Album.objects.create()
         super().save(*args, **kwargs)
 
-    def delete(self):
-        if hasattr(self, 'album_id'):  # check if model has set album attribute (related to onetoone implementation)
-            if self.album is not None:  # check if there is set related object (django specific)
-                self.album.delete()
-        super().delete()
+    # def delete(self):
+    #     if hasattr(self, 'album_id'):  # check if model has set album attribute (related to onetoone implementation)
+    #         if self.album is not None:  # check if there is set related object (django specific)
+    #             self.album.delete()
+    #     super().delete()

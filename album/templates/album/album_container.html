@@ -13,7 +13,7 @@
                 data: ajax_form_data,
                 {#method: $(this).attr('method'),#}
                 method: 'POST',
-                url: '{% url 'album_edit' album_id %}',
+                url: '{% url 'album_edit1' album_id %}',
                 success: function (response) {
 
                     console.log(response);
@@ -39,7 +39,7 @@
                 contentType: false,
                 processData: false,
                 method: 'GET',
-                url: '{% url 'album_edit' album_id %}',
+                url: '{% url 'album_edit1' album_id %}',
                 success: function (response) {
 
                     console.log(response);
@@ -74,7 +74,7 @@
     </script>
 
     <div id="album_container">
-        <form id="form_ajax" action="{% url 'album_edit' album_id %}" method="get" enctype="multipart/form-data" >
+        <form id="form_ajax" action="{% url 'album_edit1' album_id %}" method="get" enctype="multipart/form-data" >
             {% csrf_token %}
                 <table id="form_ajax_table">
                 </table>

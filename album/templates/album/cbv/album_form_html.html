@@ -1,0 +1,21 @@
+{#{% extends "base_generic.html" %}#}
+
+{% block content %}
+
+    <form id="form_1" action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table>
+            {{ image_formset }}
+            {{ album_form }}
+{#            <tr>#}
+{#                <th><label for="pictures">Pictures:</label></th>#}
+{#                <td><input type="file" name="picture" multiple accept="image/*"></td>#}
+{#            </tr>#}
+
+        </table>
+        <input type="submit" value="Submit"/>
+    </form>
+
+{% endblock %}
+
+

@@ -9,9 +9,12 @@ urlpatterns = [
     url(r'image2/detail/(?P<pk>[0-9]+)/$', views.image2_detail, name='image2Detail'),
 
     url(r'^list', views.AlbumListView.as_view(), name='albumList'),
-    url(r'^add', views.album_create, name='albumCreate'),
+    url(r'^add1', views.album_create_html, name='album_create_html'),
+    url(r'^add2', views.album_create, name='albumCreate'),
     url(r'^detail/(?P<pk>[0-9]+)/$', views.AlbumDetailView.as_view(), name='albumDetail'),
     url(r'^edit1/(?P<pk>[0-9]+)/$', views.album_edit_html, name='album_edit1'),
+    url(r'^update_cbv/(?P<pk>[0-9]+)/$', views.AlbumUpdate.as_view(), name='albumUpdate'),
+    url(r'^edit_cbv/(?P<pk>[0-9]+)/$', views.AlbumEdit.as_view(), name='albumEdit'),
     url(r'^edit2/(?P<pk>[0-9]+)/$', views.album_edit_html2, name='album_edit2'),
     url(r'^edita/(?P<pk>[0-9]+)/$', views.album_edit_ajax, name='album_edita'),
 

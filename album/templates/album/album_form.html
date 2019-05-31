@@ -62,7 +62,7 @@ $(function() {
 {#    <input type="submit" value="Submit" />#}
 {#</form>#}
 
-<form id="form_ajax" action="{% url 'album_edit' 21 %}" method="get" enctype="multipart/form-data" >
+<form id="form_ajax" action="{% url 'album_edit1' 21 %}" method="get" enctype="multipart/form-data" >
     {% csrf_token %}
 {#    <input id="initial" name="initial" type="hidden" value="True">#}
     <table id="form_ajax_table">

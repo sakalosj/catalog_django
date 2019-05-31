@@ -9,6 +9,7 @@ class RestorerForm(forms.ModelForm):
         exclude = ['album']
 
 
+
 class RestorerRemoveForm(forms.Form):
     pk = forms.IntegerField()
 

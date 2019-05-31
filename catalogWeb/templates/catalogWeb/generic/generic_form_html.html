@@ -1,0 +1,18 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+
+    <form id="form_11" action="" method="POST" enctype="multipart/form-data" >
+        {% csrf_token %}
+
+        <table>
+            {{ form }}
+        </table>
+
+        {%  include 'album/cbv/album_form_table.html' %}
+    </form>
+
+
+    <input type="submit" class="album_submit" value="Submit" form="form_11"/>
+{% endblock %}

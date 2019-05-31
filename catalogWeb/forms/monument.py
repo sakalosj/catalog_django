@@ -11,7 +11,7 @@ class MonumentForm(forms.ModelForm):
 
     date = forms.DateField(widget=SelectDateWidget2)
 
-    def save(self): #, album, commit=True):
+    def save(self, *args, **kwargs): #, album, commit=True):
         # self.instance.album = album
         self.instance.save()
 
