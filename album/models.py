@@ -26,6 +26,19 @@ class Image2(models.Model):
 
 class Album(models.Model):
 
+    # def album_show(album, image_div_id="album", edit=False):
+    #     if not album:  # if album is empty return None
+    #         return None
+    #     if image_div_id is None:
+    #         image_div_id = 'album_id_%s' % album.id
+    #     html_div_content = ['<div id = %s>' % image_div_id]
+    #     for image in album.imageList.all():
+    #         html_div_content.append('<p> %s </p>' % image.name)
+    #         html_div_content.append('<figure>'
+    #                                 '<image src=%s><figcaption> %s </figcaption>'
+    #                                 '</figure>' % (image.image.url, 'test'))
+    #     return '\n'.join(html_div_content)
+
     def as_div(self, imageDivID="album"):
         if imageDivID is None:
             imageDivID = 'album_id_%s' % self.id

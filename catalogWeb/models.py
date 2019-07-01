@@ -34,6 +34,9 @@ class Restorer(AlbumMixin, models.Model):
     last_name = models.CharField(max_length=45)
     description = models.CharField(max_length=200)
 
+    # edit_view = 'restorerEdit'
+    update_view = 'restorerUpdate'
+
     def __str__(self):
         """
         String for representing the Model object.

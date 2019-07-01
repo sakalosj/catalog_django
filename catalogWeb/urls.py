@@ -11,8 +11,8 @@ urlpatterns = [
     url(r'restorer/add', views.RestorerCreate.as_view(), name='restorerCreate'),
     url(r'restorer/del/(?P<pk>[0-9]+)/$', views.RestorerDelete.as_view(), name='restorerDelete'),
     url(r'restorer/details/(?P<pk>[0-9]+)/$', views.restorer_detail, name='restorerDetail'),
-    url(r'restorer/update/(?P<pk>[0-9]+)/$', views.restorer_update, name='restorerUpdate'),
-    url(r'restorer/update_cbv/(?P<pk>[0-9]+)/$', views.RestorerUpdate.as_view(), name='restorerUpdate_cbv'),
+    # url(r'restorer/update/(?P<pk>[0-9]+)/$', views.restorer_update, name='restorerUpdate'),
+    url(r'restorer/update/(?P<pk>[0-9]+)/$', views.RestorerUpdate.as_view(), name='restorerUpdate'),
 
 
     url(r'monument/list', views.monument_list, name='monumentList'),

@@ -3,16 +3,18 @@
 {% block content %}
 
 
-    <form id="form_11" action="" method="POST" enctype="multipart/form-data" >
+    <form id="form_11" action="" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
 
         <table>
             {{ form }}
         </table>
 
-        {%  include 'album/cbv/album_form_table.html' %}
     </form>
-
-
+    {% if object.album %}
+        <p>
+            <a href="{% url 'albumEdit' object.album.id %}"> Add/edit pictures</a>
+        </p>
+    {% endif %}
     <input type="submit" class="album_submit" value="Submit" form="form_11"/>
 {% endblock %}

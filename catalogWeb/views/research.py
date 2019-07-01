@@ -8,7 +8,6 @@ from django.views.generic.edit import UpdateView
 
 from album.forms import AlbumForm, ImageForm
 from album.models import Album, Image
-from album.views import album_process_form, album_show
 from album.widgets import PictureWidget
 from catalogWeb.helpers import add_tab_name
 from ..forms import ResearchForm, Project

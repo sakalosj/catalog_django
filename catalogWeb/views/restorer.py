@@ -9,7 +9,7 @@ from django.views.generic.edit import UpdateView
 import album
 from album.forms import AlbumForm, ImageForm
 from album.models import Album, Image
-from album.views import album_process_form, album_show, AlbumMixin, AlbumMixin2
+from album.views import album_show
 from album.widgets import PictureWidget
 from catalogWeb.forms import RestorerForm
 from catalogWeb.helpers import add_tab_name
@@ -107,11 +107,12 @@ def restorer_detail(request, pk):
     return render(request, 'catalogWeb/restorer/restorer_detail.html', context)
 
 
-class RestorerUpdate(AlbumMixin, UpdateView):
+class RestorerUpdate(UpdateView):
     model = Restorer
-
     # fields = '__all__'
     form_class = RestorerForm
+    # success_url = reverse_lazy('restorerUpdate_cbv', kwargs={'pk': self.pk})
+
     # success_url = reverse_lazy('restorerUpdate_cbv', kwargs={'pk': self.pk})
     template_name = 'catalogWeb/generic/generic_form_html.html'
 
@@ -121,6 +122,8 @@ class RestorerUpdate(AlbumMixin, UpdateView):
 
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
+        self.success_url = reverse_lazy('restorerUpdate', kwargs={'pk': self.kwargs['pk']})
+        self.request.session['back_url'] = request.get_full_path()
 
 
 def restorer_update(request, pk):

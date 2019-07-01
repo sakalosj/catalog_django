@@ -1,4 +1,4 @@
-{#{% extends "base_generic.html" %}#}
+{% extends "base_generic.html" %}
 
 {% block content %}
 
@@ -13,9 +13,15 @@
 {#            </tr>#}
 
         </table>
-        <input type="submit" value="Submit"/>
-    </form>
+{#        <input type="submit" value="Submit"/>#}
 
+    </form>
+    <input type="submit" form="form_1"/>
+        {% if request.session.back_url %}
+        <a href="{{ request.session.back_url }}">
+            <button>Back</button>
+        </a>
+        {% endif %}
 {% endblock %}
 
 
