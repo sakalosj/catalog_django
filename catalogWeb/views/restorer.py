@@ -11,15 +11,16 @@ from album.forms import AlbumForm, ImageForm
 from album.models import Album, Image
 from album.views import album_show
 from album.widgets import PictureWidget
+# from catalogWeb.forms import RestorerForm
 from catalogWeb.forms import RestorerForm
 from catalogWeb.helpers import add_tab_name
-from ..models import Restorer
+from ..models import CustomUser
 
 TAB_NAME = 'restorer'
 
 
 class RestorerListView(generic.ListView):
-    model = Restorer
+    model = CustomUser
     template_name = 'catalogWeb/restorer/restorer_list.html'
     paginate_by = 10
 
@@ -29,10 +30,10 @@ class RestorerListView(generic.ListView):
 
 
 class RestorerCreate(CreateView):
-    model = Restorer
+    model = CustomUser
     template_name = 'catalogWeb/restorer/restorer_form.html'
-    # fields = '__all__'
-    form_class = RestorerForm
+    fields = 'first_name', 'last_name', 'description', 'username'#'email'
+    # form_class = RestorerForm
     success_url = reverse_lazy('restorerList')
 
     @add_tab_name(TAB_NAME)
@@ -75,7 +76,7 @@ def restorer_create(request, pk=None):
 
 
 class RestorerDelete(DeleteView):
-    model = Restorer
+    model = CustomUser
     fields = '__all__'
     template_name = 'catalogWeb/restorer/restorer_confirm_delete.html'
     success_url = reverse_lazy('restorerList')
@@ -86,8 +87,8 @@ class RestorerDelete(DeleteView):
 
 
 class RestorerDetail(DetailView):
-    model = Restorer
-    propertiesList = [field.name for field in Restorer._meta.fields if field.name != "id"]
+    model = CustomUser
+    # propertiesList = [field.name for field in Restorer._meta.fields if field.name != "id"]
 
     @add_tab_name(TAB_NAME)
     def get_context_data(self, **kwargs):
@@ -95,7 +96,7 @@ class RestorerDetail(DetailView):
 
 
 def restorer_detail(request, pk):
-    restorer = get_object_or_404(Restorer, pk=pk)
+    restorer = get_object_or_404(CustomUser, pk=pk)
     album_html = album_show(restorer.album)
     context = {
         'restorer': restorer,
@@ -108,7 +109,7 @@ def restorer_detail(request, pk):
 
 
 class RestorerUpdate(UpdateView):
-    model = Restorer
+    model = CustomUser
     # fields = '__all__'
     form_class = RestorerForm
     # success_url = reverse_lazy('restorerUpdate_cbv', kwargs={'pk': self.pk})

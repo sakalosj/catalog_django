@@ -11,10 +11,10 @@
 {% block content %}
     <h1>Restorer List</h1>
 
-    {% if restorer_list %}
+    {% if object_list %}
     <ul>
 
-      {% for restorer in restorer_list %}
+      {% for restorer in object_list %}
       <li>
           <a href="{% url 'restorerDetail' restorer.id %}"> {{  restorer }}</a>
           <a href="{% url 'restorerDelete' restorer.id %}"> Del</a>

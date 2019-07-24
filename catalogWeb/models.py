@@ -3,6 +3,7 @@ import re
 import datetime
 
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.db import models
 from django.forms import Widget, Select
 from django.utils import six, datetime_safe
@@ -28,14 +29,18 @@ from django.utils.formats import get_format
 #         super().delete()
 from album.models import AlbumMixin
 
+class RestorerManager(models.Manager):
 
-class Restorer(AlbumMixin, models.Model):
+
+
+class Person(AlbumMixin, models.Model):
     first_name = models.CharField(max_length=45)
     last_name = models.CharField(max_length=45)
     description = models.CharField(max_length=200)
+    person2user = models.OneToOneField('User', on_delete=models.SET_NULL)
 
     # edit_view = 'restorerEdit'
-    update_view = 'restorerUpdate'
+    # update_view = 'restorerUpdate'
 
     def __str__(self):
         """
@@ -43,6 +48,18 @@ class Restorer(AlbumMixin, models.Model):
         """
         return '%s, %s' % (self.last_name, self.first_name)
 
+class Role(models.Model):
+    name = models.CharField(max_length=30)
+
+
+# class CustomUser(AlbumMixin, User):
+#     description = models.CharField(max_length=200, null=True)
+#     related_person = models.OneToOneField()
+class Person2Role(models.Model):
+    person = models.ForeignKey('Person', null=True, on_delete=models.SET_NULL)
+    role = models.ForeignKey('Role', on_delete=models.SET_NULL)
+    # materialList = models.OneToOneField('MaterialList', on_delete=models.PROTECT)
+    # testfield = models.CharField(max_length=45)
 
 class Monument(AlbumMixin, models.Model):
     name = models.CharField(max_length=45)
@@ -57,6 +74,7 @@ class Monument(AlbumMixin, models.Model):
     materials = models.ManyToManyField('Material', through='Monument2Material',
                                         # through_fields=('materialList', 'material')
                                         blank=True)
+    related_monuments = models.ManyToManyField('Monument', blank=True)
     # album = models.OneToOneField('album.Album', null=True, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -88,11 +106,11 @@ class ResearchRelation(models.Model):
 
 class Project(models.Model):
     name = models.CharField(max_length=45)
-    garant = models.CharField(max_length=45)
+    garant = models.ForeignKey('CustomUser', on_delete=models.DO_NOTHING, related_name='garant_for')
     description = models.CharField(max_length=200)
     realized_by = models.CharField(max_length=45)
     realized_for = models.CharField(max_length=45)
-    restorerList = models.ManyToManyField(Restorer, blank=True)
+    restorerList = models.ManyToManyField(CustomUser, blank=True)
     monument_list = models.ManyToManyField(Monument, blank=True, through=Monument2Project)
 
     def __str__(self):

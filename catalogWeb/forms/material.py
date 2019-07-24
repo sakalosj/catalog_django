@@ -2,7 +2,7 @@ from django import forms
 from django.forms import HiddenInput, SelectMultiple, MultipleHiddenInput
 
 from album.widgets import AlbumWidget
-from catalogWeb.models import Restorer, Material, Monument, SelectDateWidget2, Project, \
+from catalogWeb.models import  Material, Monument, SelectDateWidget2, Project, \
     Research, Monument2Project, Monument2Material
 
 

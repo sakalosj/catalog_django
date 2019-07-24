@@ -9,7 +9,7 @@
 // /****************************
 //  *** db queries
 //  ***
-//  *** todo: add quries to datastructure (array)
+//  *** todo: add queries to datastructure (array)
 //  *****************************/
 // var dbscript = ""; //used to store db phpp based on form id
 // var columns = {};
