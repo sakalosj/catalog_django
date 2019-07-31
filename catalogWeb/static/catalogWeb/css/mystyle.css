@@ -78,3 +78,13 @@ ul.sidebar-nav  {
 .text-nowrap {
     white-space: nowrap;
 }
+
+
+/*********************
+***   FilterForm   ***
+**********************/
+
+
+.filter_form  li{
+   list-style-type: none;
+}

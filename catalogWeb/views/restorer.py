@@ -14,13 +14,13 @@ from album.widgets import PictureWidget
 # from catalogWeb.forms import RestorerForm
 from catalogWeb.forms import RestorerForm
 from catalogWeb.helpers import add_tab_name
-from ..models import CustomUser
+from ..models import Person
 
 TAB_NAME = 'restorer'
 
 
 class RestorerListView(generic.ListView):
-    model = CustomUser
+    model = Person
     template_name = 'catalogWeb/restorer/restorer_list.html'
     paginate_by = 10
 
@@ -30,9 +30,9 @@ class RestorerListView(generic.ListView):
 
 
 class RestorerCreate(CreateView):
-    model = CustomUser
+    model = Person
     template_name = 'catalogWeb/restorer/restorer_form.html'
-    fields = 'first_name', 'last_name', 'description', 'username'#'email'
+    fields = 'first_name', 'last_name', 'description'#, 'username'#'email'
     # form_class = RestorerForm
     success_url = reverse_lazy('restorerList')
 
@@ -76,7 +76,7 @@ def restorer_create(request, pk=None):
 
 
 class RestorerDelete(DeleteView):
-    model = CustomUser
+    model = Person
     fields = '__all__'
     template_name = 'catalogWeb/restorer/restorer_confirm_delete.html'
     success_url = reverse_lazy('restorerList')
@@ -87,7 +87,7 @@ class RestorerDelete(DeleteView):
 
 
 class RestorerDetail(DetailView):
-    model = CustomUser
+    model = Person
     # propertiesList = [field.name for field in Restorer._meta.fields if field.name != "id"]
 
     @add_tab_name(TAB_NAME)
@@ -96,7 +96,7 @@ class RestorerDetail(DetailView):
 
 
 def restorer_detail(request, pk):
-    restorer = get_object_or_404(CustomUser, pk=pk)
+    restorer = get_object_or_404(Person, pk=pk)
     album_html = album_show(restorer.album)
     context = {
         'restorer': restorer,
@@ -109,7 +109,7 @@ def restorer_detail(request, pk):
 
 
 class RestorerUpdate(UpdateView):
-    model = CustomUser
+    model = Person
     # fields = '__all__'
     form_class = RestorerForm
     # success_url = reverse_lazy('restorerUpdate_cbv', kwargs={'pk': self.pk})
@@ -128,7 +128,7 @@ class RestorerUpdate(UpdateView):
 
 
 def restorer_update(request, pk):
-    restorer_instance = get_object_or_404(Restorer, pk=pk)
+    restorer_instance = get_object_or_404(Person, pk=pk)
     restorer_form = RestorerForm(request.POST or None, request.FILES or None, instance=restorer_instance)
     album_id = restorer_instance.album.id
     album_form = restorer_instance.album

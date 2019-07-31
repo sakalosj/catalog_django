@@ -1,0 +1,16 @@
+{#{% extends "base_generic.html" %}#}
+
+{% extends "catalogWeb/person/person_base.html" %}
+
+{% block content %}
+    <h1>{{ object.first_name }}</h1>
+    <p>First name: {{ person.first_name }}</p>
+    <p>Last name: {{ person.last_name }}</p>
+    <p>Description: {{ person.description }}</p>
+
+    {{ album_html|safe }}
+
+    <a href="{% url 'personUpdate' pk=person.id %}">Edit</a>
+    <a href="{% url 'personDelete' pk=person.id %}">Delete</a>
+
+{% endblock content %}

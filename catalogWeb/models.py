@@ -30,6 +30,9 @@ from django.utils.formats import get_format
 from album.models import AlbumMixin
 
 class RestorerManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(roles__name__in=['restorer'])
+
 
 
 
@@ -37,10 +40,16 @@ class Person(AlbumMixin, models.Model):
     first_name = models.CharField(max_length=45)
     last_name = models.CharField(max_length=45)
     description = models.CharField(max_length=200)
-    person2user = models.OneToOneField('User', on_delete=models.SET_NULL)
-
+    person2user = models.OneToOneField(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)
+    roles = models.ManyToManyField('Role')
     # edit_view = 'restorerEdit'
     # update_view = 'restorerUpdate'
+    objects = models.Manager()
+    restorers = RestorerManager()
+
+    @property
+    def full_name(self):
+        return '{}, {}'.format(self.last_name, self.first_name)
 
     def __str__(self):
         """
@@ -48,18 +57,25 @@ class Person(AlbumMixin, models.Model):
         """
         return '%s, %s' % (self.last_name, self.first_name)
 
-class Role(models.Model):
-    name = models.CharField(max_length=30)
 
+class Role(models.Model):
+    name = models.CharField(max_length=30, primary_key=True)
+
+
+    def __str__(self):
+        """
+        String for representing the Model object.
+        """
+        return '%s' % self.name
 
 # class CustomUser(AlbumMixin, User):
 #     description = models.CharField(max_length=200, null=True)
 #     related_person = models.OneToOneField()
-class Person2Role(models.Model):
-    person = models.ForeignKey('Person', null=True, on_delete=models.SET_NULL)
-    role = models.ForeignKey('Role', on_delete=models.SET_NULL)
-    # materialList = models.OneToOneField('MaterialList', on_delete=models.PROTECT)
-    # testfield = models.CharField(max_length=45)
+# class Person2Role(models.Model):
+#     person = models.ForeignKey('Person', null=True, on_delete=models.SET_NULL)
+#     role = models.ForeignKey('Role', null=True, on_delete=models.SET_NULL)
+#     # materialList = models.OneToOneField('MaterialList', on_delete=models.PROTECT)
+#     # testfield = models.CharField(max_length=45)
 
 class Monument(AlbumMixin, models.Model):
     name = models.CharField(max_length=45)
@@ -106,11 +122,11 @@ class ResearchRelation(models.Model):
 
 class Project(models.Model):
     name = models.CharField(max_length=45)
-    garant = models.ForeignKey('CustomUser', on_delete=models.DO_NOTHING, related_name='garant_for')
+    garant = models.ForeignKey('Person', on_delete=models.DO_NOTHING, related_name='garant_for')
     description = models.CharField(max_length=200)
     realized_by = models.CharField(max_length=45)
     realized_for = models.CharField(max_length=45)
-    restorerList = models.ManyToManyField(CustomUser, blank=True)
+    restorerList = models.ManyToManyField(Person, blank=True)
     monument_list = models.ManyToManyField(Monument, blank=True, through=Monument2Project)
 
     def __str__(self):

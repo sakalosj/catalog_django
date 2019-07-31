@@ -6,6 +6,15 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index_new, name='index_new'),
 
+    url(r'person/list', views.PersonListView.as_view(), name='personList'),
+    url(r'person/filter', views.PersonFilterView.as_view(), name='personFilter'),
+    # url(r'person/add', views.person_create, name='personCreate'),
+    url(r'person/add', views.PersonCreate.as_view(), name='personCreate'),
+    url(r'person/del/(?P<pk>[0-9]+)/$', views.PersonDelete.as_view(), name='personDelete'),
+    url(r'person/details/(?P<pk>[0-9]+)/$', views.person_detail, name='personDetail'),
+    # url(r'person/update/(?P<pk>[0-9]+)/$', views.person_update, name='personUpdate'),
+    url(r'person/update/(?P<pk>[0-9]+)/$', views.PersonUpdate.as_view(), name='personUpdate'),
+
     url(r'restorer/list', views.RestorerListView.as_view(), name='restorerList'),
     # url(r'restorer/add', views.restorer_create, name='restorerCreate'),
     url(r'restorer/add', views.RestorerCreate.as_view(), name='restorerCreate'),

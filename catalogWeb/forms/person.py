@@ -3,15 +3,13 @@ from django import forms
 from catalogWeb.models import Person
 
 
-class RestorerForm(forms.ModelForm):
+class PersonForm(forms.ModelForm):
     class Meta:
         model = Person
 
         # exclude = ['restorer_id']
-        exclude = ['album']
+        exclude = ['album', 'person2user']
 
 
-
-class RestorerRemoveForm(forms.Form):
+class PersonRemoveForm(forms.Form):
     pk = forms.IntegerField()
-
