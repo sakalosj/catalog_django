@@ -8,8 +8,9 @@
     <p>Last name: {{ person.last_name }}</p>
     <p>Description: {{ person.description }}</p>
 
-    {{ album_html|safe }}
-
+{#    {{ album_html|safe }}#}
+    {% load album_tags %}
+    {% render_album person.album %}
     <a href="{% url 'personUpdate' pk=person.id %}">Edit</a>
     <a href="{% url 'personDelete' pk=person.id %}">Delete</a>
 

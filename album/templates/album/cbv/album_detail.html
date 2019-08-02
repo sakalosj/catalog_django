@@ -1,4 +1,4 @@
-{% extends "base_generic.html" %}
+{#{% extends "base_generic.html" %}#}
 
 
 {% block content %}
@@ -12,7 +12,9 @@
 {#         <img src="{{image.image.url}}">#}
 {#     {% endfor %}#}
 
-    {{ album.as_div|safe }}
+    {% load album_tags %}
+    {% render_album album %}
+{#    {{ album.as_div|safe }}#}
 
 
 {% endblock content %}

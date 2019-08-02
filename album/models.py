@@ -1,10 +1,6 @@
 from django.db import models
 
-# Create your models here.
-from django.forms import modelform_factory, inlineformset_factory
 
-from album import fields
-from album.widgets import PictureWidget
 
 
 class Image(models.Model):
@@ -17,27 +13,11 @@ class Image(models.Model):
     def formfield(self, **kwargs):
         return
 
-class Image2(models.Model):
-    name = models.CharField(max_length=255, blank=True)
-    picture = fields.PictureFields()
-    album = models.ForeignKey('Album', related_name='imageList2', blank=True, null=True, on_delete=models.CASCADE)
 
 
 
 class Album(models.Model):
 
-    # def album_show(album, image_div_id="album", edit=False):
-    #     if not album:  # if album is empty return None
-    #         return None
-    #     if image_div_id is None:
-    #         image_div_id = 'album_id_%s' % album.id
-    #     html_div_content = ['<div id = %s>' % image_div_id]
-    #     for image in album.imageList.all():
-    #         html_div_content.append('<p> %s </p>' % image.name)
-    #         html_div_content.append('<figure>'
-    #                                 '<image src=%s><figcaption> %s </figcaption>'
-    #                                 '</figure>' % (image.image.url, 'test'))
-    #     return '\n'.join(html_div_content)
 
     def as_div(self, imageDivID="album"):
         if imageDivID is None:
@@ -48,14 +28,13 @@ class Album(models.Model):
             htmlDivContent.append('<image src=%s>' % image.image.url)
         return '\n'.join(htmlDivContent)
 
-    def generate_forms(self, *args, **kwargs):
-        return self.ImageFormSet(*args, **kwargs)
+    # def generate_forms(self, *args, **kwargs):
+    #     return self.ImageFormSet(*args, **kwargs)
 
     def get_absolute_url(self):
         from django.urls import reverse
         return reverse('albumDetail', args=[str(self.id)])
 
-    # def get_forms(self):
 
 
 
@@ -66,17 +45,6 @@ class Album(models.Model):
         return 'album_id_%s' % self.id
 
 
-class Test(models.Model):
-
-    name = models.CharField(max_length=255, blank=True)
-    album = models.OneToOneField(Album, on_delete=models.CASCADE, blank=True, null=True)
-
-
-    def __str__(self):
-        """
-        String for representing the Model object.
-        """
-        return 'test_%s' % self.id
 
 class AlbumMixin(models.Model):
     """
