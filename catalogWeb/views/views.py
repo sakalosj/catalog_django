@@ -11,7 +11,7 @@ from django.views.generic.edit import ModelFormMixin, UpdateView
 from album.forms import AlbumForm, ImageForm
 from album.models import Album, Image
 from album.views import album_show, album_process_form, album_edit_html_is_valid, album_edit_html
-from album.widgets import PictureWidget
+from album.widgets import ImageWidget
 from .forms import RestorerForm, RestorerRemoveForm, MonumentForm, ProjectForm, ResearchForm,  MaterialForm
 from .models import Restorer, Monument, Project, Research, Material, Monument2Project
 
@@ -113,7 +113,7 @@ def monument_detail(request, pk):
 def monument_update(request, pk):
     monument_instance = get_object_or_404(Monument, pk=pk)
     monument_form = MonumentForm(request.POST or None, request.FILES or None, instance=monument_instance)
-    ImageFormSet = inlineformset_factory(Album, Image,  extra=0, form=ImageForm, widgets={'image': PictureWidget,})
+    ImageFormSet = inlineformset_factory(Album, Image, extra=0, form=ImageForm, widgets={'image': ImageWidget, })
     album_form = AlbumForm(request.POST or None, request.FILES or None)
 
     if request.method == 'POST':
@@ -274,7 +274,7 @@ class MaterialUpdate(UpdateView):
 def material_update(request, pk):
     material_instance = get_object_or_404(Monument, pk=pk)
     material_form = MonumentForm(request.POST or None, request.FILES or None, instance=material_instance)
-    ImageFormSet = inlineformset_factory(Album, Image, extra=0, form=ImageForm, widgets={'image': PictureWidget, })
+    ImageFormSet = inlineformset_factory(Album, Image, extra=0, form=ImageForm, widgets={'image': ImageWidget, })
     album_form = AlbumForm(request.POST or None, request.FILES or None)
 
     if request.method == 'POST':

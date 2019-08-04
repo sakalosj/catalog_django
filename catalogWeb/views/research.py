@@ -8,7 +8,7 @@ from django.views.generic.edit import UpdateView
 
 from album.forms import AlbumForm, ImageForm
 from album.models import Album, Image
-from album.widgets import PictureWidget
+from album.widgets import ImageWidget
 from catalogWeb.helpers import add_tab_name
 from ..forms import ResearchForm, Project
 from ..models import Research
@@ -104,7 +104,7 @@ class ResearchUpdate(UpdateView):
 def research_update(request, pk):
     research_instance = get_object_or_404(Research, pk=pk)
     research_form = ResearchForm(request.POST or None, request.FILES or None, instance=research_instance)
-    ImageFormSet = inlineformset_factory(Album, Image,  extra=0, form=ImageForm, widgets={'image': PictureWidget, })
+    ImageFormSet = inlineformset_factory(Album, Image, extra=0, form=ImageForm, widgets={'image': ImageWidget, })
     album_form = AlbumForm(request.POST or None, request.FILES or None)
 
     context = {

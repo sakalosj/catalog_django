@@ -2,7 +2,7 @@ from django import forms
 from django.forms import BaseFormSet, BaseModelFormSet, BaseInlineFormSet
 
 from album.models import Image, Album
-from album.widgets import PictureWidget
+from album.widgets import ImageWidget
 
 
 class ImageForm(forms.ModelForm):
@@ -13,7 +13,7 @@ class ImageForm(forms.ModelForm):
 
         widgets = {
             # 'picture': PictureWidget,
-            'image': PictureWidget,
+            'image': ImageWidget,
             # 'test': forms.TextInput
         }
 

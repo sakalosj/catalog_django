@@ -15,6 +15,15 @@ class AlbumDetailView(generic.DetailView):
     model = Album
 
     def get(self, request, pk, *args, **kwargs):
+        '''
+        IS NECCESSSARY ????
+
+        :param request:
+        :param pk:
+        :param args:
+        :param kwargs:
+        :return:
+        '''
         album = get_object_or_404(Album, pk=pk)
         return render(request, 'album/cbv/album_detail.html', {'album': album})
 

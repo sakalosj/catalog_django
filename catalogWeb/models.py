@@ -93,6 +93,9 @@ class Monument(AlbumMixin, models.Model):
     related_monuments = models.ManyToManyField('Monument', blank=True)
     # album = models.OneToOneField('album.Album', null=True, on_delete=models.CASCADE)
 
+    # album_1 = models.ForeignKey('album.Album', null=True, on_delete=models.CASCADE)
+    # album_2 = models.ForeignKey('album.Album', null=True, on_delete=models.CASCADE)
+
     def __str__(self):
         """
         String for representing the Model object.

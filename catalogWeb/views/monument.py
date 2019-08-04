@@ -1,97 +1,125 @@
-from django.forms import inlineformset_factory
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect
-from django.views.generic import DeleteView
-from django.urls import reverse, reverse_lazy
-from album.forms import AlbumForm, ImageForm
-from album.models import Album, Image
-from album.widgets import PictureWidget
-from catalogWeb.helpers import add_tab_name
-from ..forms import MonumentForm
-from ..models import Monument
+from django.urls import reverse_lazy
+from django.views import generic
+from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
+from django_filters.views import FilterView
+from django_tables2 import SingleTableMixin
 
-TAB_NAME = 'monument'
+from catalogWeb.filters import MonumentFilter
+from catalogWeb.forms import MonumentForm
+from catalogWeb.models import Monument
+from catalogWeb.tables import MonumentTable
 
 
-def monument_list(request):
-    monuments = Monument.objects.all()
-    context = {
-        'monument_list': monuments,
-        'tab_name': TAB_NAME,
-        'redirect_to': request.GET.get('redirect_to'),
-            }
-
-    return render(request, 'catalogWeb/monument/monument_list.html', context)
+class MonumentListView(SingleTableMixin, generic.ListView):
+    model = Monument
+    table_class = MonumentTable
+    template_name = 'catalogWeb/monument/monument_list.html'
+    paginate_by = 10
 
 
-def monument_create(request):
-    monument_form = MonumentForm(request.POST or None, request.FILES or None)
-    album_form = AlbumForm(request.POST or None, request.FILES or None)
-    context = {
-        'monument_form': monument_form,
-        'album_form': album_form,
-        'tab_name': TAB_NAME,
-        'redirect_to': request.GET.get('redirect_to'),
-            }
 
-    if monument_form.is_valid() and album_form.is_valid():
-        monument_instance = monument_form.save()
-        ''' in form cleaned data multiple files are not available,
-         therefore files are processed via view function no in form'''
-        album_process_form(request, monument_instance.album)
-        return HttpResponseRedirect(reverse('monumentList'))
+class MonumentFilterView(SingleTableMixin, FilterView):
+    table_class = MonumentTable
+    filterset_class = MonumentFilter
 
-    return render(request, 'catalogWeb/monument/monument_form.html', context)
+    template_name = 'catalogWeb/monument/monument_filter_list.html'
+
+
+
+class MonumentCreate(CreateView):
+    model = Monument
+    template_name = 'catalogWeb/monument/monument_form.html'
+    # fields = '__all__'
+    # exclude = ['album']
+    form_class = MonumentForm
+    success_url = reverse_lazy('monumentList')
+
+    # @add_tab_name(TAB_NAME)
+    # def get_context_data(self, **kwargs):
+    #     return super().get_context_data(**kwargs)
+    #
+    # def __init__(self):
+    #     super().__init__()
+
+
+# def monument_create(request, pk=None):
+#     # if not pk:
+#     #     monument_instance = Monument()
+#     #     monument_instance.save()
+#     monument_form = MonumentForm(request.POST or None, request.FILES or None)
+#
+#     # monument_instance = get_object_or_404(Monument, pk=pk)
+#     monument_form = MonumentForm(request.POST or None, request.FILES or None, instance=monument_instance)
+#     album_id = monument_instance.album.id
+#
+#     template = 'catalogWeb/generic/generic_form.html'
+#     context = {
+#         'form': monument_form,
+#         'album_id': album_id,
+#         'tab_name': TAB_NAME,
+#         'redirect_to': request.GET.get('redirect_to'),
+#     }
+#
+#     if request.method == 'POST':
+#         if monument_form.is_valid():
+#             monument_form.save()
+#             return HttpResponseRedirect(reverse('monumentDetail', kwargs={'pk': pk}))
+#         else:
+#             return render(request, template, context)
+#
+#     return render(request, template, context)
 
 
 class MonumentDelete(DeleteView):
     model = Monument
-    template_name = 'catalogWeb/monument/monument_confirm_delete.html'
     fields = '__all__'
-    success_url = reverse_lazy('monument_list')
+    template_name = 'catalogWeb/monument/monument_confirm_delete.html'
+    success_url = reverse_lazy('monumentList')
 
-    @add_tab_name(TAB_NAME)
-    def get_context_data(self, **kwargs):
-        return super().get_context_data(**kwargs)
-
-
-def monument_detail(request, pk):
-    monument = get_object_or_404(Monument, pk=pk)
-    album_html = album_show(monument.album)
-    context = {
-        'monument': monument,
-        'album_html': album_html,
-        'tab_name': TAB_NAME,
-        'redirect_to': request.GET.get('redirect_to'),
-    }
-
-    return render(request, 'catalogWeb/monument/monument_detail.html', context)
+    # @add_tab_name(TAB_NAME)
+    # def get_context_data(self, **kwargs):
+    #     return super().get_context_data(**kwargs)
 
 
-def monument_update(request, pk):
-    monument_instance = get_object_or_404(Monument, pk=pk)
-    monument_form = MonumentForm(request.POST or None, request.FILES or None, instance=monument_instance)
-    ImageFormSet = inlineformset_factory(Album, Image,  extra=0, form=ImageForm, widgets={'image': PictureWidget, })
-    album_form = AlbumForm(request.POST or None, request.FILES or None)
+class MonumentDetail(DetailView):
+    model = Monument
+    template_name = 'catalogWeb/monument/monument_detail.html'
 
-    context = {
-        'monument_form': monument_form,
-        'album_form': album_form,
-        'tab_name': TAB_NAME,
-        'redirect_to': request.GET.get('redirect_to'),
-    }
+    # propertiesList = [field.name for field in Monument._meta.fields if field.name != "id"]
 
-    if request.method == 'POST':
-        album_formset = ImageFormSet(request.POST, request.FILES, instance=monument_instance.album)
-        if monument_form.is_valid() and album_formset.is_valid() and album_form.is_valid():
-            album_formset.save()
-            album_process_form(request, monument_instance.album)
-            monument_form.save()
-            return HttpResponseRedirect(reverse('monumentDetail', kwargs={'pk': pk}))
-        else:
-            context['album_formset'] = album_formset
-            return render(request, 'catalogWeb/monument/monument_form.html', context)
+    # @add_tab_name(TAB_NAME)
+    # def get_context_data(self, **kwargs):
+    #     return super().get_context_data(**kwargs)
 
-    album_formset = ImageFormSet(instance=monument_instance.album)
-    context['album_formset'] = album_formset
-    return render(request, 'catalogWeb/monument/monument_form.html', context)
+
+# def monument_detail(request, pk):
+#     monument = get_object_or_404(Monument, pk=pk)
+#     album_html = album_show(monument.album)
+#     context = {
+#         'monument': monument,
+#         'album_html': album_html,
+#         'tab_name': TAB_NAME,
+#         'redirect_to': request.GET.get('redirect_to'),
+#     }
+#
+#     return render(request, 'catalogWeb/monument/monument_detail.html', context)
+
+
+class MonumentUpdate(UpdateView):
+    model = Monument
+    form_class = MonumentForm
+    template_name = 'catalogWeb/monument/monument_form.html'
+
+
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
+        self.request.session['back_url'] = request.get_full_path()
+
+    def get_success_url(self):
+
+        url = reverse_lazy('monumentDetail', kwargs={'pk': self.object.id})
+        return url
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+

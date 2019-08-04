@@ -5,7 +5,7 @@ from django.utils.safestring import mark_safe
 from django.forms import ImageField, Widget, Select
 
 
-class PictureWidget(Widget):
+class ImageWidget(Widget):
 
     def render(self, name, value, attrs=None, renderer=None):
         if value:
@@ -13,7 +13,7 @@ class PictureWidget(Widget):
             return mark_safe(html.substitute(link=value))
 
 
-class PictureWidget2(MultiWidget):
+class ImageWidget2(MultiWidget):
 
     def __init__(self, attrs=None):
         _widgets = (

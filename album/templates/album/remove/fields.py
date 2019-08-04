@@ -2,7 +2,7 @@ from django import forms
 from django.core.validators import RegexValidator
 from django.forms import CharField
 
-from album.widgets import PictureWidget, PictureWidget2
+from album.widgets import ImageWidget, ImageWidget2
 
 
 class PictureFields(forms.MultiValueField):
@@ -13,7 +13,7 @@ class PictureFields(forms.MultiValueField):
     #     )
     #     super().__init__(fields, *args, **kwargs)
         # self.widget = PictureWidget
-    widget = PictureWidget2
+    widget = ImageWidget2
 
     def __init__(self, **kwargs):
         # Define one message for all fields.

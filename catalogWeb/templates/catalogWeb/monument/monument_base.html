@@ -1,30 +1,18 @@
 {% extends "base_generic.html" %}
 
+{% block css_style %}
+    <style>
+        #nav-tab-monument {
+            background-color: #ccc;
+        }
+    </style>
+{% endblock %}
 {% block sidebar %}
   <ul class="sidebar-nav">
-    <li><a href="{% url 'monumentCreate' %}">monument add</a></li>
-    <li><a href="{% url 'monumentList' %}">monument list</a></li>
+    <li class="list"><a href="{% url 'monumentList' %}">list</a></li>
+      <li class="add"><a href="{% url 'monumentCreate' %}">add</a></li>
   </ul>
 {% endblock sidebar%}
 
-{% block content %}
-    <h1>monument List</h1>
 
-    {% if monument_list %}
-    <ul>
-
-      {% for monument in monument_list %}
-      <li>
-          <a href="{% url 'monumentDetail' monument.id %}"> {{  monument }}</a>
-          <a href="{% url 'monumentDelete' monument.id %}"> Del</a>
-          <a href="{% url 'monumentUpdate' monument.id %}"> Update</a>
-      </li>
-      {% endfor %}
-
-    </ul>
-
-    {% else %}
-      <p>There are no monuments.</p>
-    {% endif %}
-{% endblock %}
 

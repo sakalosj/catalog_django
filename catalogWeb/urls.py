@@ -8,11 +8,10 @@ urlpatterns = [
 
     url(r'person/list', views.PersonListView.as_view(), name='personList'),
     url(r'person/filter', views.PersonFilterView.as_view(), name='personFilter'),
-    # url(r'person/add', views.person_create, name='personCreate'),
     url(r'person/add', views.PersonCreate.as_view(), name='personCreate'),
     url(r'person/del/(?P<pk>[0-9]+)/$', views.PersonDelete.as_view(), name='personDelete'),
-    url(r'person/details/(?P<pk>[0-9]+)/$', views.person_detail, name='personDetail'),
-    # url(r'person/update/(?P<pk>[0-9]+)/$', views.person_update, name='personUpdate'),
+    # url(r'person/details/(?P<pk>[0-9]+)/$', views.person_detail, name='personDetail'),
+    url(r'person/details/(?P<pk>[0-9]+)/$', views.PersonDetail.as_view(), name='personDetail'),
     url(r'person/update/(?P<pk>[0-9]+)/$', views.PersonUpdate.as_view(), name='personUpdate'),
 
     url(r'restorer/list', views.RestorerListView.as_view(), name='restorerList'),
@@ -24,11 +23,11 @@ urlpatterns = [
     url(r'restorer/update/(?P<pk>[0-9]+)/$', views.RestorerUpdate.as_view(), name='restorerUpdate'),
 
 
-    url(r'monument/list', views.monument_list, name='monumentList'),
-    url(r'monument/add', views.monument_create, name='monumentCreate'),
+    url(r'monument/list', views.MonumentListView.as_view(), name='monumentList'),
+    url(r'monument/add', views.MonumentCreate.as_view(), name='monumentCreate'),
     url(r'monument/del/(?P<pk>[0-9]+)/$', views.MonumentDelete.as_view(), name='monumentDelete'),
-    url(r'monument/details/(?P<pk>[0-9]+)/$', views.monument_detail, name='monumentDetail'),
-    url(r'monument/update/(?P<pk>[0-9]+)/$', views.monument_update, name='monumentUpdate'),
+    url(r'monument/details/(?P<pk>[0-9]+)/$', views.MonumentDetail.as_view(), name='monumentDetail'),
+    url(r'monument/update/(?P<pk>[0-9]+)/$', views.MonumentUpdate.as_view(), name='monumentUpdate'),
 
     url(r'project/list', views.ProjectListView.as_view(), name='projectList'),
     url(r'project/add', views.project_create, name='projectCreate'),

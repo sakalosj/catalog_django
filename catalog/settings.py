@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django_filters',
     'bootstrap3',
     'django_tables2',
+    'django_cleanup',
     # 'jsonfield',
     # 'djangoformsetjs',
     # 'djangojs',

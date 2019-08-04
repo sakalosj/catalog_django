@@ -8,7 +8,7 @@ from django.views.generic.edit import UpdateView
 
 from album.forms import AlbumForm, ImageForm
 from album.models import Album, Image
-from album.widgets import PictureWidget
+from album.widgets import ImageWidget
 from catalogWeb.helpers import add_tab_name
 from ..forms import MaterialForm
 from ..models import Material
@@ -89,7 +89,7 @@ class MaterialUpdate(UpdateView):
 def material_update(request, pk):
     material_instance = get_object_or_404(Material, pk=pk)
     material_form = MaterialForm(request.POST or None, request.FILES or None, instance=material_instance)
-    ImageFormSet = inlineformset_factory(Album, Image, extra=0, form=ImageForm, widgets={'image': PictureWidget, })
+    ImageFormSet = inlineformset_factory(Album, Image, extra=0, form=ImageForm, widgets={'image': ImageWidget, })
     album_form = AlbumForm(request.POST or None, request.FILES or None)
 
     context = {'material_form': material_form,

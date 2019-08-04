@@ -10,7 +10,7 @@ from django.views.generic.edit import ModelFormMixin, UpdateView
 
 from album.forms import AlbumForm, ImageForm
 from album.models import Album, Image
-from album.widgets import PictureWidget
+from album.widgets import ImageWidget
 # from .forms import RestorerForm, RestorerRemoveForm, MonumentForm, ProjectForm, ResearchForm,  MaterialForm
 from ..models import  Monument, Project, Research, Material, Monument2Project
 

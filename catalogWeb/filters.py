@@ -14,3 +14,14 @@ class PersonFilter(FilterSet):
         model = Person
         # fields = {'first_name': ['contains']}
         fields = []
+
+class MonumentFilter(FilterSet):
+
+    name = CharFilter(lookup_expr='contains',label='First')
+    author = CharFilter(lookup_expr='iexact')
+    # roles = ModelMultipleChoiceFilter(queryset=Role.objects.all(), widget=forms.CheckboxSelectMultiple)
+
+    class Meta:
+        model = Person
+        # fields = {'first_name': ['contains']}
+        fields = []

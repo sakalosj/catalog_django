@@ -1,42 +1,19 @@
-{#{% extends "base_generic.html" %}#}
-
 {% extends "catalogWeb/person/person_base.html" %}
 
-{#{% block sidebar %}#}
-{#  <ul class="sidebar-nav  flex-column">#}
-{#    <li><a href="{% url 'personList' %}">List people</a></li>#}
-{#    <li><a href="{% url 'personCreate' %}">Add person</a></li>#}
-{#    <li><a href="{% url 'res' %}">Add person</a></li>#}
-{#  </ul>#}
-{#{% endblock sidebar %}#}
-
-
-{% block content %}
+{% block css_style %}
+    {{ block.super }}
     <style>
-        .list  {
+        .list {
             background-color: #ccc;
         }
     </style>
-{#    <h1>People List</h1>#}
-{#    {% if object_list %}#}
-{#        <ul>#}
-{##}
-{#            {% for person in object_list %}#}
-{#                <li>#}
-{#                    <a href="{% url 'personDetail' person.id %}"> {{ person }}</a>#}
-{#                    <a href="{% url 'personDelete' person.id %}"> Del</a>#}
-{#                    <a href="{% url 'personUpdate' person.id %}"> Update</a>#}
-{#                </li>#}
-{#            {% endfor %}#}
-{##}
-{#        </ul>#}
-{#        {% load django_tables2 %}#}
-{#        {% render_table table %}#}
-{#    {% else %}#}
-{#        <p>No people in list</p>#}
-{#    {% endif %}#}
-
-            {% load django_tables2 %}
-            {% render_table table %}
 {% endblock %}
+
+{% block content %}
+    {% load bootstrap3 %}
+    {% load django_tables2 %}
+    {% render_table table 'django_tables2/bootstrap.html' %}
+{% endblock %}
+{% block pagination %}
+{% endblock pagination %}
 

@@ -1,6 +1,15 @@
 {#{% extends "base_generic.html" %}#}
 {% extends "catalogWeb/person/person_base.html" %}
 
+{% block css_style %}
+    {{ block.super }}
+
+    <style>
+        .add {
+            background-color: #ccc;
+        }
+    </style>
+{% endblock %}
 {% block content %}
 {##}
 {#    <style>#}
@@ -22,7 +31,7 @@
 {#</form>#}
 
     {% include "catalogWeb/generic/form_album_template.html" %}
-    {% load album_tags %}
-    {% ct "%Y-%m-%d %I:%M %p"  %}
-    {% render_album object.album %}
+{#    {% load album_tags %}#}
+{#    {% ct "%Y-%m-%d %I:%M %p"  %}#}
+{#    {% render_album object.album %}#}
 {% endblock %}

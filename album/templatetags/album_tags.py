@@ -24,7 +24,6 @@ context_processor_error_msg = (
 import datetime
 
 
-
 @register.simple_tag
 def ct(format_string):
     return datetime.datetime.now().strftime(format_string)
@@ -32,22 +31,28 @@ def ct(format_string):
 
 class RenderAlbumNode(Node):
 
-    def __init__(self, album):
+    def __init__(self, album, group=None):
         super().__init__()
         self.album = album
+        self.group = group
         self.template_name = 'album/tag/album_detail_tag_template.html'
 
     def render(self, context):
         album = self.album.resolve(context)
+        group = self.group.resolve(context) if  self.group else '__all__'
+
         template = get_template(self.template_name)
-        return template.render(context={'album': album})
+        return template.render(context={'imageList': album.get_images_by_group(group)})
 
 
 @register.tag
 def render_album(parser, token):
     bits = token.split_contents()
-    bits.pop(0)
+    bits.pop(0)  # tag_name
 
     album = parser.compile_filter(bits.pop(0))
+    group = parser.compile_filter(bits.pop(0)) if bits else None
 
-    return RenderAlbumNode(album)
+    # tag_name, album, album_group = token.split_contents()
+
+    return RenderAlbumNode(album, group)

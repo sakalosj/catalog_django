@@ -17,27 +17,29 @@
     <link rel="stylesheet" href="{% static 'catalogWeb/css/mystyle.css' %}">
     <script src="{% static 'catalogWeb/scripts/myscripts.js' %}"></script>
 
+    {% block css_style %}
+    {% endblock css_style %}
 </head>
 <body>
 
 <div class="container-fluid" role="navigation">
     <ul class="nav nav-tabs">
-        <li role="presentation" class="nav-item {% if tab_name == 'people' %}active{% endif %}">
+        <li id="nav-tab-person" role="presentation" class="nav-item">
             <a class="nav-link" href="{% url 'personList' %}">People</a>
         </li>
-        <li role="presentation" class="nav-item {% if tab_name == 'restorer' %}active{% endif %}">
+        <li id="nav-tab-restorer" role="presentation" class="nav-item {% if tab_name == 'restorer' %}active{% endif %}">
             <a class="nav-link" href="{% url 'restorerList' %}">Restorers</a>
         </li>
-        <li role="presentation" class="nav-item {% if tab_name == 'project' %}active{% endif %}">
+        <li id="nav-tab-project" role="presentation" class="nav-item {% if tab_name == 'project' %}active{% endif %}">
             <a class="nav-link" href="{% url 'projectList' %}">Projects</a>
         </li>
-        <li role="presentation" class="nav-item {% if tab_name == 'monument' %}active{% endif %}">
+        <li id="nav-tab-monument" role="presentation" class="nav-item {% if tab_name == 'monument' %}active{% endif %}">
             <a class="nav-link" href="{% url 'monumentList' %}">Monuments</a>
         </li>
-        <li role="presentation" class="nav-item {% if tab_name == 'research' %}active{% endif %}">
+        <li id="nav-tab-research" role="presentation" class="nav-item {% if tab_name == 'research' %}active{% endif %}">
             <a class="nav-link" href="{% url 'researchList' %}">Research</a>
         </li>
-        <li role="presentation" class="nav-item {% if tab_name == 'material' %}active{% endif %}">
+        <li id="nav-tab-material" role="presentation" class="nav-item {% if tab_name == 'material' %}active{% endif %}">
             <a class="nav-link" href="{% url 'materialList' %}">Material</a>
         </li>
 
