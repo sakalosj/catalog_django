@@ -9,7 +9,7 @@
 {#    <p>name        :  {{   album.id           }} </p>#}
 
 
-         {% for image  in imageList %}
+         {% for image  in album.imageList.all %}
             <p >image: {{image.name}}</p>
              <img src="{{image.image.url}}">
              <p >description: {{image.description}}</p>

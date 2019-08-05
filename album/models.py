@@ -1,8 +1,25 @@
 import os
 
 from django.db import models
+from django.db.models import OneToOneField
+from django.db.models.signals import m2m_changed
 
 from catalog import settings
+
+# from django.core.signals import request_finished
+from django.dispatch import receiver
+
+
+# @receiver(request_finished)
+# def my_callback(sender, **kwargs):
+#     print("Request finished!")
+
+
+@receiver(m2m_changed)
+def my_callback(sender, **kwargs):
+    print("m2m changed")
+    print(kwargs)
+
 
 def image_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
@@ -22,9 +39,9 @@ class Image(models.Model):
     album = models.ForeignKey('Album', related_name='imageList', blank=True, null=True, on_delete=models.CASCADE)
     image_group = models.CharField(max_length=30, blank=True, null=True)
 
-
     # object = models.Manager()
     object = ImageGroup()
+
     def formfield(self, **kwargs):
         return
 
@@ -35,11 +52,7 @@ class Image(models.Model):
     #         return 'images/'
 
 
-
-
-
 class Album(models.Model):
-
     #
     # def as_div(self, imageDivID="album"):
     #     if imageDivID is None:
@@ -52,7 +65,7 @@ class Album(models.Model):
 
     # def generate_forms(self, *args, **kwargs):
     #     return self.ImageFormSet(*args, **kwargs)
-    objects = models.Manager()
+    # objects = models.Manager()
 
     def get_absolute_url(self):
         from django.urls import reverse
@@ -70,17 +83,10 @@ class Album(models.Model):
         os.rmdir(os.path.join(settings.MEDIA_ROOT, path))
 
     def get_path(self):
-        try:
-            path = 'images/' + str(self.id)
-        except:
-            raise Exception('error while generating path for album')
+
+        path = 'images/' + str(self.id) if self.id is not None else None
 
         return path
-
-    def get_images_by_group(self, group):
-        if group == '__all__':
-            return self.imageList.all()
-        return self.imageList.filter(image_group=group)
 
     def __str__(self):
         """
@@ -94,7 +100,7 @@ class AlbumMixin(models.Model):
 
     """
 
-    album = models.OneToOneField('album.Album', null=True, on_delete=models.CASCADE)
+    # album = models.OneToOneField('album.Album', null=True, on_delete=models.CASCADE)
 
     class Meta:
         abstract = True
@@ -106,12 +112,20 @@ class AlbumMixin(models.Model):
             raise Exception('AlbumMixin Inherited function have to contain property album referencing model Album')
 
     def save(self, *args, **kwargs):
-        if self.album is None:
-            self.album = Album.objects.create()
+        album_field_names = self._get_album_field_names()
+        for album_field_name in album_field_names:
+            if getattr(self, album_field_name) is None:
+                setattr(self, album_field_name, Album.objects.create())
         super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        if hasattr(self, 'album_id'):  # check if model has set album attribute (related to onetoone implementation)
-            if self.album is not None:  # check if there is set related object (django specific)
-                self.album.delete()
+        album_field_names = self._get_album_field_names()
+        for album_field_name in album_field_names:
+            if isinstance(getattr(self, album_field_name), Album):
+                getattr(self, album_field_name).delete()
         super().delete()
+
+    def _get_album_field_names(self):
+        album_field_names = [field.name for field in self._meta.get_fields() if
+                             issubclass(type(field), OneToOneField) and field.related_model is Album]
+        return album_field_names
