@@ -17,8 +17,10 @@
      {% endfor %}
 
 {#    {{ monument.album.as_div|safe }}#}
+{##}
+{#    {{ album_html|safe }}#}
+    {% load album_tags %}
 
-    {{ album_html|safe }}
 
     <a href="{% url 'monumentUpdate' pk=monument.id %}">Edit</a>
     <a href="{% url 'monumentDelete' pk=monument.id %}">Delete</a>

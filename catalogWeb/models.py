@@ -6,6 +6,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 from django.forms import Widget, Select
+from django.urls import reverse
 from django.utils import six, datetime_safe
 from django.utils.dates import MONTHS
 from django.utils.encoding import force_text, force_str
@@ -42,6 +43,7 @@ class Person(AlbumMixin, models.Model):
     description = models.CharField(max_length=200)
     person2user = models.OneToOneField(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)
     roles = models.ManyToManyField('Role')
+    album = models.OneToOneField('album.Album', null=True, on_delete=models.CASCADE)
     # edit_view = 'restorerEdit'
     # update_view = 'restorerUpdate'
     objects = models.Manager()
@@ -81,7 +83,7 @@ class Monument(AlbumMixin, models.Model):
     name = models.CharField(max_length=45)
     author = models.CharField(max_length=45, blank=True, null=True)
     description = models.CharField(max_length=45)
-    date = models.DateField()
+    date = models.DateField(blank=True, null=True)
     placement = models.CharField(max_length=45, blank=True, null=True)
     provenance = models.CharField(max_length=45)
     owner = models.CharField(max_length=45, blank=True, null=True)
@@ -90,11 +92,17 @@ class Monument(AlbumMixin, models.Model):
     materials = models.ManyToManyField('Material', through='Monument2Material',
                                         # through_fields=('materialList', 'material')
                                         blank=True)
-    related_monuments = models.ManyToManyField('Monument', blank=True)
+    # related_monuments = models.ManyToManyField('Monument', blank=True)
+    parent_monument = models.ForeignKey('Monument', blank=True, null=True, on_delete=models.SET_NULL)
     # album = models.OneToOneField('album.Album', null=True, on_delete=models.CASCADE)
+    album = models.OneToOneField('album.Album', null=True, on_delete=models.CASCADE)
 
-    # album_1 = models.ForeignKey('album.Album', null=True, on_delete=models.CASCADE)
-    # album_2 = models.ForeignKey('album.Album', null=True, on_delete=models.CASCADE)
+    album_1 = models.OneToOneField('album.Album', related_name='album_1_rel', null=True, on_delete=models.CASCADE)
+    album_2 = models.OneToOneField('album.Album',  related_name='album_2_rel', null=True, on_delete=models.CASCADE)
+
+
+    def get_absolute_url(self):
+        return reverse('monumentDetail', args=(self.id,))
 
     def __str__(self):
         """

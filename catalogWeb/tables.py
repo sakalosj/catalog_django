@@ -26,6 +26,8 @@ class PersonTable(tables.Table):
 
 class MonumentTable(tables.Table):
 
+    name = tables.Column(linkify=True)
+
 
     class Meta:
         model = Monument
