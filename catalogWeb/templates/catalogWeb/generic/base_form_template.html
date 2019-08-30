@@ -1,0 +1,11 @@
+<form id="generic_form" action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {% load crispy_forms_tags %}
+    <table>
+        {#        {% bootstrap_form form %}#}
+        {% crispy form %}
+    </table>
+
+</form>
+

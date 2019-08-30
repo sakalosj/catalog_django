@@ -1,14 +1,13 @@
-{% extends "base_generic.html" %}
+{% extends "catalogWeb/generic/base.html" %}
 
 {% block content %}
-<h1>Resto DB application</h1>
+    <h1>Resto DB application</h1>
 
+    <div>
+        {% load static %}
+    </div>
 
+{% endblock content %}
 
-<div>
-{% load static %}
-</div>
-
-
-
-{% endblock content%}
+{% block sidebar %}
+{% endblock sidebar %}

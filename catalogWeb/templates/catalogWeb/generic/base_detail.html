@@ -1,0 +1,30 @@
+{% extends "catalogWeb/generic/base.html" %}
+
+
+{% block content %}
+    <h1>{{ monument.name }}</h1>
+
+    <p>name        :  {{   monument.name          }} </p>
+    <p>description :  {{   monument.description   }} </p>
+    <p>date        :  {{   monument.date          }} </p>
+    <p>provenance  :  {{   monument.provenance    }} </p>
+    <p>dimensions  :  {{   monument.dimensions    }} </p>
+    <p>technique   :  {{   monument.technique     }} </p>
+
+    <p>materials: {{  monument.materials_id }} </p>
+     {% for material in monument.materials.all %}
+        <p >material: {{material}}</p>
+     {% endfor %}
+
+{#    {{ monument.album.as_div|safe }}#}
+{##}
+{#    {{ album_html|safe }}#}
+    {% load album_tags %}
+    {% for album in object.albums %}
+        {% render_album album %}
+    {% endfor %}
+
+    <a href="{% url 'monumentUpdate' pk=monument.id %}">Edit</a>
+    <a href="{% url 'monumentDelete' pk=monument.id %}">Delete</a>
+
+{% endblock content %}

@@ -9,12 +9,9 @@ class ImageForm(forms.ModelForm):
     class Meta:
         model = Image
         fields = '__all__'
-        # exclude = ['pictureList']
 
         widgets = {
-            # 'picture': PictureWidget,
             'image': ImageWidget,
-            # 'test': forms.TextInput
         }
 
 

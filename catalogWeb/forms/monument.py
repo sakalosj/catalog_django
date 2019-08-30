@@ -36,7 +36,7 @@ class MonumentForm(forms.ModelForm):
         model = Monument
 
         # exclude = ['restorer_id']
-        exclude = ['album', 'person2user']
+        exclude = ['album', 'person2user', 'album_before', 'album_after']
 
 
 class MonumentRemoveForm(forms.Form):

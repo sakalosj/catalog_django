@@ -2,7 +2,6 @@ from django.forms import inlineformset_factory, formset_factory, modelformset_fa
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 
-# Create your views here.
 from django.urls import reverse_lazy, reverse
 from django.views import generic
 from django.views.generic import TemplateView
@@ -47,15 +46,13 @@ def album_show(album, image_div_id="album", edit=False):
     return '\n'.join(html_div_content)
 
 
-
-
 class AlbumEdit(TemplateView):
     template_name = 'album/cbv/album_form.html'
 
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
         self.album_instance = get_object_or_404(Album, pk=self.kwargs['pk'])
-        album_form = AlbumForm(request.POST or None, request.FILES or None)
+        album_form = AlbumForm(request.POST or None, request.FILES or None, instance=self.album_instance)
         image_inlineformset_factory = inlineformset_factory(Album, Image, extra=0, form=ImageForm)
         image_formset = image_inlineformset_factory(request.POST or None,
                                                     request.FILES or None,
@@ -66,24 +63,14 @@ class AlbumEdit(TemplateView):
 
         self.extra_context = self.forms
 
+
     def post(self, request, *args, **kwargs):
 
         if all([form.is_valid() for form in self.forms.values()]):
+            self.forms['album_form'].save()
             self.forms['image_formset'].save()
             for image in request.FILES.getlist('images'):
                 image = Image(image=image, album=self.album_instance)
                 image.save()
-        # context = self.get_context_data(**kwargs)
-        # return self.render_to_response(context)
         return HttpResponseRedirect(reverse('albumEdit', kwargs={'pk': self.kwargs['pk']}))
-
-    def process_froms(self, request):
-        self.setup(request)
-
-        if all([form.is_valid() for form in self.forms.values()]):
-            self.forms['image_formset'].save()
-            for image in request.FILES.getlist('images'):
-                image = Image(image=image, album=self.album_instance)
-                image.save()
-
 

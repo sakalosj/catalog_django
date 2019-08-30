@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block css_style %}
+    <style>
+        #nav-tab-{{ main_menu_section }} {
+            background-color: #ccc;
+        }
+        .sidebar-nav-{{ sidebar_section }} {
+            background-color: #ccc;
+        }
+    </style>
+{% endblock %}
+{% block sidebar %}
+    <ul class="sidebar-nav">
+        <li class="sidebar-nav-list"><a href="{{  list_url  }}">List</a></li>
+        <li class="sidebar-nav-filter"><a href="{{  filter_url  }}">Filter</a></li>
+        <li class="sidebar-nav-create"><a href="{{ create_url }}">Add</a></li>
+    </ul>
+{% endblock sidebar %}
+
+

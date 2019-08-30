@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+    <div class="content_element">
+        <h1>{{ project }}</h1>
+
+        <p>name        :       {{  project.name          }} </p>
+        <p>garant      :       {{  project.garant        }} </p>
+        <p>description :       {{  project.description   }} </p>
+        <p>realized_by :       {{  project.realized_by   }} </p>
+        <p>realized_for:       {{  project.realized_for  }} </p>
+    </div>
+
+    <div class="content_element">
+        <p>Restorers:</p>
+        {% for restorer in project.restorerList.all %}
+            <p>{{ restorer }}</p>
+        {% endfor %}
+    </div>
+
+    <div class="content_element">
+        <p>Monuments:</p>
+        {% for monument in project.monument_list.all %}
+            <p> {{ monument }}</p>
+        {% endfor %}
+    </div>
+
+    <div class="content_element">
+        <p>Research:</p>
+         {% for research in project.research_set.all  %}
+            <p>{{ research }}</p>
+        {% endfor %}
+
+        <p>
+            <a href="{% url 'researchCreateForProject' project_id=project.id %}?redirect_to={{ request.path }}"> Add research</a>
+        </p>
+    </div>
+    
+{% endblock content %}

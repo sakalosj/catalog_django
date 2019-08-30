@@ -1,0 +1,13 @@
+{% load bootstrap3 %}
+{% load crispy_forms_tags %}
+
+
+{% if object.albums %}
+    {% for album in object.albums %}
+        {% if album.id %}
+            <p>
+                <a href="{% url 'albumEdit' album.id %}"> Add/edit pictures {{ album.id }}</a>
+            </p>
+        {% endif %}
+    {% endfor %}
+{% endif %}

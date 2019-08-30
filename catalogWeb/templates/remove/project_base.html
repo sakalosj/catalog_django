@@ -1,0 +1,39 @@
+{% extends "catalogWeb/generic/base.html" %}
+{#{% block css_style %}#}
+{#    <style>#}
+{#        #nav-tab-person {#}
+{#            background-color: #ccc;#}
+{#        }#}
+{#    </style>#}
+{#{% endblock %}#}
+
+{#{% block sidebar %}#}
+{#  <ul class="sidebar-nav  flex-column">#}
+{#    <li class="list"><a href="{% url 'personList' %}">List</a></li>#}
+{#    <li class="filter"><a href="{% url 'personFilter' %}">Filter</a></li>#}
+{#    <li class="add"><a href="{% url 'personCreate' %}">Add</a></li>#}
+{#    <li><a href="{% url 'res' %}">Add person</a></li>#}
+{#  </ul>#}
+{#{% endblock sidebar %}#}
+
+{##}
+{#{% block content %}#}
+{#    <h1>People List</h1>#}
+{#    {% if object_list %}#}
+{#    <ul>#}
+{##}
+{#      {% for person in object_list %}#}
+{#      <li>#}
+{#          <a href="{% url 'personDetail' person.id %}"> {{  person }}</a>#}
+{#          <a href="{% url 'personDelete' person.id %}"> Del</a>#}
+{#          <a href="{% url 'personUpdate' person.id %}"> Update</a>#}
+{#      </li>#}
+{#      {% endfor %}#}
+{##}
+{#    </ul>#}
+{##}
+{#    {% else %}#}
+{#      <p>No people in list</p>#}
+{#    {% endif %}#}
+{#{% endblock %}#}
+

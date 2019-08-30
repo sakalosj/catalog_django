@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block sidebar %}
+  <ul class="sidebar-nav  flex-column">
+    <li><a href="{% url 'restorerCreate' %}">Restorer add</a></li>
+    <li><a href="{% url 'restorerList' %}">Restorer list</a></li>
+  </ul>
+{% endblock sidebar %}
+
+
+{% block content %}
+    <h1>Restorer List</h1>
+
+    {% if object_list %}
+    <ul>
+
+      {% for restorer in object_list %}
+      <li>
+          <a href="{% url 'restorerDetail' restorer.id %}"> {{  restorer }}</a>
+          <a href="{% url 'restorerDelete' restorer.id %}"> Del</a>
+          <a href="{% url 'restorerUpdate' restorer.id %}"> Update</a>
+      </li>
+      {% endfor %}
+
+    </ul>
+
+    {% else %}
+      <p>There are no books in the library.</p>
+    {% endif %}
+{% endblock %}
+

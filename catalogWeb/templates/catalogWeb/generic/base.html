@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    {% block title %}<title>Resto DB</title>{% endblock title %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {#    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">#}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <!-- Add additional CSS in static file -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'catalogWeb/css/mystyle.css' %}">
+    <script src="{% static 'catalogWeb/scripts/myscripts.js' %}"></script>
+
+    {% block js_scripts %}
+    {% endblock js_scripts %}
+
+    {% block css_style %}
+        <style>
+            #nav-tab-{{ main_menu_section }} {
+                background-color: #ccc;
+            }
+            .sidebar-nav-{{ sidebar_section }} {
+                background-color: #ccc;
+            }
+        </style>
+    {% endblock %}
+
+</head>
+<body>
+
+<div class="container-fluid" role="navigation">
+    <ul class="nav nav-tabs">
+        <li id="nav-tab-person" role="presentation" class="nav-item">
+            <a class="nav-link" href="{% url 'personList' %}">People</a>
+        </li>
+{#        <li id="nav-tab-restorer" role="presentation" class="nav-item {% if tab_name == 'restorer' %}active{% endif %}">#}
+{#            <a class="nav-link" href="{% url 'restorerList' %}">Restorers</a>#}
+        </li>
+        <li id="nav-tab-project" role="presentation" class="nav-item {% if tab_name == 'project' %}active{% endif %}">
+            <a class="nav-link" href="{% url 'projectList' %}">Projects</a>
+        </li>
+        <li id="nav-tab-monument" role="presentation" class="nav-item {% if tab_name == 'monument' %}active{% endif %}">
+            <a class="nav-link" href="{% url 'monumentList' %}">Monuments</a>
+        </li>
+        <li id="nav-tab-research" role="presentation" class="nav-item {% if tab_name == 'research' %}active{% endif %}">
+            <a class="nav-link" href="{% url 'researchList' %}">Research</a>
+        </li>
+        <li id="nav-tab-material" role="presentation" class="nav-item {% if tab_name == 'material' %}active{% endif %}">
+            <a class="nav-link" href="{% url 'materialList' %}">Material</a>
+        </li>
+
+    </ul>
+    <div class="row">
+        <div class="col-sm-2">
+            {% block sidebar %}
+                <ul class="sidebar-nav">
+                    <li class="sidebar-nav-list"><a href="{{  list_url  }}">List</a></li>
+                    <li class="sidebar-nav-filter"><a href="{{  filter_url  }}">Filter</a></li>
+                    <li class="sidebar-nav-create"><a href="{{ create_url }}">Add</a></li>
+                </ul>
+            {% endblock sidebar %}
+
+        </div>
+        <div class="col-sm-10 ">
+            {% block content %}{% endblock content %}
+
+            {% block pagination %}
+                {% if is_paginated %}
+                    <div class="pagination">
+                        <span class="page-links">
+                            {% if page_obj.has_previous %}
+                                <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+                            {% endif %}
+                            <span class="page-current">
+                                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                            </span>
+                            {% if page_obj.has_next %}
+                                <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+                            {% endif %}
+                        </span>
+                    </div>
+                {% endif %}
+            {% endblock pagination %}
+        </div>
+
+        {% if redirect_to and redirect_to != None %}
+            <a class="btn" href={{ redirect_to }}>Back</a>
+
+        {% endif %}
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,22 +1,33 @@
-{% extends "base_generic.html" %}
+{% extends "base.html" %}
 
 {% block content %}
 
     <form id="form_1" action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
+
+        <div class="fieldWrapper">
+            {{ album_form.name.errors }}
+            <label for="{{ album_form.name.id_for_label }}"><b>Album name:</b></label>
+            {{ album_form.name }}
+        </div>
+        <div class="fieldWrapper">
+            {{ album_form.description.errors }}
+            <label for="{{ album_form.description.id_for_label }}"><b>Album description:</b></label>
+            {{ album_form.description }}
+        </div>
+        <p></p>
         <table>
             {{ image_formset }}
-            {{ album_form }}
-
         </table>
 
+        {{ album_form.images }}
     </form>
     <input type="submit" form="form_1" value="Save"/>
-        {% if request.session.back_url %}
+    {% if request.session.back_url %}
         <a href="{{ request.session.back_url }}">
             <button>Back</button>
         </a>
-        {% endif %}
+    {% endif %}
 {% endblock %}
 
 

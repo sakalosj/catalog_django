@@ -1,18 +1,9 @@
+<p>album name : {{ album.name }} </p>
 
-
-
-
-
-
-{#    <h1>{{ album.name }}</h1>#}
-
-{#    <p>name        :  {{   album.id           }} </p>#}
-
-
-         {% for image  in album.imageList.all %}
-            <p >image: {{image.name}}</p>
-             <img src="{{image.image.url}}">
-             <p >description: {{image.description}}</p>
-         {% endfor %}
+{% for image  in album.imageList.all %}
+    <p>image: {{ image.name }}</p>
+    <img src="{{ image.image.url }}">
+    <p>description: {{ image.description }}</p>
+{% endfor %}
 
 

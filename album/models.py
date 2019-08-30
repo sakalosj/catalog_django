@@ -37,7 +37,7 @@ class Image(models.Model):
     description = models.CharField(max_length=255, blank=True)
     image = models.ImageField(upload_to=image_path)
     album = models.ForeignKey('Album', related_name='imageList', blank=True, null=True, on_delete=models.CASCADE)
-    image_group = models.CharField(max_length=30, blank=True, null=True)
+    # image_group = models.CharField(max_length=30, blank=True, null=True)
 
     # object = models.Manager()
     object = ImageGroup()
@@ -66,6 +66,9 @@ class Album(models.Model):
     # def generate_forms(self, *args, **kwargs):
     #     return self.ImageFormSet(*args, **kwargs)
     # objects = models.Manager()
+    name = models.CharField(max_length=255, blank=True, null=True)
+    description = models.CharField(max_length=255, blank=True, null=True)
+
 
     def get_absolute_url(self):
         from django.urls import reverse
@@ -75,7 +78,11 @@ class Album(models.Model):
              update_fields=None):
         super().save(force_insert=False, force_update=False, using=None,
                      update_fields=None)
-        os.mkdir(os.path.join(settings.MEDIA_ROOT, self.get_path()))
+        try:
+            os.mkdir(os.path.join(settings.MEDIA_ROOT, self.get_path()))
+        except FileExistsError:
+            pass
+
 
     def delete(self, using=None, keep_parents=False):
         path = self.get_path()
@@ -97,7 +104,7 @@ class Album(models.Model):
 
 class AlbumMixin(models.Model):
     """
-
+        :todo add check if on_delete=SET_NULL to avoid unwanted data deletion
     """
 
     # album = models.OneToOneField('album.Album', null=True, on_delete=models.CASCADE)
@@ -107,9 +114,9 @@ class AlbumMixin(models.Model):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if not hasattr(self, 'album_id'):  # check if model has set album attribute (related to onetoone implementation)
-            # if not hasattr(self, 'album'):  # check if there is set related object (django specific)
-            raise Exception('AlbumMixin Inherited function have to contain property album referencing model Album')
+        # if not hasattr(self, 'album_id'):  # check if model has set album attribute (related to onetoone implementation)
+        #     # if not hasattr(self, 'album'):  # check if there is set related object (django specific)
+        #     raise Exception('AlbumMixin Inherited function have to contain property album referencing model Album')
 
     def save(self, *args, **kwargs):
         album_field_names = self._get_album_field_names()
@@ -129,3 +136,20 @@ class AlbumMixin(models.Model):
         album_field_names = [field.name for field in self._meta.get_fields() if
                              issubclass(type(field), OneToOneField) and field.related_model is Album]
         return album_field_names
+
+    def _get_albums(self):
+        albums = [getattr(self, field.name) for field in self._meta.get_fields() if
+                             issubclass(type(field), OneToOneField) and field.related_model is Album]
+        return albums
+
+    @property
+    def albums(self):
+        return self._get_albums()
+
+
+
+class A(models.Model):
+    pass
+
+class B(models.Model):
+    rel2a = OneToOneField(A,on_delete=models.CASCADE,null=True)

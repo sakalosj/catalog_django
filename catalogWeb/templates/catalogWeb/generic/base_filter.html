@@ -1,0 +1,33 @@
+{% extends "catalogWeb/generic/base.html" %}
+
+
+{#{% block css_style %}#}
+{#    <style>#}
+{#        #{{ nav_bar }}{#}
+{#            background-color: #ccc;#}
+{#        }#}
+{#    </style>#}
+{#{% endblock %}#}
+{% block js_scripts %}
+    {% load static %}
+    <script src="{% static 'catalogWeb/scripts/list_view.js' %}"></script>
+{% endblock js_scripts %}
+
+{% block content %}
+    {% load bootstrap3 %}
+    {% load django_tables2 %}
+
+
+    <a id="show_hide_form" href="" >Show filter</a>
+    <form class="filter_form" action="" method="get" style="display: none;">
+        {#        {{ filter.form.as_p }}#}
+        {#        <input type="submit"/>#}
+        {% bootstrap_form filter.form layout='inline' %}
+        {% bootstrap_button 'filter' %}
+    </form>
+
+
+    {% render_table table 'django_tables2/bootstrap.html' %}
+{% endblock %}
+{% block pagination %}
+{% endblock pagination %}

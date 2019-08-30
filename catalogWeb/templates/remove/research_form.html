@@ -1,0 +1,38 @@
+{% extends "catalogWeb/research/research_base.html" %}
+
+{% block css_style %}
+    {{ block.super }}
+
+    <style>
+        .add {
+            background-color: #ccc;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    {% include "catalogWeb/generic/form_album_template.html" %}
+    {#    {% load album_tags %}#}
+    {#    {% ct "%Y-%m-%d %I:%M %p"  %}#}
+    {#    {% render_album object.album %}#}
+{% endblock %}
+
+
+{#{% extends "base.html" %}#}
+{##}
+{#{% block content %}#}
+{##}
+{#    <form action="" method="post" enctype="multipart/form-data">#}
+{#    {% csrf_token %}#}
+{#    <table>#}
+{#        {{ form.as_table }}#}
+{#        {{ album_form.as_table }}#}
+{#        {{ album_formset }}#}
+{#    </table>#}
+{##}
+{#    <input type="hidden" name="redirect_to" value="{{ redirect_to }}">#}
+{#    <input type="submit" value="Submit" />#}
+{##}
+{#</form>#}
+{#{% endblock %}#}

@@ -1,0 +1,21 @@
+{% extends "catalogWeb/generic/base.html" %}
+
+
+{#{% block css_style %}#}
+{#    <style>#}
+{#        #{{ nav_bar }}{#}
+{#            background-color: #ccc;#}
+{#        }#}
+{#    </style>#}
+{#{% endblock %}#}
+{% block js_scripts %}
+    {% load static %}
+    <script src="{% static 'catalogWeb/scripts/list_view.js' %}"></script>
+{% endblock js_scripts %}
+
+{% block content %}
+    {% load django_tables2 %}
+    {% render_table table 'django_tables2/bootstrap.html' %}
+{% endblock %}
+{% block pagination %}
+{% endblock pagination %}

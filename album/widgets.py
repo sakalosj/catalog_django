@@ -31,5 +31,6 @@ class ImageWidget2(MultiWidget):
 class AlbumWidget(Widget):
 
     def render(self, name, value, attrs=None, renderer=None):
+        x = 1
         pass
 

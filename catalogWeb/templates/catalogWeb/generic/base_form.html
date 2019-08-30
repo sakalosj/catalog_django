@@ -1,0 +1,10 @@
+{% extends "catalogWeb/generic/base.html" %}
+
+{% block content %}
+
+
+        {% include 'catalogWeb/generic/base_form_template.html' %}
+        {%  include 'catalogWeb/generic/album_edit_link_template.html' %}
+
+    <input type="submit" class="album_submit" value="Submit" form="generic_form"/>
+{% endblock %}

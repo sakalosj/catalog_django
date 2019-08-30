@@ -1,4 +1,4 @@
-{% extends "base_generic.html" %}
+{% extends "base.html" %}
 
 
 {% block content %}
@@ -16,7 +16,7 @@
         <p>Restorers:</p>
         {% for restorer in project.restorerList.all %}
             <p>
-                <a href="{% url 'restorerDetail' restorer.id %}"> {{  restorer }}</a>
+                <a href="{% url 'personDetail' restorer.id %}"> {{  restorer }}</a>
 
             </p>
         {% endfor %}

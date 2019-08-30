@@ -30,6 +30,31 @@ from django.utils.formats import get_format
 #         super().delete()
 from album.models import AlbumMixin
 
+class UrlMmodelMixin:
+
+    def __init_subclass__(cls, *args, **kwargs):
+        super().__init_subclass__(*args, **kwargs)
+        cls.main_menu_name = cls.__name__.lower()
+
+    @classmethod
+    def get_list_url(cls):
+        return reverse(cls.main_menu_name + 'List')
+
+    @classmethod
+    def get_create_url(cls):
+        return reverse(cls.main_menu_name + 'Create')
+
+    def get_details_url(self):
+        # return reverse(self.main_menu_name + 'Details', self.id)
+        return self.get_absolute_url()
+
+    def get_update_url(self):
+        return reverse(self.main_menu_name + 'Update', self.id)
+
+    @classmethod
+    def get_filter_url(cls):
+        return reverse(cls.main_menu_name + 'Filter')
+
 class RestorerManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(roles__name__in=['restorer'])
@@ -43,7 +68,7 @@ class Person(AlbumMixin, models.Model):
     description = models.CharField(max_length=200)
     person2user = models.OneToOneField(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)
     roles = models.ManyToManyField('Role')
-    album = models.OneToOneField('album.Album', null=True, on_delete=models.CASCADE)
+    album = models.OneToOneField('album.Album', null=True, on_delete=models.SET_NULL)
     # edit_view = 'restorerEdit'
     # update_view = 'restorerUpdate'
     objects = models.Manager()
@@ -95,10 +120,10 @@ class Monument(AlbumMixin, models.Model):
     # related_monuments = models.ManyToManyField('Monument', blank=True)
     parent_monument = models.ForeignKey('Monument', blank=True, null=True, on_delete=models.SET_NULL)
     # album = models.OneToOneField('album.Album', null=True, on_delete=models.CASCADE)
-    album = models.OneToOneField('album.Album', null=True, on_delete=models.CASCADE)
+    # album = models.OneToOneField('album.Album', null=True, on_delete=models.SET_NULL)
 
-    album_1 = models.OneToOneField('album.Album', related_name='album_1_rel', null=True, on_delete=models.CASCADE)
-    album_2 = models.OneToOneField('album.Album',  related_name='album_2_rel', null=True, on_delete=models.CASCADE)
+    album_before = models.OneToOneField('album.Album', related_name='album_1_rel', null=True, on_delete=models.SET_NULL)
+    album_after = models.OneToOneField('album.Album',  related_name='album_2_rel', null=True, on_delete=models.SET_NULL)
 
 
     def get_absolute_url(self):
@@ -140,6 +165,9 @@ class Project(models.Model):
     restorerList = models.ManyToManyField(Person, blank=True)
     monument_list = models.ManyToManyField(Monument, blank=True, through=Monument2Project)
 
+    def get_absolute_url(self):
+        return reverse('projectDetail', args=(self.id,))
+
     def __str__(self):
         """
         String for representing the Model object.
@@ -153,6 +181,9 @@ class Material(AlbumMixin, models.Model):
     description = models.CharField(max_length=200)  # general info
     # album = models.OneToOneField('album.Album', null=True, on_delete=models.CASCADE)
 
+    def get_absolute_url(self):
+        return reverse('materialDetail', args=(self.id,))
+
     def __str__(self):
         """
         String for representing the Model object.
@@ -161,6 +192,16 @@ class Material(AlbumMixin, models.Model):
 
 
 class Research(AlbumMixin, models.Model):
+    PLANNING = 'pl'
+    ONGOING = 'on'
+    FINISHED = 'fi'
+
+    STATUS = [
+        (PLANNING, 'Planning in progress'),
+        (ONGOING, 'Work in progress'),
+        (FINISHED, 'Work finished'),
+    ]
+
     # monument = models.ForeignKey(Monument, blank=True, null=True, on_delete=models.PROTECT)
     name = models.CharField(max_length=45, blank=True, null=True)
     description = models.CharField(max_length=200, blank=True, null=True)  # general info
@@ -178,7 +219,11 @@ class Research(AlbumMixin, models.Model):
     ch_t_research = models.BooleanField()
     sondazny = models.CharField(max_length=200)
     other = models.CharField(max_length=200)
+    status = models.CharField(max_length=2, choices=STATUS, default=PLANNING)
     # album = models.OneToOneField('album.Album', null=True, on_delete=models.CASCADE)
+
+    def get_absolute_url(self):
+        return reverse('researchDetail', args=(self.id,))
 
     def __str__(self):
         """

@@ -8,27 +8,32 @@ from catalogWeb.filters import MonumentFilter
 from catalogWeb.forms import MonumentForm
 from catalogWeb.models import Monument
 from catalogWeb.tables import MonumentTable
+from catalogWeb.views import UrlViewMixin
 
 
-class MonumentListView(SingleTableMixin, generic.ListView):
+class MonumentListView(UrlViewMixin, SingleTableMixin, generic.ListView):
     model = Monument
     table_class = MonumentTable
-    template_name = 'catalogWeb/monument/monument_list.html'
+    # template_name = 'catalogWeb/monument/monument_list.html'
+    template_name = 'catalogWeb/generic/base_list.html'
     paginate_by = 10
+    extra_context = {}
 
 
 
-class MonumentFilterView(SingleTableMixin, FilterView):
+class MonumentFilterView(UrlViewMixin, SingleTableMixin, FilterView):
+    model = Monument
     table_class = MonumentTable
     filterset_class = MonumentFilter
 
-    template_name = 'catalogWeb/monument/monument_filter_list.html'
+    # template_name = 'catalogWeb/monument/monument_filter_list.html'
+    template_name = 'catalogWeb/generic/base_filter.html'
 
 
-
-class MonumentCreate(CreateView):
+class MonumentCreateView(UrlViewMixin, CreateView):
     model = Monument
-    template_name = 'catalogWeb/monument/monument_form.html'
+    # template_name = 'catalogWeb/monument/monument_form.html'
+    template_name = 'catalogWeb/generic/base_form.html'
     # fields = '__all__'
     # exclude = ['album']
     form_class = MonumentForm
@@ -70,10 +75,10 @@ class MonumentCreate(CreateView):
 #     return render(request, template, context)
 
 
-class MonumentDelete(DeleteView):
+class MonumentDeleteView(DeleteView):
     model = Monument
-    fields = '__all__'
-    template_name = 'catalogWeb/monument/monument_confirm_delete.html'
+    # fields = '__all__'
+    template_name = 'catalogWeb/generic/base_confirm_delete.html'
     success_url = reverse_lazy('monumentList')
 
     # @add_tab_name(TAB_NAME)
@@ -81,7 +86,7 @@ class MonumentDelete(DeleteView):
     #     return super().get_context_data(**kwargs)
 
 
-class MonumentDetail(DetailView):
+class MonumentDetailView(UrlViewMixin, DetailView):
     model = Monument
     template_name = 'catalogWeb/monument/monument_detail.html'
 
@@ -105,11 +110,11 @@ class MonumentDetail(DetailView):
 #     return render(request, 'catalogWeb/monument/monument_detail.html', context)
 
 
-class MonumentUpdate(UpdateView):
+class MonumentUpdateView(UrlViewMixin, UpdateView):
     model = Monument
     form_class = MonumentForm
-    template_name = 'catalogWeb/monument/monument_form.html'
-
+    # template_name = 'catalogWeb/monument/monument_form.html'
+    template_name = 'catalogWeb/generic/base_form.html'
 
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
@@ -120,6 +125,5 @@ class MonumentUpdate(UpdateView):
         url = reverse_lazy('monumentDetail', kwargs={'pk': self.object.id})
         return url
 
-    def form_valid(self, form):
-        return super().form_valid(form)
+
 

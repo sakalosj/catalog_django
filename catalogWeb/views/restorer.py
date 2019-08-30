@@ -7,13 +7,13 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic.edit import UpdateView
 
 import album
-from album.forms import AlbumForm, ImageForm
+from album.forms import ImageForm
 from album.models import Album, Image
 from album.views import album_show
 from album.widgets import ImageWidget
 # from catalogWeb.forms import RestorerForm
 from catalogWeb.forms import RestorerForm
-from catalogWeb.helpers import add_tab_name
+from catalogWeb.r_helpers import add_tab_name
 from ..models import Person
 
 TAB_NAME = 'restorer'

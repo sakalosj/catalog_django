@@ -1,4 +1,4 @@
-{% extends "base_generic.html" %}
+{% extends "catalogWeb/generic/generic_base.html" %}
 
 
 {% block content %}
@@ -20,7 +20,9 @@
 {##}
 {#    {{ album_html|safe }}#}
     {% load album_tags %}
-
+    {% for album in object.albums %}
+        {% render_album album %}
+    {% endfor %}
 
     <a href="{% url 'monumentUpdate' pk=monument.id %}">Edit</a>
     <a href="{% url 'monumentDelete' pk=monument.id %}">Delete</a>

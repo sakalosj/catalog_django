@@ -1,114 +1,70 @@
-from django.forms import inlineformset_factory
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect
 from django.views import generic
 from django.views.generic import CreateView, DeleteView, DetailView
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 from django.views.generic.edit import UpdateView
+from django_filters.views import FilterView
+from django_tables2 import SingleTableMixin
 
-from album.forms import AlbumForm, ImageForm
-from album.models import Album, Image
-from album.widgets import ImageWidget
-from catalogWeb.helpers import add_tab_name
-from ..forms import MaterialForm
+from catalogWeb.filters import MaterialFilter
+from catalogWeb.forms import MaterialForm
+from catalogWeb.tables import MaterialTable
+from catalogWeb.views import UrlViewMixin
 from ..models import Material
 
 
-TAB_NAME = 'material'
-
-
-class MaterialView(generic.ListView):
+class MaterialListView(UrlViewMixin, SingleTableMixin, generic.ListView):
     model = Material
-    template_name = 'catalogWeb/material/material_list.html'
+    table_class = MaterialTable
+    # template_name = 'catalogWeb/material/material_list.html'
+    template_name = 'catalogWeb/generic/base_list.html'
     paginate_by = 10
 
-    @add_tab_name('material')
-    def get_context_data(self, **kwargs):
-        return super().get_context_data(**kwargs)
 
-
-class MaterialCreate(CreateView):
+class MaterialFilterView(UrlViewMixin, SingleTableMixin, FilterView):
     model = Material
+    table_class = MaterialTable
+    filterset_class = MaterialFilter
+
+    # template_name = 'catalogWeb/material/material_filter_list.html'
+    template_name = 'catalogWeb/generic/base_filter.html'
+
+
+class MaterialCreateView(UrlViewMixin, CreateView):
+    model = Material
+    # template_name = 'catalogWeb/material/material_form.html'
+    template_name = 'catalogWeb/generic/base_form.html'
+    # fields = 'first_name', 'last_name', 'description'  # , 'username'#'email'
     form_class = MaterialForm
     success_url = reverse_lazy('materialList')
 
-    @add_tab_name('material')
-    def get_context_data(self, **kwargs):
-        return super().get_context_data(**kwargs)
 
-
-def material_create(request):
-    material_form = MaterialForm(request.POST or None, request.FILES or None)
-    album_form = AlbumForm(request.POST or None, request.FILES or None)
-    context = {
-        'material_form': material_form,
-        'album_form': album_form,
-        'redirect_to': request.GET.get('redirect_to'),
-    }
-    if material_form.is_valid() and album_form.is_valid():
-        material_instance = material_form.save()
-        album_process_form(request, material_instance.album)
-        return HttpResponseRedirect(reverse('materialList'))
-
-    return render(request, 'catalogWeb/material/material_form.html', context)
-
-
-class MaterialDelete(DeleteView):
+class MaterialDeleteView(DeleteView):
     model = Material
     fields = '__all__'
-    template_name = 'catalogWeb/material/material_confirm_delete.html'
-    success_url = reverse_lazy('materialList')
-
-    @add_tab_name('material')
-    def get_context_data(self, **kwargs):
-        return super().get_context_data(**kwargs)
-
-
-class MaterialDetail(DetailView):
-    model = Material
-
-
-def material_detail(request, pk):
-    material = get_object_or_404(Material, pk=pk)
-    album_html = album_show(material.album)
-    context = {'material': material,
-               'album_html': album_html,
-               'tab_name': TAB_NAME,
-               'redirect_to': request.GET.get('redirect_to'),
-               }
-
-    return render(request, 'catalogWeb/material/material_detail.html', context)
-
-
-class MaterialUpdate(UpdateView):
-    model = Material
-    fields = '__all__'
+    # template_name = 'catalogWeb/material/material_confirm_delete.html'
+    template_name = 'catalogWeb/generic/base_confirm_delete.html'
     success_url = reverse_lazy('materialList')
 
 
-def material_update(request, pk):
-    material_instance = get_object_or_404(Material, pk=pk)
-    material_form = MaterialForm(request.POST or None, request.FILES or None, instance=material_instance)
-    ImageFormSet = inlineformset_factory(Album, Image, extra=0, form=ImageForm, widgets={'image': ImageWidget, })
-    album_form = AlbumForm(request.POST or None, request.FILES or None)
+class MaterialDetailView(UrlViewMixin, DetailView):
+    model = Material
+    template_name = 'catalogWeb/material/material_detail.html'
 
-    context = {'material_form': material_form,
-               'album_form': album_form,
-               'tab_name': TAB_NAME,
-               'redirect_to': request.GET.get('redirect_to'),
-               }
 
-    if request.method == 'POST':
-        album_formset = ImageFormSet(request.POST, request.FILES, instance=material_instance.album)
-        if material_form.is_valid() and album_formset.is_valid() and album_form.is_valid():
-            album_formset.save()
-            album_process_form(request, material_instance.album)
-            material_form.save()
-            return HttpResponseRedirect(reverse('materialList'))
-        else:
-            context['album_formset'] = album_formset
-            return render(request, 'catalogWeb/material/material_form.html', context)
+class MaterialUpdateView(UrlViewMixin, UpdateView):
+    model = Material
+    form_class = MaterialForm
+    # template_name = 'catalogWeb/material/material_form.html'
+    template_name = 'catalogWeb/generic/base_form.html'
 
-    album_formset = ImageFormSet(instance=material_instance.album)
-    context['album_formset'] = album_formset
-    return render(request, 'catalogWeb/material/material_form.html', context)
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
+        self.request.session['back_url'] = request.get_full_path()
+
+    def get_success_url(self):
+        url = reverse_lazy('materialDetail', kwargs={'pk': self.object.id})
+        return url
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+
